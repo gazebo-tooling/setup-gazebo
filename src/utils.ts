@@ -51,12 +51,11 @@ export async function determineDistribCodename(): Promise<string> {
 // List of valid Gazebo distributions
 const validDistro: string[] = ["citadel", "fortress", "garden", "humble"];
 
-//.
 /**
  * Validate all Gazebo input distribution names
  *
  * @param requiredGazeboDistributionsList
- * @returns boolean
+ * @returns boolean Validity of Gazebo distribution
  */
 export function validateDistro(
 	requiredGazeboDistributionsList: string[],
@@ -66,7 +65,6 @@ export function validateDistro(
 			return false;
 		}
 	}
-
 	return true;
 }
 
@@ -84,10 +82,8 @@ export function getRequiredGazeboDistributions(): string[] {
 			RegExp("\\s"),
 		);
 	}
-
 	if (!validateDistro(requiredGazeboDistributionsList)) {
 		throw new Error("Input has invalid distribution names.");
 	}
-
 	return requiredGazeboDistributionsList;
 }

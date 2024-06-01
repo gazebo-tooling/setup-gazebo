@@ -72,7 +72,6 @@ async function addAptRepo(ubuntuCodename: string): Promise<void> {
     http://packages.osrfoundation.org/gazebo/ubuntu-stable ${ubuntuCodename} main" | \
     sudo tee /etc/apt/sources.list.d/gazebo-stable.list > /dev/null`,
   ]);
-
 	await utils.exec("sudo", ["apt-get", "update"]);
 }
 
@@ -83,9 +82,11 @@ export async function runLinux(): Promise<void> {
 	await configOs();
   await addAptRepoKey();
 
+  // Add repo according to Ubuntu version
 	const ubuntuCodename = await utils.determineDistribCodename();
 	await addAptRepo(ubuntuCodename);
 
-  // Only there to test the installation of a gazebo. To be removed later
-  await apt.runAptGetInstall(['gz-garden',]);
+  for (const gazeboDistro of utils.getRequiredGazeboDistributions()) {
+		await apt.runAptGetInstall([`gz-${gazeboDistro}`]);
+	}
 }

@@ -26340,10 +26340,12 @@ function runLinux() {
     return __awaiter(this, void 0, void 0, function* () {
         yield configOs();
         yield addAptRepoKey();
+        // Add repo according to Ubuntu version
         const ubuntuCodename = yield utils.determineDistribCodename();
         yield addAptRepo(ubuntuCodename);
-        // Only there to test the installation of a gazebo. To be removed later
-        yield apt.runAptGetInstall(['gz-garden',]);
+        for (const gazeboDistro of utils.getRequiredGazeboDistributions()) {
+            yield apt.runAptGetInstall([`gz-${gazeboDistro}`]);
+        }
     });
 }
 exports.runLinux = runLinux;
@@ -26494,12 +26496,11 @@ function determineDistribCodename() {
 exports.determineDistribCodename = determineDistribCodename;
 // List of valid Gazebo distributions
 const validDistro = ["citadel", "fortress", "garden", "humble"];
-//.
 /**
  * Validate all Gazebo input distribution names
  *
  * @param requiredGazeboDistributionsList
- * @returns boolean
+ * @returns boolean Validity of Gazebo distribution
  */
 function validateDistro(requiredGazeboDistributionsList) {
     for (const gazeboDistro of requiredGazeboDistributionsList) {
