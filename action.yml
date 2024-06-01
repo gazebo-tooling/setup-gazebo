@@ -1,0 +1,6 @@
+name: 'Setup Gazebo release'
+description: |
+  Install a Gazebo release on a Linux system
+runs:
+  using: node20
+  main: dist/index.js
