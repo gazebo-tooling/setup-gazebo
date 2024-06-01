@@ -97,7 +97,7 @@ async function configOs(): Promise<void> {
  */
 async function addAptRepoKey(): Promise<void> {
 	const workspace = process.env.GITHUB_WORKSPACE as string;
-	const keyFilePath = path.join(workspace, "gazebo.key");
+	const keyFilePath = path.join(workspace, "/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg");
 	fs.writeFileSync(keyFilePath, openRoboticsAptPublicGpgKey);
 	await utils.exec("sudo", ["apt-key", "add", keyFilePath]);
 }
