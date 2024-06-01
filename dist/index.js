@@ -26311,7 +26311,8 @@ function addAptRepoKey() {
         yield utils.exec("sudo", [
             "bash",
             "-c",
-            "wget https://packages.osrfoundation.org/gazebo.gpg -O /usr/share/keyrings/pkgs-osrf-archive-keyring.gpg"
+            `wget --no-check-certificate https://packages.osrfoundation.org/gazebo.gpg -O
+    /usr/share/keyrings/pkgs-osrf-archive-keyring.gpg`
         ]);
     });
 }
