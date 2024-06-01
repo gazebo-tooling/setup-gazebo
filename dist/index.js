@@ -26343,7 +26343,7 @@ function runLinux() {
         const ubuntuCodename = yield utils.determineDistribCodename();
         yield addAptRepo(ubuntuCodename);
         // Only there to test the installation of a gazebo. To be removed later
-        yield utils.exec("sudo", ["apt-get", "install", "gz-garden"]);
+        yield apt.runAptGetInstall(['gz-garden',]);
     });
 }
 exports.runLinux = runLinux;

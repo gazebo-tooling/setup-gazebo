@@ -90,6 +90,6 @@ export async function runLinux(): Promise<void> {
 	await addAptRepo(ubuntuCodename);
 
   // Only there to test the installation of a gazebo. To be removed later
-  await utils.exec("sudo", ["apt-get", "install", "gz-garden"]);
+  await apt.runAptGetInstall(['gz-garden',]);
 
 }
