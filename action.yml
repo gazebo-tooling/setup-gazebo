@@ -1,6 +1,19 @@
 name: 'Setup Gazebo release'
 description: |
   Install a Gazebo release on a Linux system
+required-gazebo-distributions:
+    description: |
+      List of Gazebo distributions to be installed.
+
+      Allowed Gazebo distributions
+      - citadel
+      - fortress
+      - garden
+      - harmonic
+
+      Multiple values can be passed using a whitespace delimited list
+      "fortress garden".
+    required: true
 runs:
   using: node20
   main: dist/index.js

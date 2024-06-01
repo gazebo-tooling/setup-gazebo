@@ -4,9 +4,6 @@ import * as io from "@actions/io";
 import * as apt from "./package_manager/apt";
 import * as utils from "./utils";
 
-import * as path from "path";
-import fs from "fs";
-
 /**
  * Configure basic OS stuff.
  */
@@ -91,5 +88,4 @@ export async function runLinux(): Promise<void> {
 
   // Only there to test the installation of a gazebo. To be removed later
   await apt.runAptGetInstall(['gz-garden',]);
-
 }

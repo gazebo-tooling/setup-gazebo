@@ -26448,7 +26448,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.determineDistribCodename = exports.exec = void 0;
+exports.getRequiredGazeboDistributions = exports.validateDistro = exports.determineDistribCodename = exports.exec = void 0;
 const actions_exec = __importStar(__nccwpck_require__(1514));
 const core = __importStar(__nccwpck_require__(2186));
 /**
@@ -26492,6 +26492,42 @@ function determineDistribCodename() {
     });
 }
 exports.determineDistribCodename = determineDistribCodename;
+// List of valid Gazebo distributions
+const validDistro = ["citadel", "fortress", "garden", "humble"];
+//.
+/**
+ * Validate all Gazebo input distribution names
+ *
+ * @param requiredGazeboDistributionsList
+ * @returns boolean
+ */
+function validateDistro(requiredGazeboDistributionsList) {
+    for (const gazeboDistro of requiredGazeboDistributionsList) {
+        if (validDistro.indexOf(gazeboDistro) <= -1) {
+            return false;
+        }
+    }
+    return true;
+}
+exports.validateDistro = validateDistro;
+/**
+ * Gets the input of the Gazebo distributions to be installed and
+ * validates them
+ *
+ * @returns string[] List of validated Gazebo distributions
+ */
+function getRequiredGazeboDistributions() {
+    let requiredGazeboDistributionsList = [];
+    const requiredGazeboDistributions = core.getInput("required-gazebo-distributions");
+    if (requiredGazeboDistributions) {
+        requiredGazeboDistributionsList = requiredGazeboDistributions.split(RegExp("\\s"));
+    }
+    if (!validateDistro(requiredGazeboDistributionsList)) {
+        throw new Error("Input has invalid distribution names.");
+    }
+    return requiredGazeboDistributionsList;
+}
+exports.getRequiredGazeboDistributions = getRequiredGazeboDistributions;
 
 
 /***/ }),

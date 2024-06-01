@@ -47,3 +47,47 @@ export async function determineDistribCodename(): Promise<string> {
 	);
 	return distribCodename;
 }
+
+// List of valid Gazebo distributions
+const validDistro: string[] = ["citadel", "fortress", "garden", "humble"];
+
+//.
+/**
+ * Validate all Gazebo input distribution names
+ *
+ * @param requiredGazeboDistributionsList
+ * @returns boolean
+ */
+export function validateDistro(
+	requiredGazeboDistributionsList: string[],
+): boolean {
+	for (const gazeboDistro of requiredGazeboDistributionsList) {
+		if (validDistro.indexOf(gazeboDistro) <= -1) {
+			return false;
+		}
+	}
+
+	return true;
+}
+
+/**
+ * Gets the input of the Gazebo distributions to be installed and
+ * validates them
+ *
+ * @returns string[] List of validated Gazebo distributions
+ */
+export function getRequiredGazeboDistributions(): string[] {
+	let requiredGazeboDistributionsList: string[] = [];
+	const requiredGazeboDistributions = core.getInput("required-gazebo-distributions");
+	if (requiredGazeboDistributions) {
+		requiredGazeboDistributionsList = requiredGazeboDistributions.split(
+			RegExp("\\s"),
+		);
+	}
+
+	if (!validateDistro(requiredGazeboDistributionsList)) {
+		throw new Error("Input has invalid distribution names.");
+	}
+
+	return requiredGazeboDistributionsList;
+}
