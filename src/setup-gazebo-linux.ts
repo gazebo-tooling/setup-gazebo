@@ -7,48 +7,6 @@ import * as utils from "./utils";
 import * as path from "path";
 import fs from "fs";
 
-// Open Robotics APT Repository public GPG key, as retrieved by
-//
-// $ apt-key adv --refresh-keys --keyserver hkp://keyserver.ubuntu.com:80 \
-//     C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
-// See also http://packages.ros.org/ros.asc (caution, this is an HTTP URL)
-//
-// Unfortunately, usin apt-key adv is slow, and is failing sometimes, causing
-// spurious pipelines failures. The action is hard-coding the key here to
-// mitigate this issue.
-const openRoboticsAptPublicGpgKey = `
------BEGIN PGP PUBLIC KEY BLOCK-----
-Version: GnuPG v1
-
-mQINBFzvJpYBEADY8l1YvO7iYW5gUESyzsTGnMvVUmlV3XarBaJz9bGRmgPXh7jc
-VFrQhE0L/HV7LOfoLI9H2GWYyHBqN5ERBlcA8XxG3ZvX7t9nAZPQT2Xxe3GT3tro
-u5oCR+SyHN9xPnUwDuqUSvJ2eqMYb9B/Hph3OmtjG30jSNq9kOF5bBTk1hOTGPH4
-K/AY0jzT6OpHfXU6ytlFsI47ZKsnTUhipGsKucQ1CXlyirndZ3V3k70YaooZ55rG
-aIoAWlx2H0J7sAHmqS29N9jV9mo135d+d+TdLBXI0PXtiHzE9IPaX+ctdSUrPnp+
-TwR99lxglpIG6hLuvOMAaxiqFBB/Jf3XJ8OBakfS6nHrWH2WqQxRbiITl0irkQoz
-pwNEF2Bv0+Jvs1UFEdVGz5a8xexQHst/RmKrtHLct3iOCvBNqoAQRbvWvBhPjO/p
-V5cYeUljZ5wpHyFkaEViClaVWqa6PIsyLqmyjsruPCWlURLsQoQxABcL8bwxX7UT
-hM6CtH6tGlYZ85RIzRifIm2oudzV5l+8oRgFr9yVcwyOFT6JCioqkwldW52P1pk/
-/SnuexC6LYqqDuHUs5NnokzzpfS6QaWfTY5P5tz4KHJfsjDIktly3mKVfY0fSPVV
-okdGpcUzvz2hq1fqjxB6MlB/1vtk0bImfcsoxBmF7H+4E9ZN1sX/tSb0KQARAQAB
-tCZPcGVuIFJvYm90aWNzIDxpbmZvQG9zcmZvdW5kYXRpb24ub3JnPokCVAQTAQgA
-PgIbAwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBMHPbjHmut6IaLFytPQu1vur
-F8ZUBQJgsdhRBQkLTMW7AAoJEPQu1vurF8ZUTMwP/3f7EkOPIFjUdRmpNJ2db4iB
-RQu5b2SJRG+KIdbvQBzKUBMV6/RUhEDPjhXZI3zDevzBewvAMKkqs2Q1cWo9WV7Z
-PyTkvSyey/Tjn+PozcdvzkvrEjDMftIk8E1WzLGq7vnPLZ1q/b6Vq4H373Z+EDWa
-DaDwW72CbCBLWAVtqff80CwlI2x8fYHKr3VBUnwcXNHR4+nRABfAWnaU4k+oTshC
-Qucsd8vitNfsSXrKuKyz91IRHRPnJjx8UvGU4tRGfrHkw1505EZvgP02vXeRyWBR
-fKiL1vGy4tCSRDdZO3ms2J2m08VPv65HsHaWYMnO+rNJmMZj9d9JdL/9GRf5F6U0
-quoIFL39BhUEvBynuqlrqistnyOhw8W/IQy/ymNzBMcMz6rcMjMwhkgm/LNXoSD1
-1OrJu4ktQwRhwvGVarnB8ihwjsTxZFylaLmFSfaA+OAlOqCLS1OkIVMzjW+Ul6A6
-qjiCEUOsnlf4CGlhzNMZOx3low6ixzEqKOcfECpeIj80a2fBDmWkcAAjlHu6VBhA
-TUDG9e2xKLzV2Z/DLYsb3+n9QW7KO0yZKfiuUo6AYboAioQKn5jh3iRvjGh2Ujpo
-22G+oae3PcCc7G+z12j6xIY709FQuA49dA2YpzMda0/OX4LP56STEveDRrO+CnV6
-WE+F5FaIKwb72PL4rLi4
-=i0tj
------END PGP PUBLIC KEY BLOCK-----
-`;
-
 /**
  * Configure basic OS stuff.
  */
@@ -73,7 +31,7 @@ async function configOs(): Promise<void> {
 	await utils.exec("sudo", ["apt-get", "update"]);
 
 	// Install tools required to configure the worker system.
-	await apt.runAptGetInstall(["curl", "gnupg2", "locales", "lsb-release"]);
+	await apt.runAptGetInstall(["wget", "curl", "gnupg2", "locales", "lsb-release"]);
 
 	// Select a locale supporting Unicode.
 	await utils.exec("sudo", ["locale-gen", "en_US", "en_US.UTF-8"]);
@@ -96,10 +54,11 @@ async function configOs(): Promise<void> {
  * This is necessary even when building from source to install colcon, vcs, etc.
  */
 async function addAptRepoKey(): Promise<void> {
-	const workspace = process.env.GITHUB_WORKSPACE as string;
-	const keyFilePath = path.join(workspace, "/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg");
-	fs.writeFileSync(keyFilePath, openRoboticsAptPublicGpgKey);
-	await utils.exec("sudo", ["apt-key", "add", keyFilePath]);
+	await utils.exec("sudo", [
+    "bash",
+    "-c",
+    "wget https://packages.osrfoundation.org/gazebo.gpg -O /usr/share/keyrings/pkgs-osrf-archive-keyring.gpg"
+  ]);
 }
 
 /**
@@ -111,7 +70,9 @@ async function addAptRepo(ubuntuCodename: string): Promise<void> {
   await utils.exec("sudo", [
     "bash",
     "-c",
-    `echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable ${ubuntuCodename} main" > /etc/apt/sources.list.d/gazebo-stable.list`,
+    `echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg]
+    http://packages.osrfoundation.org/gazebo/ubuntu-stable ${ubuntuCodename} main" |
+    sudo tee /etc/apt/sources.list.d/gazebo-stable.list > /dev/null`,
   ]);
 
 	await utils.exec("sudo", ["apt-get", "update"]);
