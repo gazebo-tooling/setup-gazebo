@@ -26523,6 +26523,9 @@ function getRequiredGazeboDistributions() {
     if (requiredGazeboDistributions) {
         requiredGazeboDistributionsList = requiredGazeboDistributions.split(RegExp("\\s"));
     }
+    else {
+        throw new Error("Input cannot be empty.");
+    }
     if (!validateDistro(requiredGazeboDistributionsList)) {
         throw new Error("Input has invalid distribution names.");
     }
