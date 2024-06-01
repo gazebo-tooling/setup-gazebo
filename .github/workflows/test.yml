@@ -14,7 +14,8 @@ jobs:
           - ubuntu:22.04
     steps:
       - uses: actions/checkout@v4
-      - uses: ./
-        # with:
-        #   required-gazebo-distributions: garden
+      - name: 'Install Gazebo in Linux runner'
+        uses: ./
+        with:
+          required-gazebo-distributions: garden
       - run: gz sim --versions
