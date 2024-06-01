@@ -10,10 +10,10 @@ jobs:
       fail-fast: false
     steps:
       - uses: actions/checkout@v4
-      - name: 'Install Gazebo Garden in Linux runner'
+      - name: 'Install Gazebo Harmonic in Linux runner'
         uses: ./
         with:
-          required-gazebo-distributions: garden
+          required-gazebo-distributions: harmonic
       - name: 'Check Gazebo installation'
         run: gz sim --versions
   test_linux_fortress_garden:
@@ -46,9 +46,9 @@ jobs:
           - ubuntu:22.04
     steps:
       - uses: actions/checkout@v4
-      - name: 'Install Gazebo Harmonic in Linux runners'
+      - name: 'Install Gazebo Garden in Linux runners'
         uses: ./
         with:
-          required-gazebo-distributions: harmonic
+          required-gazebo-distributions: garden
       - name: 'Check Gazebo installation'
         run: gz sim --versions
