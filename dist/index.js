@@ -26355,7 +26355,7 @@ function configOs() {
 function addAptRepoKey() {
     return __awaiter(this, void 0, void 0, function* () {
         const workspace = process.env.GITHUB_WORKSPACE;
-        const keyFilePath = path.join(workspace, "gazebo.key");
+        const keyFilePath = path.join(workspace, "/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg");
         fs_1.default.writeFileSync(keyFilePath, openRoboticsAptPublicGpgKey);
         yield utils.exec("sudo", ["apt-key", "add", keyFilePath]);
     });
