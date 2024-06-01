@@ -10,10 +10,10 @@ jobs:
       fail-fast: false
     steps:
       - uses: actions/checkout@v4
-      - name: 'Install Gazebo Citadel in Linux runner'
+      - name: 'Install Gazebo Garden in Linux runner'
         uses: ./
         with:
-          required-gazebo-distributions: citadel
+          required-gazebo-distributions: garden
       - name: 'Check Gazebo installation'
         run: gz sim --versions
   test_linux_fortress_garden:
@@ -24,16 +24,16 @@ jobs:
       fail-fast: false
       matrix:
         gazebo_distribution:
+          - citadel
           - fortress
-          - garden
     steps:
       - uses: actions/checkout@v4
-      - name: 'Install Gazebo in Linux runner'
+      - name: 'Install Gazebo in Linux runners'
         uses: ./
         with:
           required-gazebo-distributions: ${{ matrix.gazebo_distribution }}
       - name: 'Check Gazebo installation'
-        run: gz sim --versions
+        run: ign gazebo --versions
   test_linux_harmonic:
     runs-on: ubuntu-latest
     container:

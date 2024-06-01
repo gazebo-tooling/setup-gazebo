@@ -49,7 +49,7 @@ export async function determineDistribCodename(): Promise<string> {
 }
 
 // List of valid Gazebo distributions
-const validDistro: string[] = ["citadel", "fortress", "garden", "humble"];
+const validDistro: string[] = ["citadel", "fortress", "garden", "harmonic"];
 
 /**
  * Validate all Gazebo input distribution names
