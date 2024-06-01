@@ -2,7 +2,39 @@ name: 'Test setup-gazebo'
 on:
   workflow_dispatch:
 jobs:
-  test_linux:
+  test_linux_citadel:
+    runs-on: ubuntu-latest
+    container:
+      image: ubuntu:20.04
+    strategy:
+      fail-fast: false
+    steps:
+      - uses: actions/checkout@v4
+      - name: 'Install Gazebo Citadel in Linux runner'
+        uses: ./
+        with:
+          required-gazebo-distributions: citadel
+      - name: 'Check Gazebo installation'
+        run: gz sim --versions
+  test_linux_fortress_garden:
+    runs-on: ubuntu-latest
+    container:
+      image: ubuntu:20.04
+    strategy:
+      fail-fast: false
+      matrix:
+        gazebo_distribution:
+          - fortress
+          - garden
+    steps:
+      - uses: actions/checkout@v4
+      - name: 'Install Gazebo in Linux runner'
+        uses: ./
+        with:
+          required-gazebo-distributions: ${{ matrix.gazebo_distribution }}
+      - name: 'Check Gazebo installation'
+        run: gz sim --versions
+  test_linux_harmonic:
     runs-on: ubuntu-latest
     container:
       image: ${{ matrix.docker_image }}
@@ -14,8 +46,9 @@ jobs:
           - ubuntu:22.04
     steps:
       - uses: actions/checkout@v4
-      - name: 'Install Gazebo in Linux runner'
+      - name: 'Install Gazebo Harmonic in Linux runners'
         uses: ./
         with:
-          required-gazebo-distributions: garden
-      - run: gz sim --versions
+          required-gazebo-distributions: harmonic
+      - name: 'Check Gazebo installation'
+        run: gz sim --versions
