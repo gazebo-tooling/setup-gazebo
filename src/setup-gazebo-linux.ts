@@ -8,41 +8,41 @@ import * as utils from "./utils";
  * Configure basic OS stuff.
  */
 async function configOs(): Promise<void> {
-	// When this action runs in a Docker image, sudo may be missing.
-	// This installs sudo to avoid having to handle both cases (action runs as
-	// root, action does not run as root) everywhere in the action.
-	try {
-		await io.which("sudo", true);
-	} catch (err) {
-		await utils.exec("apt-get", ["update"]);
-		await utils.exec("apt-get", [
-			"install",
-			"--no-install-recommends",
-			"--quiet",
-			"--yes",
-			"sudo",
-		]);
-	}
+  // When this action runs in a Docker image, sudo may be missing.
+  // This installs sudo to avoid having to handle both cases (action runs as
+  // root, action does not run as root) everywhere in the action.
+  try {
+    await io.which("sudo", true);
+  } catch (err) {
+    await utils.exec("apt-get", ["update"]);
+    await utils.exec("apt-get", [
+      "install",
+      "--no-install-recommends",
+      "--quiet",
+      "--yes",
+      "sudo",
+    ]);
+  }
 
-	await utils.exec("sudo", ["bash", "-c", "echo 'Etc/UTC' > /etc/timezone"]);
-	await utils.exec("sudo", ["apt-get", "update"]);
+  await utils.exec("sudo", ["bash", "-c", "echo 'Etc/UTC' > /etc/timezone"]);
+  await utils.exec("sudo", ["apt-get", "update"]);
 
-	// Install tools required to configure the worker system.
-	await apt.runAptGetInstall(["wget", "curl", "gnupg2", "locales", "lsb-release"]);
+  // Install tools required to configure the worker system.
+  await apt.runAptGetInstall(["wget", "curl", "gnupg2", "locales", "lsb-release"]);
 
-	// Select a locale supporting Unicode.
-	await utils.exec("sudo", ["locale-gen", "en_US", "en_US.UTF-8"]);
-	core.exportVariable("LANG", "en_US.UTF-8");
+  // Select a locale supporting Unicode.
+  await utils.exec("sudo", ["locale-gen", "en_US", "en_US.UTF-8"]);
+  core.exportVariable("LANG", "en_US.UTF-8");
 
-	// Enforce UTC time for consistency.
-	await utils.exec("sudo", ["bash", "-c", "echo 'Etc/UTC' > /etc/timezone"]);
-	await utils.exec("sudo", [
-		"ln",
-		"-sf",
-		"/usr/share/zoneinfo/Etc/UTC",
-		"/etc/localtime",
-	]);
-	await apt.runAptGetInstall(["tzdata"]);
+  // Enforce UTC time for consistency.
+  await utils.exec("sudo", ["bash", "-c", "echo 'Etc/UTC' > /etc/timezone"]);
+  await utils.exec("sudo", [
+    "ln",
+    "-sf",
+    "/usr/share/zoneinfo/Etc/UTC",
+    "/etc/localtime",
+  ]);
+  await apt.runAptGetInstall(["tzdata"]);
 }
 
 /**
@@ -51,10 +51,10 @@ async function configOs(): Promise<void> {
  * This is necessary even when building from source to install colcon, vcs, etc.
  */
 async function addAptRepoKey(): Promise<void> {
-	await utils.exec("sudo", [
+  await utils.exec("sudo", [
     "bash",
     "-c",
-    `wget --no-check-certificate https://packages.osrfoundation.org/gazebo.gpg -O \
+    `wget https://packages.osrfoundation.org/gazebo.gpg -O \
     /usr/share/keyrings/pkgs-osrf-archive-keyring.gpg`,
   ]);
 }
@@ -72,21 +72,21 @@ async function addAptRepo(ubuntuCodename: string): Promise<void> {
     http://packages.osrfoundation.org/gazebo/ubuntu-stable ${ubuntuCodename} main" | \
     sudo tee /etc/apt/sources.list.d/gazebo-stable.list > /dev/null`,
   ]);
-	await utils.exec("sudo", ["apt-get", "update"]);
+  await utils.exec("sudo", ["apt-get", "update"]);
 }
 
 /**
  * Install Gazebo on a Linux worker.
  */
 export async function runLinux(): Promise<void> {
-	await configOs();
+  await configOs();
   await addAptRepoKey();
 
   // Add repo according to Ubuntu version
-	const ubuntuCodename = await utils.determineDistribCodename();
-	await addAptRepo(ubuntuCodename);
+  const ubuntuCodename = await utils.determineDistribCodename();
+  await addAptRepo(ubuntuCodename);
 
   for (const gazeboDistro of utils.getRequiredGazeboDistributions()) {
-		await apt.runAptGetInstall([`gz-${gazeboDistro}`]);
-	}
+    await apt.runAptGetInstall([`gz-${gazeboDistro}`]);
+  }
 }
