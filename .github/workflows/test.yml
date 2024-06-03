@@ -19,31 +19,34 @@ jobs:
           # Gazebo Citadel (Dec 2019 - Dec 2024)
           - docker_image: ubuntu:focal
             gazebo_distribution: citadel
-            gazebo_version: ign
 
           # Gazebo Fortress (Sep 2021 - Sep 2026)
           - docker_image: ubuntu:focal
             gazebo_distribution: fortress
-            gazebo_version: ign
 
           # Gazebo Garden (Sep 2022 - Nov 2024)
           - docker_image: ubuntu:focal
             gazebo_distribution: garden
-            gazebo_version: gz
 
           # Gazebo Harmonic (Sep 2023 - Sep 2028)
           - docker_image: ubuntu:jammy
             gazebo_distribution: harmonic
-            gazebo_version: gz
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4.0.2
         with:
           node-version: "20.x"
-      - uses: ./
+      - name: 'Check Gazebo installation on Ubuntu runner'
+        uses: ./
         with:
           required-gazebo-distributions: ${{ matrix.gazebo_distribution }}
-      - run: ign gazebo --versions
-        if: matrix.gazebo_version == 'ign'
-      - run: gz sim --versions
-        if: matrix.gazebo_version == 'gz'
+      - name: 'Test Gazebo installation'
+        run: |
+          if command -v ign > /dev/null; then
+            ign gazebo --versions
+          elif command -v gz > /dev/null; then
+            gz sim --versions
+          else
+            echo "Neither ign nor gz command found"
+            exit 1
+          fi
