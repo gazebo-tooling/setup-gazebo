@@ -13,7 +13,8 @@ required-gazebo-distributions:
 
       Multiple values can be passed using a whitespace delimited list
       "fortress garden".
-    required: true
+    required: false
+    default: ''
 runs:
   using: node20
   main: dist/index.js
