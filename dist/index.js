@@ -26285,7 +26285,7 @@ function configOs() {
         yield utils.exec("sudo", ["bash", "-c", "echo 'Etc/UTC' > /etc/timezone"]);
         yield utils.exec("sudo", ["apt-get", "update"]);
         // Install tools required to configure the worker system.
-        yield apt.runAptGetInstall(["wget", "curl", "gnupg2", "locales", "lsb-release"]);
+        yield apt.runAptGetInstall(["wget", "curl", "gnupg2", "locales", "lsb-release", "ca-certificates"]);
         // Select a locale supporting Unicode.
         yield utils.exec("sudo", ["locale-gen", "en_US", "en_US.UTF-8"]);
         core.exportVariable("LANG", "en_US.UTF-8");
