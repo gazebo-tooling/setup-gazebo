@@ -26189,7 +26189,6 @@ exports.runAptGetInstall = void 0;
 const utils = __importStar(__nccwpck_require__(1314));
 const aptCommandLine = [
     "DEBIAN_FRONTEND=noninteractive",
-    "RTI_NC_LICENSE_ACCEPTED=yes",
     "apt-get",
     "install",
     "--no-install-recommends",
@@ -26311,7 +26310,7 @@ function addAptRepoKey() {
         yield utils.exec("sudo", [
             "bash",
             "-c",
-            `wget --no-check-certificate https://packages.osrfoundation.org/gazebo.gpg -O \
+            `wget https://packages.osrfoundation.org/gazebo.gpg -O \
     /usr/share/keyrings/pkgs-osrf-archive-keyring.gpg`,
         ]);
     });

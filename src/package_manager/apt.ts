@@ -2,7 +2,6 @@ import * as utils from "../utils";
 
 const aptCommandLine: string[] = [
   "DEBIAN_FRONTEND=noninteractive",
-  "RTI_NC_LICENSE_ACCEPTED=yes",
   "apt-get",
   "install",
   "--no-install-recommends",
