@@ -1,6 +1,13 @@
 name: 'Test setup-gazebo'
 on:
-  workflow_dispatch:
+  pull_request:
+  push:
+    branches:
+      - main
+      - "releases/*"
+  schedule:
+    # Run the CI automatically twice per day to look for flakyness.
+    - cron: "0 */12 * * *"
 jobs:
   test_gazebo_install_ubuntu:
     name: 'Check installation of Gazebo on Ubuntu'
