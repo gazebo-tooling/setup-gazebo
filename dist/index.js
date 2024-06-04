@@ -26189,7 +26189,6 @@ exports.runAptGetInstall = void 0;
 const utils = __importStar(__nccwpck_require__(1314));
 const aptCommandLine = [
     "DEBIAN_FRONTEND=noninteractive",
-    "RTI_NC_LICENSE_ACCEPTED=yes",
     "apt-get",
     "install",
     "--no-install-recommends",
@@ -26286,7 +26285,7 @@ function configOs() {
         yield utils.exec("sudo", ["bash", "-c", "echo 'Etc/UTC' > /etc/timezone"]);
         yield utils.exec("sudo", ["apt-get", "update"]);
         // Install tools required to configure the worker system.
-        yield apt.runAptGetInstall(["curl", "gnupg2", "locales", "lsb-release"]);
+        yield apt.runAptGetInstall(["wget", "curl", "gnupg2", "locales", "lsb-release", "ca-certificates"]);
         // Select a locale supporting Unicode.
         yield utils.exec("sudo", ["locale-gen", "en_US", "en_US.UTF-8"]);
         core.exportVariable("LANG", "en_US.UTF-8");
@@ -26302,11 +26301,50 @@ function configOs() {
     });
 }
 /**
+ * Add OSRF APT repository key.
+ *
+ * This is necessary even when building from source to install colcon, vcs, etc.
+ */
+function addAptRepoKey() {
+    return __awaiter(this, void 0, void 0, function* () {
+        yield utils.exec("sudo", [
+            "bash",
+            "-c",
+            `wget https://packages.osrfoundation.org/gazebo.gpg -O \
+    /usr/share/keyrings/pkgs-osrf-archive-keyring.gpg`,
+        ]);
+    });
+}
+/**
+ * Add OSRF APT repository.
+ *
+ * @param ubuntuCodename the Ubuntu version codename
+ */
+function addAptRepo(ubuntuCodename) {
+    return __awaiter(this, void 0, void 0, function* () {
+        yield utils.exec("sudo", [
+            "bash",
+            "-c",
+            `echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg] \
+    http://packages.osrfoundation.org/gazebo/ubuntu-stable ${ubuntuCodename} main" | \
+    sudo tee /etc/apt/sources.list.d/gazebo-stable.list > /dev/null`,
+        ]);
+        yield utils.exec("sudo", ["apt-get", "update"]);
+    });
+}
+/**
  * Install Gazebo on a Linux worker.
  */
 function runLinux() {
     return __awaiter(this, void 0, void 0, function* () {
         yield configOs();
+        yield addAptRepoKey();
+        // Add repo according to Ubuntu version
+        const ubuntuCodename = yield utils.determineDistribCodename();
+        yield addAptRepo(ubuntuCodename);
+        for (const gazeboDistro of utils.getRequiredGazeboDistributions()) {
+            yield apt.runAptGetInstall([`gz-${gazeboDistro}`]);
+        }
     });
 }
 exports.runLinux = runLinux;
@@ -26411,7 +26449,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.determineDistribCodename = exports.exec = void 0;
+exports.getRequiredGazeboDistributions = exports.validateDistro = exports.determineDistribCodename = exports.exec = void 0;
 const actions_exec = __importStar(__nccwpck_require__(1514));
 const core = __importStar(__nccwpck_require__(2186));
 /**
@@ -26455,6 +26493,44 @@ function determineDistribCodename() {
     });
 }
 exports.determineDistribCodename = determineDistribCodename;
+// List of valid Gazebo distributions
+const validDistro = ["citadel", "fortress", "garden", "harmonic"];
+/**
+ * Validate all Gazebo input distribution names
+ *
+ * @param requiredGazeboDistributionsList
+ * @returns boolean Validity of Gazebo distribution
+ */
+function validateDistro(requiredGazeboDistributionsList) {
+    for (const gazeboDistro of requiredGazeboDistributionsList) {
+        if (validDistro.indexOf(gazeboDistro) <= -1) {
+            return false;
+        }
+    }
+    return true;
+}
+exports.validateDistro = validateDistro;
+/**
+ * Gets the input of the Gazebo distributions to be installed and
+ * validates them
+ *
+ * @returns string[] List of validated Gazebo distributions
+ */
+function getRequiredGazeboDistributions() {
+    let requiredGazeboDistributionsList = [];
+    const requiredGazeboDistributions = core.getInput("required-gazebo-distributions");
+    if (requiredGazeboDistributions) {
+        requiredGazeboDistributionsList = requiredGazeboDistributions.split(RegExp("\\s"));
+    }
+    else {
+        throw new Error("Input cannot be empty.");
+    }
+    if (!validateDistro(requiredGazeboDistributionsList)) {
+        throw new Error("Input has invalid distribution names.");
+    }
+    return requiredGazeboDistributionsList;
+}
+exports.getRequiredGazeboDistributions = getRequiredGazeboDistributions;
 
 
 /***/ }),
