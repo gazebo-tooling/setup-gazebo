@@ -1,12 +1,12 @@
 {
-  "compilerOptions": {
-    "target": "es6",
-    "module": "commonjs",
-    "rootDir": "src",
-    "outDir": "lib",
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "strict": true,
-    "skipLibCheck": true
-  }
+	"compilerOptions": {
+		"target": "es6",
+		"module": "commonjs",
+		"rootDir": "src",
+		"outDir": "lib",
+		"esModuleInterop": true,
+		"forceConsistentCasingInFileNames": true,
+		"strict": true,
+		"skipLibCheck": true
+	}
 }

@@ -1,12 +1,12 @@
 import * as utils from "../utils";
 
 const aptCommandLine: string[] = [
-  "DEBIAN_FRONTEND=noninteractive",
-  "apt-get",
-  "install",
-  "--no-install-recommends",
-  "--quiet",
-  "--yes",
+	"DEBIAN_FRONTEND=noninteractive",
+	"apt-get",
+	"install",
+	"--no-install-recommends",
+	"--quiet",
+	"--yes",
 ];
 
 /**
@@ -23,5 +23,5 @@ const aptCommandLine: string[] = [
  * @returns Promise<number> exit code
  */
 export async function runAptGetInstall(packages: string[]): Promise<number> {
-  return utils.exec("sudo", aptCommandLine.concat(packages));
+	return utils.exec("sudo", aptCommandLine.concat(packages));
 }
