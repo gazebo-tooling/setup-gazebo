@@ -5,6 +5,9 @@
 	"scripts": {
 		"build": "ncc build src/setup-gazebo.ts -o dist",
 		"test": "echo \"Error: no test specified\" && exit 1",
+		"fixup": "eslint . --fix",
+		"lint": "eslint .",
+		"prettier": "prettier --write .",
 		"prepare": "husky"
 	},
 	"keywords": [],
