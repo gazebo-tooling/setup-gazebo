@@ -8,6 +8,9 @@ on:
   schedule:
     # Run the CI automatically twice per day to look for flakyness.
     - cron: "0 */12 * * *"
+defaults:
+  run:
+    shell: bash
 jobs:
   test_gazebo_install_ubuntu:
     name: 'Check installation of Gazebo on Ubuntu'
