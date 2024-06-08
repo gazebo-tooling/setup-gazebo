@@ -1,20 +1,47 @@
 {
 	"name": "setup-gazebo",
-	"version": "1.0.0",
+	"version": "0.0.1",
+	"description": "GitHub action to setup a Gazebo release in a supported platform",
 	"main": "lib/main.js",
 	"scripts": {
 		"build": "ncc build src/setup-gazebo.ts -o dist",
-		"test": "echo \"Error: no test specified\" && exit 1",
+		"test": "tsc --noEmit && jest --coverage",
 		"fixup": "eslint . --fix",
 		"lint": "eslint .",
 		"prettier": "prettier --write .",
 		"prepare": "husky"
 	},
-	"keywords": [],
-	"author": "",
-	"license": "ISC",
-	"description": "",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/gazebo-tooling/setup-gazebo.git"
+	},
+	"bugs": {
+		"url": "https://github.com/gazebo-tooling/setup-gazebo/issues"
+	},
+	"keywords": [
+		"actions",
+		"gazebo",
+		"setup"
+	],
+	"author": {
+		"name": "Saurabh Kamat",
+		"email": "kamatsaurabh01@gmail.com"
+	},
+	"contributors": [
+		{
+			"name": "Jose Luis Rivero",
+			"email": "jrivero@osrfoundation.org"
+		}
+	],
+	"license": "Apache-2.0",
+	"licenses": [
+		{
+			"type": "Apache-2.0",
+			"url": "http://www.apache.org/licenses/LICENSE-2.0"
+		}
+	],
 	"devDependencies": {
+		"@types/jest": "^29.5.12",
 		"@types/node": "^20.12.13",
 		"@typescript-eslint/eslint-plugin": "^7.12.0",
 		"@typescript-eslint/parser": "^7.12.0",
@@ -22,8 +49,10 @@
 		"eslint-config-prettier": "^9.1.0",
 		"eslint-plugin-prettier": "^5.1.3",
 		"husky": "^8.0.0",
+		"jest": "^29.7.0",
 		"lint-staged": "^15.2.5",
 		"prettier": "^3.3.1",
+		"ts-jest": "^29.1.4",
 		"typescript": "^5.4.5"
 	},
 	"dependencies": {
