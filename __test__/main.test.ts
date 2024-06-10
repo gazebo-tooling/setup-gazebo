@@ -36,7 +36,7 @@ describe("workflow test with a invalid distro input", () => {
 describe("workflow test with a valid distro input", () => {
 	beforeAll(() => {
 		jest.spyOn(exec, "exec").mockImplementation(jest.fn());
-		jest.spyOn(core, "getInput").mockReturnValue("citadel");
+		jest.spyOn(core, "getInput").mockReturnValue("harmonic");
 	});
 
 	afterAll(() => {
