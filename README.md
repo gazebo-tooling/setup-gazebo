@@ -3,7 +3,7 @@
 This action sets up a Gazebo release inside a Linux environment.
 
 1. [Overview](#Overview)
-1. [Supported Gazebo releases](#Supported-Gazebo-releases)
+1. [Supported platforms](#Supported-platforms)
 1. [Tasks performed by the action](#Tasks-performed-by-the-action)
 1. [Usage](#Usage)
     1. [Setting up worker and installing a compatible Gazebo and Ubuntu combination](#Setting-up-worker-and-installing-a-compatible-Gazebo-and-Ubuntu-combination)
@@ -14,18 +14,14 @@ This action sets up a Gazebo release inside a Linux environment.
 
 The `setup-gazebo` GitHub Action sets up an environment to install a Gazebo release in a compatible Ubuntu distribution. The action requires a Gazebo release name as an input for the `required-gazebo-distributions` field.
 
-It is recommended to use the `setup-gazebo` action inside a Docker container.
+It is recommended to use the `setup-gazebo` action inside a Docker container due to the flaky nature of GitHub actions Linux workers.
 
-## Supported Gazebo releases
+## Supported platforms
 
-This action currently supports the installation of four Gazebo [releases]. The following table lists the release name, EOL date and the supported operating system.
+`setup-gazebo` action works for all non-EOL Gazebo [releases] on [officially] supported platforms (Ubuntu).
 
-| Release Name | EOL Date | Supported OS |
-| ------------ | -------- | ------------ |
-| Harmonic     | Sep 2028 | Ubuntu Jammy |
-| Garden       | Nov 2024 | Ubuntu Focal |
-| Fortress     | Sep 2026 | Ubuntu Focal |
-| Citadel      | Dec 2024 | Ubuntu Focal |
+> [!NOTE]
+> There is a plan to implement this action for the [best-effort] supported platforms.
 
 ## Tasks performed by the action
 
@@ -43,9 +39,9 @@ See [action.yml](action.yml)
 >
 > `setup-gazebo` is under active development. This action is currently being tested, and has not been released to GitHub Marketplace yet.
 >
-> This action can be used with `gazebo-tooling/setup-gazebo@main`. But it needs to be used with caution!
+> When using this action in your workflows, it is advisable to use a full commit hash as a suffix - `gazebo-tooling/setup-gazebo@<full_commit_hash>`.
 >
-> Instead, it is advisable to use a full commit hash in your workflows - `gazebo-tooling/setup-gazebo@<full_commit_hash>`.
+> This action can also be used with the `main` branch - `gazebo-tooling/setup-gazebo@main`. Use with caution as compatibility is not guaranteed!
 
 ### Setting up worker and installing a compatible Gazebo and Ubuntu combination
 
@@ -58,13 +54,13 @@ The following code snippet shows the installation of Gazebo Garden on Ubuntu Foc
     build_docker:
       runs-on: ubuntu-latest
       container:
-        image: ubuntu:focal
+        image: ubuntu:noble
       steps:
         - name: 'Setup Gazebo'
           uses: gazebo-tooling/setup-gazebo@<full_commit_hash>
           with:
-            required-gazebo-distributions: garden
-        -run: 'gz sim --versions'
+            required-gazebo-distributions: harmonic
+        - run: 'gz sim --versions'
 ```
 
 ### Iterating on all Gazebo and Ubuntu combinations
@@ -126,3 +122,5 @@ This workflow shows how to spawn one job per Gazebo release. It iterates over al
 The scripts and documentation in this project are released under the [Apache 2](LICENSE) license.
 
 [releases]: https://gazebosim.org/docs/all/releases
+[officially]: https://gazebosim.org/docs/harmonic/releases#supported-platforms
+[best-effort]: https://gazebosim.org/docs/harmonic/releases#supported-platforms
