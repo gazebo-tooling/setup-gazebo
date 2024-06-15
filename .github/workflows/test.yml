@@ -100,5 +100,6 @@ jobs:
         uses: ./
         with:
           required-gazebo-distributions: 'harmonic'
+          use-gazebo-prerelease: 'true'
       - name: 'Test Gazebo installation'
         run: 'gz sim --versions'
