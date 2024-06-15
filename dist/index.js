@@ -26336,7 +26336,35 @@ function addAptRepo(ubuntuCodename) {
     http://packages.osrfoundation.org/gazebo/ubuntu-stable ${ubuntuCodename} main" | \
     sudo tee /etc/apt/sources.list.d/gazebo-stable.list > /dev/null`,
         ]);
+        const unstableRepo = yield checkForUnstableAptRepos();
+        if (unstableRepo !== "") {
+            yield utils.exec("sudo", [
+                "bash",
+                "-c",
+                `echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg] \
+      http://packages.osrfoundation.org/gazebo/${unstableRepo} ${ubuntuCodename} main" | \
+      sudo tee /etc/apt/sources.list.d/gazebo-stable.list > /dev/null`,
+            ]);
+        }
         yield utils.exec("sudo", ["apt-get", "update"]);
+    });
+}
+function checkForUnstableAptRepos() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const useGazeboPrerelease = core.getInput("use-gazebo-prerelease") === "true";
+        const useGazeboNightly = core.getInput("use-gazebo-nightly") === "true";
+        if (useGazeboPrerelease && useGazeboNightly) {
+            throw new Error("Cannot select Gazebo pre-release and nightly together.");
+        }
+        if (useGazeboPrerelease) {
+            return "ubuntu-prerelease";
+        }
+        else if (useGazeboNightly) {
+            return "ubuntu-nightly";
+        }
+        else {
+            return "";
+        }
     });
 }
 /**

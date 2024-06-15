@@ -1,20 +1,31 @@
 name: 'Setup Gazebo release'
 description: |
   Install a Gazebo release on a Linux system
-required-gazebo-distributions:
+inputs:
+  required-gazebo-distributions:
+      description: |
+        List of Gazebo distributions to be installed.
+
+        Allowed Gazebo distributions
+        - citadel
+        - fortress
+        - garden
+        - harmonic
+
+        Multiple values can be passed using a whitespace delimited list
+        "fortress garden".
+      required: false
+      default: ''
+  use-gazebo-prerelease:
     description: |
-      List of Gazebo distributions to be installed.
-
-      Allowed Gazebo distributions
-      - citadel
-      - fortress
-      - garden
-      - harmonic
-
-      Multiple values can be passed using a whitespace delimited list
-      "fortress garden".
+      Use pre-release binaries from OSRF repository
     required: false
-    default: ''
+    default: 'false'
+  use-gazebo-nightly:
+    description: |
+      Use nightly binaries from OSRF repository
+    required: false
+    default: 'false'
 runs:
   using: node20
   main: dist/index.js
