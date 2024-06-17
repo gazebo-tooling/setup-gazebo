@@ -79,8 +79,8 @@ async function addAptRepo(ubuntuCodename: string): Promise<void> {
     http://packages.osrfoundation.org/gazebo/ubuntu-stable ${ubuntuCodename} main" | \
     sudo tee /etc/apt/sources.list.d/gazebo-stable.list > /dev/null`,
 	]);
-	const unstableRepo = await checkForUnstableAptRepos();
-	if (unstableRepo !== "") {
+	const unstableRepos = await checkForUnstableAptRepos();
+	for (const unstableRepo of unstableRepos) {
 		await utils.exec("sudo", [
 			"bash",
 			"-c",
@@ -92,20 +92,22 @@ async function addAptRepo(ubuntuCodename: string): Promise<void> {
 	await utils.exec("sudo", ["apt-get", "update"]);
 }
 
-async function checkForUnstableAptRepos(): Promise<string> {
+/**
+ * Check for unstable repository inputs
+ *
+ * @returns unstableRepos unstable repository names
+ */
+async function checkForUnstableAptRepos(): Promise<string[]> {
+	const unstableRepos: string[] = [];
 	const useGazeboPrerelease = core.getInput("use-gazebo-prerelease") === "true";
-	const useGazeboNightly = core.getInput("use-gazebo-nightly") === "true";
-	if (useGazeboPrerelease && useGazeboNightly) {
-		throw new Error("Cannot select Gazebo pre-release and nightly together.");
-	}
-
 	if (useGazeboPrerelease) {
-		return "prerelease";
-	} else if (useGazeboNightly) {
-		return "nightly";
-	} else {
-		return "";
+		unstableRepos.push("prerelease");
 	}
+	const useGazeboNightly = core.getInput("use-gazebo-nightly") === "true";
+	if (useGazeboNightly) {
+		unstableRepos.push("nightly");
+	}
+	return unstableRepos;
 }
 
 /**

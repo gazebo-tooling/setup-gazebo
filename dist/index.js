@@ -26336,8 +26336,8 @@ function addAptRepo(ubuntuCodename) {
     http://packages.osrfoundation.org/gazebo/ubuntu-stable ${ubuntuCodename} main" | \
     sudo tee /etc/apt/sources.list.d/gazebo-stable.list > /dev/null`,
         ]);
-        const unstableRepo = yield checkForUnstableAptRepos();
-        if (unstableRepo !== "") {
+        const unstableRepos = yield checkForUnstableAptRepos();
+        for (const unstableRepo of unstableRepos) {
             yield utils.exec("sudo", [
                 "bash",
                 "-c",
@@ -26349,22 +26349,23 @@ function addAptRepo(ubuntuCodename) {
         yield utils.exec("sudo", ["apt-get", "update"]);
     });
 }
+/**
+ * Check for unstable repository inputs
+ *
+ * @returns unstableRepos unstable repository names
+ */
 function checkForUnstableAptRepos() {
     return __awaiter(this, void 0, void 0, function* () {
+        const unstableRepos = [];
         const useGazeboPrerelease = core.getInput("use-gazebo-prerelease") === "true";
-        const useGazeboNightly = core.getInput("use-gazebo-nightly") === "true";
-        if (useGazeboPrerelease && useGazeboNightly) {
-            throw new Error("Cannot select Gazebo pre-release and nightly together.");
-        }
         if (useGazeboPrerelease) {
-            return "prerelease";
+            unstableRepos.push("prerelease");
         }
-        else if (useGazeboNightly) {
-            return "nightly";
+        const useGazeboNightly = core.getInput("use-gazebo-nightly") === "true";
+        if (useGazeboNightly) {
+            unstableRepos.push("nightly");
         }
-        else {
-            return "";
-        }
+        return unstableRepos;
     });
 }
 /**
