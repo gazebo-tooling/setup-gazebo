@@ -91,3 +91,21 @@ export function getRequiredGazeboDistributions(): string[] {
 	}
 	return requiredGazeboDistributionsList;
 }
+
+/**
+ * Check for unstable repository inputs
+ *
+ * @returns unstableRepos unstable repository names
+ */
+export function checkForUnstableAptRepos(): string[] {
+	const unstableRepos: string[] = [];
+	const useGazeboPrerelease = core.getInput("use-gazebo-prerelease") === "true";
+	if (useGazeboPrerelease) {
+		unstableRepos.push("prerelease");
+	}
+	const useGazeboNightly = core.getInput("use-gazebo-nightly") === "true";
+	if (useGazeboNightly) {
+		unstableRepos.push("nightly");
+	}
+	return unstableRepos;
+}

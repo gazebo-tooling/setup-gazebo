@@ -26336,7 +26336,7 @@ function addAptRepo(ubuntuCodename) {
     http://packages.osrfoundation.org/gazebo/ubuntu-stable ${ubuntuCodename} main" | \
     sudo tee /etc/apt/sources.list.d/gazebo-stable.list > /dev/null`,
         ]);
-        const unstableRepos = yield checkForUnstableAptRepos();
+        const unstableRepos = utils.checkForUnstableAptRepos();
         for (const unstableRepo of unstableRepos) {
             yield utils.exec("sudo", [
                 "bash",
@@ -26347,25 +26347,6 @@ function addAptRepo(ubuntuCodename) {
             ]);
         }
         yield utils.exec("sudo", ["apt-get", "update"]);
-    });
-}
-/**
- * Check for unstable repository inputs
- *
- * @returns unstableRepos unstable repository names
- */
-function checkForUnstableAptRepos() {
-    return __awaiter(this, void 0, void 0, function* () {
-        const unstableRepos = [];
-        const useGazeboPrerelease = core.getInput("use-gazebo-prerelease") === "true";
-        if (useGazeboPrerelease) {
-            unstableRepos.push("prerelease");
-        }
-        const useGazeboNightly = core.getInput("use-gazebo-nightly") === "true";
-        if (useGazeboNightly) {
-            unstableRepos.push("nightly");
-        }
-        return unstableRepos;
     });
 }
 /**
@@ -26485,7 +26466,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getRequiredGazeboDistributions = exports.validateDistro = exports.determineDistribCodename = exports.exec = void 0;
+exports.checkForUnstableAptRepos = exports.getRequiredGazeboDistributions = exports.validateDistro = exports.determineDistribCodename = exports.exec = void 0;
 const actions_exec = __importStar(__nccwpck_require__(1514));
 const core = __importStar(__nccwpck_require__(2186));
 /**
@@ -26567,6 +26548,24 @@ function getRequiredGazeboDistributions() {
     return requiredGazeboDistributionsList;
 }
 exports.getRequiredGazeboDistributions = getRequiredGazeboDistributions;
+/**
+ * Check for unstable repository inputs
+ *
+ * @returns unstableRepos unstable repository names
+ */
+function checkForUnstableAptRepos() {
+    const unstableRepos = [];
+    const useGazeboPrerelease = core.getInput("use-gazebo-prerelease") === "true";
+    if (useGazeboPrerelease) {
+        unstableRepos.push("prerelease");
+    }
+    const useGazeboNightly = core.getInput("use-gazebo-nightly") === "true";
+    if (useGazeboNightly) {
+        unstableRepos.push("nightly");
+    }
+    return unstableRepos;
+}
+exports.checkForUnstableAptRepos = checkForUnstableAptRepos;
 
 
 /***/ }),

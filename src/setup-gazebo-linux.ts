@@ -79,7 +79,7 @@ async function addAptRepo(ubuntuCodename: string): Promise<void> {
     http://packages.osrfoundation.org/gazebo/ubuntu-stable ${ubuntuCodename} main" | \
     sudo tee /etc/apt/sources.list.d/gazebo-stable.list > /dev/null`,
 	]);
-	const unstableRepos = await checkForUnstableAptRepos();
+	const unstableRepos = utils.checkForUnstableAptRepos();
 	for (const unstableRepo of unstableRepos) {
 		await utils.exec("sudo", [
 			"bash",
@@ -90,24 +90,6 @@ async function addAptRepo(ubuntuCodename: string): Promise<void> {
 		]);
 	}
 	await utils.exec("sudo", ["apt-get", "update"]);
-}
-
-/**
- * Check for unstable repository inputs
- *
- * @returns unstableRepos unstable repository names
- */
-async function checkForUnstableAptRepos(): Promise<string[]> {
-	const unstableRepos: string[] = [];
-	const useGazeboPrerelease = core.getInput("use-gazebo-prerelease") === "true";
-	if (useGazeboPrerelease) {
-		unstableRepos.push("prerelease");
-	}
-	const useGazeboNightly = core.getInput("use-gazebo-nightly") === "true";
-	if (useGazeboNightly) {
-		unstableRepos.push("nightly");
-	}
-	return unstableRepos;
 }
 
 /**
