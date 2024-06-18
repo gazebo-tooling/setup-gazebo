@@ -8,6 +8,7 @@ This action sets up a Gazebo release inside a Linux environment.
 1. [Usage](#Usage)
     1. [Setting up worker and installing a compatible Gazebo and Ubuntu combination](#Setting-up-worker-and-installing-a-compatible-Gazebo-and-Ubuntu-combination)
     1. [Iterating on all Gazebo and Ubuntu combinations](#Iterating-on-all-gazebo-ubuntu-combinations)
+    1. [Using pre-release and/or nightly Gazebo binaries](#Using-pre-release-and/or-nightly-Gazebo-binaries)
 1. [License](#License)
 
 ## Overview
@@ -47,74 +48,106 @@ See [action.yml](action.yml)
 
 This workflow shows how to spawn a job to install Gazebo using the action. The action needs an input in the `required-gazebo-distributions` field and requires a Docker configuration to run seamlessly.
 
-The following code snippet shows the installation of Gazebo Garden on Ubuntu Focal.
+The following code snippet shows the installation of Gazebo Harmonic on Ubuntu Noble.
 
 ```yaml
   jobs:
-    build_docker:
+    test_gazebo:
       runs-on: ubuntu-latest
       container:
         image: ubuntu:noble
       steps:
+        - uses: actions/checkout@v4
+        - uses: actions/setup-node@v4.0.2
+          with:
+            node-version: '20.x'
         - name: 'Setup Gazebo'
           uses: gazebo-tooling/setup-gazebo@<full_commit_hash>
           with:
             required-gazebo-distributions: harmonic
-        - run: 'gz sim --versions'
+        - name: 'Test Gazebo installation'
+          run: 'gz sim --versions'
 ```
 
 ### Iterating on all Gazebo and Ubuntu combinations
 
-This workflow shows how to spawn one job per Gazebo release. It iterates over all specified Gazebo and Ubuntu combinations using Docker. For example, Gazebo Garden requires Ubuntu Focal while Gazebo Harmonic requires Ubuntu Jammy.
+This workflow shows how to spawn one job per Gazebo release. It iterates over all specified Gazebo and Ubuntu combinations using Docker. For example, Gazebo Garden is paired with Ubuntu Focal while Gazebo Harmonic is paired with Ubuntu Jammy.
 
 ```yaml
-  test_gazebo:
-    runs-on: ubuntu-latest
-    container:
-      image: ${{ matrix.docker_image }}
-    strategy:
-      fail-fast: false
-      matrix:
-        gazebo_distribution:
-          - citadel
-          - fortress
-          - garden
-          - harmonic
-        include:
-          # Gazebo Citadel (Dec 2019 - Dec 2024)
-          - docker_image: ubuntu:focal
-            gazebo_distribution: citadel
+  jobs:
+    test_gazebo:
+      runs-on: ubuntu-latest
+      container:
+        image: ${{ matrix.docker_image }}
+      strategy:
+        fail-fast: false
+        matrix:
+          gazebo_distribution:
+            - citadel
+            - fortress
+            - garden
+            - harmonic
+          include:
+            # Gazebo Citadel (Dec 2019 - Dec 2024)
+            - docker_image: ubuntu:focal
+              gazebo_distribution: citadel
 
-          # Gazebo Fortress (Sep 2021 - Sep 2026)
-          - docker_image: ubuntu:focal
-            gazebo_distribution: fortress
+            # Gazebo Fortress (Sep 2021 - Sep 2026)
+            - docker_image: ubuntu:focal
+              gazebo_distribution: fortress
 
-          # Gazebo Garden (Sep 2022 - Nov 2024)
-          - docker_image: ubuntu:focal
-            gazebo_distribution: garden
+            # Gazebo Garden (Sep 2022 - Nov 2024)
+            - docker_image: ubuntu:focal
+              gazebo_distribution: garden
 
-          # Gazebo Harmonic (Sep 2023 - Sep 2028)
-          - docker_image: ubuntu:jammy
-            gazebo_distribution: harmonic
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4.0.2
-        with:
-          node-version: '20.x'
-      - name: 'Check Gazebo installation on Ubuntu runner'
-        uses: gazebo-tooling/setup-gazebo@<full_commit_hash>
-        with:
-          required-gazebo-distributions: ${{ matrix.gazebo_distribution }}
-      - name: 'Test Gazebo installation'
-        run: |
-          if command -v ign > /dev/null; then
-            ign gazebo --versions
-          elif command -v gz > /dev/null; then
-            gz sim --versions
-          else
-            echo "Neither ign nor gz command found"
-            exit 1
-          fi
+            # Gazebo Harmonic (Sep 2023 - Sep 2028)
+            - docker_image: ubuntu:jammy
+              gazebo_distribution: harmonic
+      steps:
+        - uses: actions/checkout@v4
+        - uses: actions/setup-node@v4.0.2
+          with:
+            node-version: '20.x'
+        - name: 'Check Gazebo installation on Ubuntu runner'
+          uses: gazebo-tooling/setup-gazebo@<full_commit_hash>
+          with:
+            required-gazebo-distributions: ${{ matrix.gazebo_distribution }}
+        - name: 'Test Gazebo installation'
+          run: |
+            if command -v ign > /dev/null; then
+              ign gazebo --versions
+            elif command -v gz > /dev/null; then
+              gz sim --versions
+            else
+              echo "Neither ign nor gz command found"
+              exit 1
+            fi
+```
+
+### Using pre-release and/or nightly Gazebo binaries
+
+This workflow shows how to use binaries from [pre-release] or [nightly] Gazebo repositories instead of the stable repository by setting the `use-gazebo-prerelease` or `use-gazebo-nightly` to `true`.
+
+```yaml
+  jobs:
+    test_gazebo:
+        name: 'Check installation of Gazebo nightly binary on Ubuntu'
+        runs-on: ubuntu-latest
+        container:
+          image: ubuntu:noble
+        steps:
+          - uses: actions/checkout@v4
+          - uses: actions/setup-node@v4.0.2
+            with:
+              node-version: '20.x'
+          - name: 'Check Gazebo installation on Ubuntu runner'
+            uses: gazebo-tooling/setup-gazebo@<full_commit_hash>
+            with:
+              required-gazebo-distributions: 'harmonic'
+              use-gazebo-prerelease: 'true'
+              use-gazebo-nightly: 'true'
+          - name: 'Test Gazebo installation'
+            run: 'gz sim --versions'
 ```
 
 ## License
@@ -124,3 +157,5 @@ The scripts and documentation in this project are released under the [Apache 2](
 [releases]: https://gazebosim.org/docs/all/releases
 [officially]: https://gazebosim.org/docs/harmonic/releases#supported-platforms
 [best-effort]: https://gazebosim.org/docs/harmonic/releases#supported-platforms
+[pre-release]: https://packages.osrfoundation.org/gazebo/ubuntu-prerelease/
+[nightly]: https://packages.osrfoundation.org/gazebo/ubuntu-nightly/
