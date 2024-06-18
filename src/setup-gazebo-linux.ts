@@ -79,6 +79,16 @@ async function addAptRepo(ubuntuCodename: string): Promise<void> {
     http://packages.osrfoundation.org/gazebo/ubuntu-stable ${ubuntuCodename} main" | \
     sudo tee /etc/apt/sources.list.d/gazebo-stable.list > /dev/null`,
 	]);
+	const unstableRepos = utils.checkForUnstableAptRepos();
+	for (const unstableRepo of unstableRepos) {
+		await utils.exec("sudo", [
+			"bash",
+			"-c",
+			`echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg] \
+      http://packages.osrfoundation.org/gazebo/ubuntu-${unstableRepo} ${ubuntuCodename} main" | \
+      sudo tee /etc/apt/sources.list.d/gazebo-${unstableRepo}.list > /dev/null`,
+		]);
+	}
 	await utils.exec("sudo", ["apt-get", "update"]);
 }
 

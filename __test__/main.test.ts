@@ -13,7 +13,7 @@ describe("workflow test without input", () => {
 		jest.resetAllMocks();
 	});
 
-	it("run Linux workflow without", async () => {
+	it("run Linux workflow without input", async () => {
 		await expect(linux.runLinux()).rejects.toThrow();
 	});
 });
@@ -28,7 +28,7 @@ describe("workflow test with a invalid distro input", () => {
 		jest.resetAllMocks();
 	});
 
-	it("run Linux workflow without", async () => {
+	it("run Linux workflow with invalid distro input", async () => {
 		await expect(linux.runLinux()).rejects.toThrow();
 	});
 });
@@ -43,7 +43,7 @@ describe("workflow test with a valid distro input", () => {
 		jest.resetAllMocks();
 	});
 
-	it("run Linux workflow without", async () => {
+	it("run Linux workflow with valid distro input", async () => {
 		await expect(linux.runLinux()).resolves.not.toThrow();
 	});
 });
@@ -66,5 +66,37 @@ describe("validate distribution test", () => {
 		await expect(utils.validateDistro(["citadel", "edifice", "harmonic"])).toBe(
 			false,
 		);
+	});
+});
+
+describe("check for unstable repositories input", () => {
+	beforeAll(() => {
+		jest.spyOn(exec, "exec").mockImplementation(jest.fn());
+		jest
+			.spyOn(utils, "checkForUnstableAptRepos")
+			.mockReturnValueOnce(["prerelease"]);
+		jest
+			.spyOn(utils, "checkForUnstableAptRepos")
+			.mockReturnValueOnce(["nightly"]);
+		jest
+			.spyOn(utils, "checkForUnstableAptRepos")
+			.mockReturnValueOnce(["prerelease", "nightly"]);
+		jest.spyOn(core, "getInput").mockReturnValue("harmonic");
+	});
+
+	afterAll(() => {
+		jest.resetAllMocks();
+	});
+
+	it("run Linux workflow with unstable repo prerelease", async () => {
+		await expect(linux.runLinux()).resolves.not.toThrow();
+	});
+
+	it("run Linux workflow with unstable repo nightly", async () => {
+		await expect(linux.runLinux()).resolves.not.toThrow();
+	});
+
+	it("run Linux workflow with both unstable repos", async () => {
+		await expect(linux.runLinux()).resolves.not.toThrow();
 	});
 });

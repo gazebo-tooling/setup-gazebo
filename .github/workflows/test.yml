@@ -79,3 +79,46 @@ jobs:
             echo "Neither ign nor gz command found"
             exit 1
           fi
+
+  test_gazebo_install_ubuntu_prerelease:
+    name: 'Check installation of Gazebo pre-release binary on Ubuntu'
+    runs-on: ubuntu-latest
+    container:
+      image: ${{ matrix.docker_image }}
+    strategy:
+      fail-fast: false
+      matrix:
+        docker_image:
+          - ubuntu:jammy
+          - ubuntu:noble
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4.0.2
+        with:
+          node-version: '20.x'
+      - name: 'Check Gazebo installation on Ubuntu runner'
+        uses: ./
+        with:
+          required-gazebo-distributions: 'harmonic'
+          use-gazebo-prerelease: 'true'
+      - name: 'Test Gazebo installation'
+        run: 'gz sim --versions'
+
+  test_gazebo_install_ubuntu_nightly:
+    name: 'Check installation of Gazebo nightly binary on Ubuntu'
+    runs-on: ubuntu-latest
+    container:
+      # Ionic should be running on Noble but existing bug is releasing it into Jammy
+      image: ubuntu:jammy
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4.0.2
+        with:
+          node-version: '20.x'
+      - name: 'Check Gazebo installation on Ubuntu runner'
+        uses: ./
+        with:
+          required-gazebo-distributions: 'ionic'
+          use-gazebo-nightly: 'true'
+      - name: 'Test Gazebo installation'
+        run: 'gz sim --versions'

@@ -49,7 +49,13 @@ export async function determineDistribCodename(): Promise<string> {
 }
 
 // List of valid Gazebo distributions
-const validDistro: string[] = ["citadel", "fortress", "garden", "harmonic"];
+const validDistro: string[] = [
+	"citadel",
+	"fortress",
+	"garden",
+	"harmonic",
+	"ionic",
+];
 
 /**
  * Validate all Gazebo input distribution names
@@ -90,4 +96,22 @@ export function getRequiredGazeboDistributions(): string[] {
 		throw new Error("Input has invalid distribution names.");
 	}
 	return requiredGazeboDistributionsList;
+}
+
+/**
+ * Check for unstable repository inputs
+ *
+ * @returns unstableRepos unstable repository names
+ */
+export function checkForUnstableAptRepos(): string[] {
+	const unstableRepos: string[] = [];
+	const useGazeboPrerelease = core.getInput("use-gazebo-prerelease") === "true";
+	if (useGazeboPrerelease) {
+		unstableRepos.push("prerelease");
+	}
+	const useGazeboNightly = core.getInput("use-gazebo-nightly") === "true";
+	if (useGazeboNightly) {
+		unstableRepos.push("nightly");
+	}
+	return unstableRepos;
 }
