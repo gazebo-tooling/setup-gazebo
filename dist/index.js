@@ -26511,7 +26511,13 @@ function determineDistribCodename() {
 }
 exports.determineDistribCodename = determineDistribCodename;
 // List of valid Gazebo distributions
-const validDistro = ["citadel", "fortress", "garden", "harmonic"];
+const validDistro = [
+    "citadel",
+    "fortress",
+    "garden",
+    "harmonic",
+    "ionic",
+];
 /**
  * Validate all Gazebo input distribution names
  *
