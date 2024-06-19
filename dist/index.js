@@ -26463,8 +26463,7 @@ const utils = __importStar(__nccwpck_require__(1314));
 const brew = __importStar(__nccwpck_require__(9586));
 function configureBrew() {
     return __awaiter(this, void 0, void 0, function* () {
-        yield utils.exec("sudo", [
-            "bash",
+        yield utils.exec("/bin/bash", [
             "-c",
             "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)",
         ]);

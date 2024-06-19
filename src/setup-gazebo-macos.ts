@@ -2,8 +2,7 @@ import * as utils from "./utils";
 import * as brew from "./package_manager/brew";
 
 async function configureBrew() {
-	await utils.exec("sudo", [
-		"bash",
+	await utils.exec("/bin/bash", [
 		"-c",
 		"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)",
 	]);
