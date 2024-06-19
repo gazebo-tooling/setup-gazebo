@@ -26461,14 +26461,12 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.runMacOs = void 0;
 const utils = __importStar(__nccwpck_require__(1314));
 const brew = __importStar(__nccwpck_require__(9586));
-function configureBrew() {
-    return __awaiter(this, void 0, void 0, function* () {
-        yield utils.exec("/bin/bash", [
-            "-c",
-            "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)",
-        ]);
-    });
-}
+// async function configureBrew() {
+// 	await utils.exec("/bin/bash", [
+// 		"-c",
+// 		"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)",
+// 	]);
+// }
 function addBrewRepo() {
     return __awaiter(this, void 0, void 0, function* () {
         yield utils.exec("brew", ["tap", "osrf/simulation"]);
@@ -26476,7 +26474,7 @@ function addBrewRepo() {
 }
 function runMacOs() {
     return __awaiter(this, void 0, void 0, function* () {
-        yield configureBrew();
+        // await configureBrew();
         yield addBrewRepo();
         for (const gazeboDistro of utils.getRequiredGazeboDistributions()) {
             yield brew.runBrew([`gz-${gazeboDistro}`]);
