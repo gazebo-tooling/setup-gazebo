@@ -1,20 +1,17 @@
 import * as utils from "./utils";
 import * as brew from "./package_manager/brew";
 
-// async function configureBrew() {
-// 	await utils.exec("/bin/bash", [
-// 		"-c",
-// 		"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)",
-// 	]);
-// }
-
+/**
+ * Tap into OSRF repository
+ */
 async function addBrewRepo() {
 	await utils.exec("brew", ["tap", "osrf/simulation"]);
 }
 
+/**
+ * Install Gazebo on MacOS worker
+ */
 export async function runMacOs() {
-	// await configureBrew();
-
 	await addBrewRepo();
 
 	for (const gazeboDistro of utils.getRequiredGazeboDistributions()) {
