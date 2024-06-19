@@ -125,7 +125,7 @@ jobs:
 
   test_gazebo_install_macos:
     name: 'Check installation of Gazebo on MacOS'
-    runs-on: macOs-latest
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4.0.2
