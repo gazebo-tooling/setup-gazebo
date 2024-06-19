@@ -26476,8 +26476,8 @@ function addBrewRepo() {
 }
 function runMacOs() {
     return __awaiter(this, void 0, void 0, function* () {
-        configureBrew();
-        addBrewRepo();
+        yield configureBrew();
+        yield addBrewRepo();
         for (const gazeboDistro of utils.getRequiredGazeboDistributions()) {
             yield brew.runBrew([`gz-${gazeboDistro}`]);
         }

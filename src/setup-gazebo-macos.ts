@@ -13,9 +13,9 @@ async function addBrewRepo() {
 }
 
 export async function runMacOs() {
-	configureBrew();
+	await configureBrew();
 
-	addBrewRepo();
+	await addBrewRepo();
 
 	for (const gazeboDistro of utils.getRequiredGazeboDistributions()) {
 		await brew.runBrew([`gz-${gazeboDistro}`]);
