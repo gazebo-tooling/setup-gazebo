@@ -130,7 +130,10 @@ jobs:
       fail-fast: false
       matrix:
         os:
+          # MacOS Monterey
           - macos-12
+
+          # MacOS Ventura
           - macos-13
     steps:
       - uses: actions/checkout@v4
