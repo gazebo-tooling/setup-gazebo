@@ -60,6 +60,9 @@ jobs:
           # Gazebo Harmonic (Sep 2023 - Sep 2028)
           - docker_image: ubuntu:jammy
             gazebo_distribution: harmonic
+
+          - docker_image: ubuntu:noble
+            gazebo_distribution: harmonic
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4.0.2
