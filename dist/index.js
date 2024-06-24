@@ -26200,12 +26200,7 @@ const aptCommandLine = [
  *
  * This invokation guarantees that APT install will be non-blocking.
  *
- * In particular, it automatically accepts the RTI Connext license, which would block forever otherwise.
- * Skipping the license agreement page requires RTI_NC_LICENSE_ACCEPTED to be set to "yes".
- * This package would normally be installed automatically by rosdep, but
- * there is no way to pass RTI_NC_LICENSE_ACCEPTED through rosdep.
- *
- * @param   packages        list of Debian pacakges to be installed
+ * @param   packages list of Debian pacakges to be installed
  * @returns Promise<number> exit code
  */
 function runAptGetInstall(packages) {
@@ -26214,6 +26209,62 @@ function runAptGetInstall(packages) {
     });
 }
 exports.runAptGetInstall = runAptGetInstall;
+
+
+/***/ }),
+
+/***/ 9586:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.runBrew = void 0;
+const utils = __importStar(__nccwpck_require__(1314));
+/**
+ * Run brew install on a list of specified packages.
+ *
+ * @param   packages list of Homebrew packages to be installed
+ * @returns Promise<number> exit code
+ */
+function runBrew(packages) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return utils.exec("brew", ["install"].concat(packages));
+    });
+}
+exports.runBrew = runBrew;
 
 
 /***/ }),
@@ -26369,6 +26420,71 @@ exports.runLinux = runLinux;
 
 /***/ }),
 
+/***/ 8247:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.runMacOs = void 0;
+const utils = __importStar(__nccwpck_require__(1314));
+const brew = __importStar(__nccwpck_require__(9586));
+/**
+ * Tap into OSRF repository
+ */
+function addBrewRepo() {
+    return __awaiter(this, void 0, void 0, function* () {
+        yield utils.exec("brew", ["tap", "osrf/simulation"]);
+    });
+}
+/**
+ * Install Gazebo on MacOS worker
+ */
+function runMacOs() {
+    return __awaiter(this, void 0, void 0, function* () {
+        yield addBrewRepo();
+        for (const gazeboDistro of utils.getRequiredGazeboDistributions()) {
+            yield brew.runBrew([`gz-${gazeboDistro}`]);
+        }
+    });
+}
+exports.runMacOs = runMacOs;
+
+
+/***/ }),
+
 /***/ 525:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -26409,10 +26525,20 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(2186));
 const linux = __importStar(__nccwpck_require__(5467));
+const macOs = __importStar(__nccwpck_require__(8247));
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            linux.runLinux();
+            const platform = process.platform;
+            if (platform === "darwin") {
+                macOs.runMacOs();
+            }
+            else if (platform === "linux") {
+                linux.runLinux();
+            }
+            else {
+                throw new Error(`Unsupported platform ${platform}`);
+            }
         }
         catch (error) {
             let errorMessage = "Unknown error";

@@ -122,3 +122,27 @@ jobs:
           use-gazebo-nightly: 'true'
       - name: 'Test Gazebo installation'
         run: 'gz sim --versions'
+
+  test_gazebo_install_macos:
+    name: 'Check installation of Gazebo on MacOS'
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          # MacOS Monterey
+          - macos-12
+
+          # MacOS Ventura
+          - macos-13
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4.0.2
+        with:
+          node-version: '20.x'
+      - name: 'Check Gazebo installation on MacOS runner'
+        uses: ./
+        with:
+          required-gazebo-distributions: 'harmonic'
+      - name: 'Test Gazebo installation'
+        run: 'gz sim --versions'
