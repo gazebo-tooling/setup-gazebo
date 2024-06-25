@@ -26185,7 +26185,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.runAptGetInstall = void 0;
+exports.runAptGetInstall = runAptGetInstall;
 const utils = __importStar(__nccwpck_require__(1314));
 const aptCommandLine = [
     "DEBIAN_FRONTEND=noninteractive",
@@ -26208,7 +26208,6 @@ function runAptGetInstall(packages) {
         return utils.exec("sudo", aptCommandLine.concat(packages));
     });
 }
-exports.runAptGetInstall = runAptGetInstall;
 
 
 /***/ }),
@@ -26251,7 +26250,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.runBrew = void 0;
+exports.runBrew = runBrew;
 const utils = __importStar(__nccwpck_require__(1314));
 /**
  * Run brew install on a list of specified packages.
@@ -26264,7 +26263,6 @@ function runBrew(packages) {
         return utils.exec("brew", ["install"].concat(packages));
     });
 }
-exports.runBrew = runBrew;
 
 
 /***/ }),
@@ -26307,7 +26305,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.runLinux = void 0;
+exports.runLinux = runLinux;
 const core = __importStar(__nccwpck_require__(2186));
 const io = __importStar(__nccwpck_require__(7436));
 const apt = __importStar(__nccwpck_require__(4671));
@@ -26415,7 +26413,6 @@ function runLinux() {
         }
     });
 }
-exports.runLinux = runLinux;
 
 
 /***/ }),
@@ -26458,7 +26455,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.runMacOs = void 0;
+exports.runMacOs = runMacOs;
 const utils = __importStar(__nccwpck_require__(1314));
 const brew = __importStar(__nccwpck_require__(9586));
 /**
@@ -26480,7 +26477,6 @@ function runMacOs() {
         }
     });
 }
-exports.runMacOs = runMacOs;
 
 
 /***/ }),
@@ -26592,7 +26588,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.checkForUnstableAptRepos = exports.getRequiredGazeboDistributions = exports.validateDistro = exports.determineDistribCodename = exports.exec = void 0;
+exports.exec = exec;
+exports.determineDistribCodename = determineDistribCodename;
+exports.validateDistro = validateDistro;
+exports.getRequiredGazeboDistributions = getRequiredGazeboDistributions;
+exports.checkForUnstableAptRepos = checkForUnstableAptRepos;
 const actions_exec = __importStar(__nccwpck_require__(1514));
 const core = __importStar(__nccwpck_require__(2186));
 /**
@@ -26613,7 +26613,6 @@ function exec(commandLine, args, options, log_message) {
         });
     });
 }
-exports.exec = exec;
 /**
  * Determines the Ubuntu distribution codename.
  *
@@ -26635,7 +26634,6 @@ function determineDistribCodename() {
         return distribCodename;
     });
 }
-exports.determineDistribCodename = determineDistribCodename;
 // List of valid Gazebo distributions
 const validDistro = [
     "citadel",
@@ -26658,7 +26656,6 @@ function validateDistro(requiredGazeboDistributionsList) {
     }
     return true;
 }
-exports.validateDistro = validateDistro;
 /**
  * Gets the input of the Gazebo distributions to be installed and
  * validates them
@@ -26679,7 +26676,6 @@ function getRequiredGazeboDistributions() {
     }
     return requiredGazeboDistributionsList;
 }
-exports.getRequiredGazeboDistributions = getRequiredGazeboDistributions;
 /**
  * Check for unstable repository inputs
  *
@@ -26697,7 +26693,6 @@ function checkForUnstableAptRepos() {
     }
     return unstableRepos;
 }
-exports.checkForUnstableAptRepos = checkForUnstableAptRepos;
 
 
 /***/ }),
