@@ -159,7 +159,7 @@ jobs:
           node-version: '20.x'
       - uses: conda-incubator/setup-miniconda@v3
       - shell: pwsh
-        run: 'conda search libgz-sim* --channel conda-forge'
+        run: 'conda install gz-sim8 --channel conda-forge'
       # - name: 'Check Gazebo installation on Windows runner'
       #   uses: ./
       #   with:
