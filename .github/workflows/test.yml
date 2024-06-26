@@ -159,5 +159,9 @@ jobs:
         with:
           node-version: '20.x'
       - uses: conda-incubator/setup-miniconda@v3
-      - shell: pwsh
-        run: conda list
+      - name: 'Check Gazebo installation on Windows runner'
+        uses: ./
+        with:
+          required-gazebo-distributions: 'harmonic'
+      - name: 'Test Gazebo installation'
+        run: 'gz sim --versions'
