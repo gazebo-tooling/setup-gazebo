@@ -26317,7 +26317,7 @@ const utils = __importStar(__nccwpck_require__(1314));
  */
 function runConda(packages) {
     return __awaiter(this, void 0, void 0, function* () {
-        return utils.exec("conda", ["install"].concat(packages).concat(["--channel conda-forge"]));
+        return utils.exec("conda", ["install"].concat(packages).concat("--channel conda-forge"));
     });
 }
 exports.runConda = runConda;

@@ -9,6 +9,6 @@ import * as utils from "../utils";
 export async function runConda(packages: string[]): Promise<number> {
 	return utils.exec(
 		"conda",
-		["install"].concat(packages).concat(["--channel conda-forge"]),
+		["install"].concat(packages).concat("--channel conda-forge"),
 	);
 }
