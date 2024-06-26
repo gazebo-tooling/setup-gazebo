@@ -158,11 +158,11 @@ jobs:
         with:
           node-version: '20.x'
       - uses: conda-incubator/setup-miniconda@v3
-      - shell: pwsh
-        run: 'conda install gz-sim8 --channel conda-forge'
-      # - name: 'Check Gazebo installation on Windows runner'
-      #   uses: ./
-      #   with:
-      #     required-gazebo-distributions: 'harmonic'
-      # - name: 'Test Gazebo installation'
-      #   run: 'gz sim --versions'
+      # - shell: pwsh
+      #   run: 'conda install gz-sim8 --channel conda-forge'
+      - name: 'Check Gazebo installation on Windows runner'
+        uses: ./
+        with:
+          required-gazebo-distributions: 'harmonic'
+      - name: 'Test Gazebo installation'
+        run: 'gz sim --versions'
