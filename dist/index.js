@@ -26331,12 +26331,24 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.runConda = exports.activateCondaEnv = exports.createCondaEnv = void 0;
 const utils = __importStar(__nccwpck_require__(1314));
+/**
+ * Create a conda environment
+ *
+ * @param envName
+ * @returns Promise<number> exit code
+ */
 function createCondaEnv(envName) {
     return __awaiter(this, void 0, void 0, function* () {
         return utils.exec("conda", ["create", "-n"].concat([envName]));
     });
 }
 exports.createCondaEnv = createCondaEnv;
+/**
+ * Activate a conda environment
+ *
+ * @param envName
+ * @returns Promise<number> exit code
+ */
 function activateCondaEnv(envName) {
     return __awaiter(this, void 0, void 0, function* () {
         return utils.exec("conda", ["activate"].concat([envName]));
@@ -26636,6 +26648,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.runWindows = void 0;
 const utils = __importStar(__nccwpck_require__(1314));
 const conda = __importStar(__nccwpck_require__(7725));
+// List of mapped Gazebo distro to gz-sim versions
 const validLibVersions = [
     {
         distro: "garden",
@@ -26646,6 +26659,12 @@ const validLibVersions = [
         libVersion: 8,
     },
 ];
+/**
+ * Get gz-sim library version
+ *
+ * @param gazeboDistro name of Gazebo distribution
+ * @returns gz-sim version
+ */
 function getLibVersion(gazeboDistro) {
     return __awaiter(this, void 0, void 0, function* () {
         let version;
@@ -26660,8 +26679,12 @@ function getLibVersion(gazeboDistro) {
         return version;
     });
 }
+/**
+ * Install Gazebo on a Windows worker
+ */
 function runWindows() {
     return __awaiter(this, void 0, void 0, function* () {
+        // Create and activate conda environment
         yield conda.createCondaEnv("gz-env");
         yield conda.activateCondaEnv("gz-env");
         for (const gazeboDistro of utils.getRequiredGazeboDistributions()) {

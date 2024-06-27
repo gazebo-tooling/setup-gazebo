@@ -167,5 +167,5 @@ jobs:
       - name: 'Test Gazebo installation'
         shell: pwsh
         run: |
-          conda activate gz_env
+          conda activate gz-env
           gz sim --versions
