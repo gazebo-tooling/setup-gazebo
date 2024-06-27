@@ -1,7 +1,11 @@
 import * as utils from "../utils";
 
-export async function createCondaEnv(): Promise<number> {
-	return utils.exec("conda", ["create", "-n", "gz-env"]);
+export async function createCondaEnv(envName: string): Promise<number> {
+	return utils.exec("conda", ["create", "-n"].concat([envName]));
+}
+
+export async function activateCondaEnv(envName: string): Promise<number> {
+	return utils.exec("conda", ["activate"].concat([envName]));
 }
 
 /**

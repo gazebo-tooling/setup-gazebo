@@ -26307,14 +26307,20 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.runConda = exports.createCondaEnv = void 0;
+exports.runConda = exports.activateCondaEnv = exports.createCondaEnv = void 0;
 const utils = __importStar(__nccwpck_require__(1314));
-function createCondaEnv() {
+function createCondaEnv(envName) {
     return __awaiter(this, void 0, void 0, function* () {
-        return utils.exec("conda", ["create", "-n", "gz-env"]);
+        return utils.exec("conda", ["create", "-n"].concat([envName]));
     });
 }
 exports.createCondaEnv = createCondaEnv;
+function activateCondaEnv(envName) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return utils.exec("conda", ["activate"].concat([envName]));
+    });
+}
+exports.activateCondaEnv = activateCondaEnv;
 /**
  * Run conda install on a list of specified packages.
  *
@@ -26614,7 +26620,8 @@ function getLibVersion(gazeboDistro) {
 }
 function runWindows() {
     return __awaiter(this, void 0, void 0, function* () {
-        yield conda.createCondaEnv();
+        yield conda.createCondaEnv("gz-env");
+        yield conda.activateCondaEnv("gz-env");
         for (const gazeboDistro of utils.getRequiredGazeboDistributions()) {
             const version = yield getLibVersion(gazeboDistro);
             yield conda.runConda([`gz-sim${version}`]);

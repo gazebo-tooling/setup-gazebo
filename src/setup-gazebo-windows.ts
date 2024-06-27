@@ -26,7 +26,8 @@ async function getLibVersion(gazeboDistro: string): Promise<number> {
 }
 
 export async function runWindows(): Promise<void> {
-	await conda.createCondaEnv();
+	await conda.createCondaEnv("gz-env");
+	await conda.activateCondaEnv("gz-env");
 
 	for (const gazeboDistro of utils.getRequiredGazeboDistributions()) {
 		const version = await getLibVersion(gazeboDistro);
