@@ -166,4 +166,6 @@ jobs:
         with:
           required-gazebo-distributions: 'harmonic'
       - name: 'Test Gazebo installation'
-        run: 'gz sim --versions'
+        run: |
+          conda activate
+          gz sim --versions

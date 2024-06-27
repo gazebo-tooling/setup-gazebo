@@ -26534,7 +26534,7 @@ function runWindows() {
             "--channel",
             "conda-forge",
         ]);
-        yield utils.exec("conda", ["install", "gz-sim8", "--channel", "conda-forge"]);
+        yield utils.exec("conda", ["install", "--channel", "conda-forge", "gz-sim8"]);
     });
 }
 exports.runWindows = runWindows;

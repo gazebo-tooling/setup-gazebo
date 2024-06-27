@@ -8,5 +8,5 @@ export async function runWindows(): Promise<void> {
 		"--channel",
 		"conda-forge",
 	]);
-	await utils.exec("conda", ["install", "gz-sim8", "--channel", "conda-forge"]);
+	await utils.exec("conda", ["install", "--channel", "conda-forge", "gz-sim8"]);
 }
