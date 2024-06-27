@@ -1,6 +1,7 @@
 import * as utils from "./utils";
 import * as conda from "./package_manager/conda";
 
+// List of mapped Gazebo distro to gz-sim versions
 const validLibVersions: { distro: string; libVersion: number }[] = [
 	{
 		distro: "garden",
@@ -12,6 +13,12 @@ const validLibVersions: { distro: string; libVersion: number }[] = [
 	},
 ];
 
+/**
+ * Get gz-sim library version
+ *
+ * @param gazeboDistro name of Gazebo distribution
+ * @returns gz-sim version
+ */
 async function getLibVersion(gazeboDistro: string): Promise<number> {
 	let version: number | undefined;
 	validLibVersions.forEach((obj) => {
@@ -25,7 +32,11 @@ async function getLibVersion(gazeboDistro: string): Promise<number> {
 	return version;
 }
 
+/**
+ * Install Gazebo on a Windows worker
+ */
 export async function runWindows(): Promise<void> {
+	// Create and activate conda environment
 	await conda.createCondaEnv("gz-env");
 	await conda.activateCondaEnv("gz-env");
 
