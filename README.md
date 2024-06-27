@@ -10,8 +10,10 @@ This action sets up a Gazebo release inside a Linux environment.
         1. [Setting up worker and installing a compatible Gazebo and Ubuntu combination](#Setting-up-worker-and-installing-a-compatible-Gazebo-and-Ubuntu-combination)
         1. [Iterating on all Gazebo and Ubuntu combinations](#Iterating-on-all-gazebo-ubuntu-combinations)
         1. [Using pre-release and/or nightly Gazebo binaries](#Using-pre-release-and/or-nightly-Gazebo-binaries)
-    2. [MacOS](#MacOS)
+    2. [macOS](#macOS)
         1. [Setting up worker to install Gazebo on macOS](#Setting-up-worker-to-install-Gazebo-on-macOS)
+    3. [Windows](#Windows)
+        1. [Setting up worker to install Gazebo on Windows](#Setting-up-worker-to-install-Gazebo-on-Windows)
 1. [License](#License)
 
 ## Overview
@@ -25,6 +27,7 @@ It is recommended to use the `setup-gazebo` action inside a Docker container due
 `setup-gazebo` action works for all non-EOL Gazebo [releases] on the following platforms:
   - Ubuntu
   - macOS
+  - Windows
 
 ## Tasks performed by the action
 
@@ -36,6 +39,8 @@ The `setup-gazebo` action performs the following tasks:
   - Registers the Open Robotics APT repository
 - On macOS:
   - Tapping into the [osrf/homebrew-simulation](https://github.com/osrf/homebrew-simulation) using Homebrew
+- On Windows:
+  - Installing Gazebo using Conda from conda-forge
 ## Usage
 
 See [action.yml](action.yml)
@@ -155,7 +160,7 @@ This workflow shows how to use binaries from [pre-release] or [nightly] Gazebo r
             run: 'gz sim --versions'
 ```
 
-### MacOS
+### macOS
 
 #### Setting up worker to install Gazebo on macOS
 
@@ -175,6 +180,32 @@ This workflow shows how to install Gazebo on a macOS worker. The action needs an
           required-gazebo-distributions: 'harmonic'
       - name: 'Test Gazebo installation'
         run: 'gz sim --versions'
+```
+
+### Windows
+
+This workflow shows how to install Gazebo on a Windows worker. The action requires a Conda package management system such as miniconda as all Gazebo packages are available on conda-forge. The action is run by specifying the distribution of choice in `required-gazebo-distributions` field.
+
+#### Setting up worker to install Gazebo on Windows
+
+```yaml
+  test_gazebo:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4.0.2
+        with:
+          node-version: '20.x'
+      - uses: conda-incubator/setup-miniconda@v3
+      - name: 'Check Gazebo installation on Windows runner'
+        uses: gazebo-tooling/setup-gazebo@<full_commit_hash>
+        with:
+          required-gazebo-distributions: 'harmonic'
+      - name: 'Test Gazebo installation'
+        shell: pwsh
+        run: |
+          conda activate
+          gz sim --versions
 ```
 
 ## License
