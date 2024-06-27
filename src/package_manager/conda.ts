@@ -1,5 +1,9 @@
 import * as utils from "../utils";
 
+export async function createCondaEnv(): Promise<number> {
+	return utils.exec("conda", ["create", "-n", "gz-env"]);
+}
+
 /**
  * Run conda install on a list of specified packages.
  *
@@ -9,6 +13,6 @@ import * as utils from "../utils";
 export async function runConda(packages: string[]): Promise<number> {
 	return utils.exec(
 		"conda",
-		["install"].concat(packages).concat("--channel conda-forge"),
+		["install", "--channel", "conda-forge"].concat(packages),
 	);
 }
