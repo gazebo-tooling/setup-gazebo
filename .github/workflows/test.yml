@@ -158,8 +158,6 @@ jobs:
         with:
           node-version: '20.x'
       - uses: conda-incubator/setup-miniconda@v3
-      # - shell: pwsh
-      #   run: 'conda install gz-sim8 --channel conda-forge'
       - name: 'Check Gazebo installation on Windows runner'
         uses: ./
         with:
@@ -167,5 +165,5 @@ jobs:
       - name: 'Test Gazebo installation'
         shell: pwsh
         run: |
-          conda activate gz-env
+          conda activate
           gz sim --versions
