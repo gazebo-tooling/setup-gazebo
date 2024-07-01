@@ -111,8 +111,7 @@ jobs:
     name: 'Check installation of Gazebo nightly binary on Ubuntu'
     runs-on: ubuntu-latest
     container:
-      # Ionic should be running on Noble but existing bug is releasing it into Jammy
-      image: ubuntu:jammy
+      image: ubuntu:noble
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4.0.2
