@@ -3,6 +3,7 @@ import * as exec from "@actions/exec";
 
 import * as linux from "../src/setup-gazebo-linux";
 import * as macOs from "../src/setup-gazebo-macos";
+import * as windows from "../src/setup-gazebo-windows";
 import * as utils from "../src/utils";
 
 describe("workflow test without input", () => {
@@ -18,8 +19,12 @@ describe("workflow test without input", () => {
 		await expect(linux.runLinux()).rejects.toThrow();
 	});
 
-	it("run macOS workflow without input", async () => {
+	it("run MacOS workflow without input", async () => {
 		await expect(macOs.runMacOs()).rejects.toThrow();
+	});
+
+	it("run Windows workflow without input", async () => {
+		await expect(windows.runWindows()).rejects.toThrow();
 	});
 });
 
@@ -37,8 +42,12 @@ describe("workflow test with a invalid distro input", () => {
 		await expect(linux.runLinux()).rejects.toThrow();
 	});
 
-	it("run macOS workflow with invalid distro input", async () => {
+	it("run MacOS workflow with invalid distro input", async () => {
 		await expect(macOs.runMacOs()).rejects.toThrow();
+	});
+
+	it("run Windows workflow with invalid distro input", async () => {
+		await expect(windows.runWindows()).rejects.toThrow();
 	});
 });
 
@@ -56,8 +65,12 @@ describe("workflow test with a valid distro input", () => {
 		await expect(linux.runLinux()).resolves.not.toThrow();
 	});
 
-	it("run macOS workflow with valid distro input", async () => {
+	it("run MacOS workflow with valid distro input", async () => {
 		await expect(macOs.runMacOs()).resolves.not.toThrow();
+	});
+
+	it("run Windows workflow with valid distro input", async () => {
+		await expect(windows.runWindows()).resolves.not.toThrow();
 	});
 });
 
