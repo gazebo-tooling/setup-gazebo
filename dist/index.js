@@ -26483,11 +26483,11 @@ function addBrewRepo() {
 }
 function overwritePythonInstall() {
     return __awaiter(this, void 0, void 0, function* () {
-        yield utils.exec("find", [
-            "/usr/local/bin -lname",
-            "'*/Library/Frameworks/Python.framework/*'",
-            "-delete",
-        ]);
+        // await utils.exec("find", [
+        // 	"/usr/local/bin -lname",
+        // 	"'*/Library/Frameworks/Python.framework/*'",
+        // 	"-delete",
+        // ]);
         yield utils.exec("sudo", [
             "rm",
             "-rf",
