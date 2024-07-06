@@ -9,3 +9,11 @@ import * as utils from "../utils";
 export async function runBrew(packages: string[]): Promise<number> {
 	return utils.exec("brew", ["install"].concat(packages));
 }
+
+export async function unlinkPackage(packageName: string): Promise<number> {
+	return utils.exec("brew", ["unlink", `${packageName}`]);
+}
+
+export async function linkPackage(packageName: string): Promise<number> {
+	return utils.exec("brew", ["link", `${packageName}`]);
+}
