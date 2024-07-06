@@ -26265,12 +26265,24 @@ function runBrew(packages) {
     });
 }
 exports.runBrew = runBrew;
+/**
+ * Run brew unlink on a specified package
+ *
+ * @param packageName name of the package to be unlinked
+ * @returns Promise<number> exit code
+ */
 function unlinkPackage(packageName) {
     return __awaiter(this, void 0, void 0, function* () {
         return utils.exec("brew", ["unlink", `${packageName}`]);
     });
 }
 exports.unlinkPackage = unlinkPackage;
+/**
+ * Run brew link on a specified package
+ *
+ * @param packageName name of the package to be linked
+ * @returns Promise<number> exit code
+ */
 function linkPackage(packageName) {
     return __awaiter(this, void 0, void 0, function* () {
         return utils.exec("brew", ["link", `${packageName}`]);
@@ -26481,13 +26493,11 @@ function addBrewRepo() {
         yield utils.exec("brew", ["tap", "osrf/simulation"]);
     });
 }
+/**
+ * Overwrite existing python installation
+ */
 function overwritePythonInstall() {
     return __awaiter(this, void 0, void 0, function* () {
-        // await utils.exec("find", [
-        // 	"/usr/local/bin -lname",
-        // 	"'*/Library/Frameworks/Python.framework/*'",
-        // 	"-delete",
-        // ]);
         yield utils.exec("sudo", [
             "rm",
             "-rf",

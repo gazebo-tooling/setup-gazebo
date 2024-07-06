@@ -8,12 +8,10 @@ async function addBrewRepo(): Promise<void> {
 	await utils.exec("brew", ["tap", "osrf/simulation"]);
 }
 
+/**
+ * Overwrite existing python installation
+ */
 export async function overwritePythonInstall(): Promise<void> {
-	// await utils.exec("find", [
-	// 	"/usr/local/bin -lname",
-	// 	"'*/Library/Frameworks/Python.framework/*'",
-	// 	"-delete",
-	// ]);
 	await utils.exec("sudo", [
 		"rm",
 		"-rf",
