@@ -99,6 +99,8 @@ async function launchVirtualDisplay(): Promise<void> {
 	}
 	await utils.exec("bash", [
 		"-c",
+		"eval",
+		"$(",
 		"Xvfb",
 		":1",
 		"-ac",
@@ -107,6 +109,7 @@ async function launchVirtualDisplay(): Promise<void> {
 		"-screen",
 		"0",
 		"1280x1024x24",
+		")",
 		">",
 		"/dev/null",
 		"2>&1",
