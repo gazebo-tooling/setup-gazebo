@@ -26413,9 +26413,10 @@ function launchVirtualDisplay() {
             "0",
             "1280x1024x24",
             "&",
-            " ",
+            "export",
+            "DISPLAY=:1.0",
         ]);
-        yield utils.exportVariables(["DISPLAY=:1.0", "MESA_GL_VERSION_OVERRIDE=3.3"]);
+        yield utils.exportVariables(["MESA_GL_VERSION_OVERRIDE=3.3"]);
     });
 }
 /**
