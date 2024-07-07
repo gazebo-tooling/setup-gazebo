@@ -26404,7 +26404,8 @@ function launchVirtualDisplay() {
         if (!utils.checkLaunchVirtualDisplay()) {
             return;
         }
-        yield utils.exec("Xvfb", [
+        yield utils.exec("nohup", [
+            "Xvfb",
             ":1",
             "-ac",
             "-noreset",
@@ -26412,11 +26413,12 @@ function launchVirtualDisplay() {
             "-screen",
             "0",
             "1280x1024x24",
+            ">",
+            "/dev/null",
+            "2>&1",
             "&",
-            "export",
-            "DISPLAY=:1.0",
         ]);
-        yield utils.exportVariables(["MESA_GL_VERSION_OVERRIDE=3.3"]);
+        yield utils.exportVariables(["DISPLAY=:1.0", "MESA_GL_VERSION_OVERRIDE=3.3"]);
     });
 }
 /**

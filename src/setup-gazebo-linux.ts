@@ -97,7 +97,8 @@ async function launchVirtualDisplay(): Promise<void> {
 	if (!utils.checkLaunchVirtualDisplay()) {
 		return;
 	}
-	await utils.exec("Xvfb", [
+	await utils.exec("nohup", [
+		"Xvfb",
 		":1",
 		"-ac",
 		"-noreset",
@@ -105,11 +106,12 @@ async function launchVirtualDisplay(): Promise<void> {
 		"-screen",
 		"0",
 		"1280x1024x24",
+		">",
+		"/dev/null",
+		"2>&1",
 		"&",
-		"export",
-		"DISPLAY=:1.0",
 	]);
-	await utils.exportVariables(["MESA_GL_VERSION_OVERRIDE=3.3"]);
+	await utils.exportVariables(["DISPLAY=:1.0", "MESA_GL_VERSION_OVERRIDE=3.3"]);
 }
 
 /**
