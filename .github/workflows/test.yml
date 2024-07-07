@@ -153,7 +153,7 @@ jobs:
     name: 'Test virtual display on Ubuntu'
     runs-on: ubuntu-latest
     container:
-      image: ubuntu:noble
+      image: ubuntu:jammy
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4.0.2
