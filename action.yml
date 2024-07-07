@@ -26,6 +26,11 @@ inputs:
       Use nightly binaries from OSRF repository
     required: false
     default: 'false'
+  launch-virtual-display:
+    description: |
+      Use a virtual display to perform software rendering
+    required: false
+    default: 'false'
 runs:
   using: node20
   main: dist/index.js

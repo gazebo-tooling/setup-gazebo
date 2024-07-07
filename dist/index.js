@@ -26398,6 +26398,22 @@ function addAptRepo(ubuntuCodename) {
         yield utils.exec("sudo", ["apt-get", "update"]);
     });
 }
+function launchVirtualDisplay() {
+    return __awaiter(this, void 0, void 0, function* () {
+        yield utils.exec("set", ["-x"]);
+        yield utils.exec("Xvfb", [
+            ":1",
+            "-ac",
+            "-noreset",
+            "-core",
+            "-screen",
+            "0",
+            "1280x1024x24",
+            "&",
+        ]);
+        yield utils.exportVariables(["DISPLAY=:1.0", "MESA_GL_VERSION_OVERRIDE=3.3"]);
+    });
+}
 /**
  * Install Gazebo on a Linux worker.
  */
@@ -26411,6 +26427,7 @@ function runLinux() {
         for (const gazeboDistro of utils.getRequiredGazeboDistributions()) {
             yield apt.runAptGetInstall([`gz-${gazeboDistro}`]);
         }
+        yield launchVirtualDisplay();
     });
 }
 
@@ -26589,10 +26606,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.exec = exec;
+exports.exportVariables = exportVariables;
 exports.determineDistribCodename = determineDistribCodename;
 exports.validateDistro = validateDistro;
 exports.getRequiredGazeboDistributions = getRequiredGazeboDistributions;
 exports.checkForUnstableAptRepos = checkForUnstableAptRepos;
+exports.checkLaunchVirtualDisplay = checkLaunchVirtualDisplay;
 const actions_exec = __importStar(__nccwpck_require__(1514));
 const core = __importStar(__nccwpck_require__(2186));
 /**
@@ -26611,6 +26630,11 @@ function exec(commandLine, args, options, log_message) {
         return core.group(message, () => {
             return actions_exec.exec(commandLine, args, options);
         });
+    });
+}
+function exportVariables(envVariables) {
+    return __awaiter(this, void 0, void 0, function* () {
+        yield exec("export", [""].concat(envVariables));
     });
 }
 /**
@@ -26692,6 +26716,13 @@ function checkForUnstableAptRepos() {
         unstableRepos.push("nightly");
     }
     return unstableRepos;
+}
+function checkLaunchVirtualDisplay() {
+    const launchVirtualDisplay = core.getInput("launch-virtual-display");
+    if (launchVirtualDisplay === "true") {
+        return true;
+    }
+    return false;
 }
 
 
