@@ -150,6 +150,7 @@ jobs:
         run: 'gz sim --versions'
 
   test_gazebo_virtual_display:
+    name: 'Test virtual display on Ubuntu'
     runs-on: ubuntu-latest
     container:
       image: ubuntu:noble

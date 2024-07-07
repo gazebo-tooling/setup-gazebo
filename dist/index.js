@@ -26403,7 +26403,6 @@ function launchVirtualDisplay() {
         if (!utils.checkLaunchVirtualDisplay()) {
             return;
         }
-        yield utils.exec("set", ["-x"]);
         yield utils.exec("Xvfb", [
             ":1",
             "-ac",

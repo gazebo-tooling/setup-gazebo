@@ -96,7 +96,6 @@ async function launchVirtualDisplay(): Promise<void> {
 	if (!utils.checkLaunchVirtualDisplay()) {
 		return;
 	}
-	await utils.exec("set", ["-x"]);
 	await utils.exec("Xvfb", [
 		":1",
 		"-ac",
