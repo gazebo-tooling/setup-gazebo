@@ -25,7 +25,7 @@ export async function exec(
 }
 
 export async function exportVariables(envVariables: string[]): Promise<void> {
-	await exec("export", [""].concat(envVariables));
+	await exec("bash", ["-c", "export"].concat(envVariables));
 }
 
 /**

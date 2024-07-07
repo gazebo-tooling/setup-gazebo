@@ -26404,7 +26404,8 @@ function launchVirtualDisplay() {
         if (!utils.checkLaunchVirtualDisplay()) {
             return;
         }
-        yield utils.exec("nohup", [
+        yield utils.exec("bash", [
+            "-c",
             "Xvfb",
             ":1",
             "-ac",
@@ -26413,9 +26414,6 @@ function launchVirtualDisplay() {
             "-screen",
             "0",
             "1280x1024x24",
-            ">",
-            "/dev/null",
-            "2>&1",
             "&",
         ]);
         yield utils.exportVariables(["DISPLAY=:1.0", "MESA_GL_VERSION_OVERRIDE=3.3"]);
@@ -26641,7 +26639,7 @@ function exec(commandLine, args, options, log_message) {
 }
 function exportVariables(envVariables) {
     return __awaiter(this, void 0, void 0, function* () {
-        yield exec("export", [""].concat(envVariables));
+        yield exec("bash", ["-c", "export"].concat(envVariables));
     });
 }
 /**
