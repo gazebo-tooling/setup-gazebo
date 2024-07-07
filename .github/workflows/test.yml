@@ -166,3 +166,4 @@ jobs:
           launch-virtual-display: true
       - name: 'Test Gazebo installation'
         run: 'gz sim --versions'
+      - run: 'ps ax'
