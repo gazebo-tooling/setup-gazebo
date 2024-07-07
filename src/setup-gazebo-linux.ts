@@ -92,6 +92,21 @@ async function addAptRepo(ubuntuCodename: string): Promise<void> {
 	await utils.exec("sudo", ["apt-get", "update"]);
 }
 
+async function launchVirtualDisplay(): Promise<void> {
+	await utils.exec("set", ["-x"]);
+	await utils.exec("Xvfb", [
+		":1",
+		"-ac",
+		"-noreset",
+		"-core",
+		"-screen",
+		"0",
+		"1280x1024x24",
+		"&",
+	]);
+	await utils.exportVariables(["DISPLAY=:1.0", "MESA_GL_VERSION_OVERRIDE=3.3"]);
+}
+
 /**
  * Install Gazebo on a Linux worker.
  */
@@ -106,4 +121,6 @@ export async function runLinux(): Promise<void> {
 	for (const gazeboDistro of utils.getRequiredGazeboDistributions()) {
 		await apt.runAptGetInstall([`gz-${gazeboDistro}`]);
 	}
+
+	await launchVirtualDisplay();
 }

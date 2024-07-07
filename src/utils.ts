@@ -24,6 +24,10 @@ export async function exec(
 	});
 }
 
+export async function exportVariables(envVariables: string[]): Promise<void> {
+	await exec("export", [""].concat(envVariables));
+}
+
 /**
  * Determines the Ubuntu distribution codename.
  *
@@ -114,4 +118,12 @@ export function checkForUnstableAptRepos(): string[] {
 		unstableRepos.push("nightly");
 	}
 	return unstableRepos;
+}
+
+export function checkLaunchVirtualDisplay(): boolean {
+	const launchVirtualDisplay = core.getInput("launch-virtual-display");
+	if (launchVirtualDisplay === "true") {
+		return true;
+	}
+	return false;
 }
