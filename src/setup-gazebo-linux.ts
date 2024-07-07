@@ -35,6 +35,7 @@ async function configOs(): Promise<void> {
 		"locales",
 		"lsb-release",
 		"ca-certificates",
+		"xvfb",
 	]);
 
 	// Select a locale supporting Unicode.

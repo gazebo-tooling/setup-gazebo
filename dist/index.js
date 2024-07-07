@@ -26341,6 +26341,7 @@ function configOs() {
             "locales",
             "lsb-release",
             "ca-certificates",
+            "xvfb",
         ]);
         // Select a locale supporting Unicode.
         yield utils.exec("sudo", ["locale-gen", "en_US", "en_US.UTF-8"]);
