@@ -105,7 +105,6 @@ async function launchVirtualDisplay(): Promise<void> {
 		"-screen",
 		"0",
 		"1280x1024x24",
-		"&",
 	]);
 	await utils.exportVariables(["DISPLAY=:1.0", "MESA_GL_VERSION_OVERRIDE=3.3"]);
 }
