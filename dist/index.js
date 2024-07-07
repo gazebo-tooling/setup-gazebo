@@ -26400,6 +26400,9 @@ function addAptRepo(ubuntuCodename) {
 }
 function launchVirtualDisplay() {
     return __awaiter(this, void 0, void 0, function* () {
+        if (!utils.checkLaunchVirtualDisplay()) {
+            return;
+        }
         yield utils.exec("set", ["-x"]);
         yield utils.exec("Xvfb", [
             ":1",
