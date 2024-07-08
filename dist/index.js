@@ -26407,8 +26407,7 @@ function launchVirtualDisplay() {
         yield utils.exec("bash", ["-c", "set", "-x"]);
         yield utils.exec("bash", [
             "-c",
-            "eval",
-            "$(",
+            "(",
             "Xvfb",
             ":1",
             "-ac",
