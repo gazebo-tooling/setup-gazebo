@@ -26404,7 +26404,7 @@ function launchVirtualDisplay() {
         if (!utils.checkLaunchVirtualDisplay()) {
             return;
         }
-        yield utils.exec("bash", ["set", "-x"]);
+        yield utils.exec("bash", ["-c", "set", "-x"]);
         yield utils.exec("bash", [
             "-c",
             "eval",
