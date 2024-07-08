@@ -26185,7 +26185,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.runAptGetInstall = runAptGetInstall;
+exports.runAptGetInstall = void 0;
 const utils = __importStar(__nccwpck_require__(1314));
 const aptCommandLine = [
     "DEBIAN_FRONTEND=noninteractive",
@@ -26208,6 +26208,7 @@ function runAptGetInstall(packages) {
         return utils.exec("sudo", aptCommandLine.concat(packages));
     });
 }
+exports.runAptGetInstall = runAptGetInstall;
 
 
 /***/ }),
@@ -26250,7 +26251,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.runBrew = runBrew;
+exports.runBrew = void 0;
 const utils = __importStar(__nccwpck_require__(1314));
 /**
  * Run brew install on a list of specified packages.
@@ -26263,6 +26264,7 @@ function runBrew(packages) {
         return utils.exec("brew", ["install"].concat(packages));
     });
 }
+exports.runBrew = runBrew;
 
 
 /***/ }),
@@ -26305,7 +26307,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.runLinux = runLinux;
+exports.runLinux = void 0;
 const core = __importStar(__nccwpck_require__(2186));
 const io = __importStar(__nccwpck_require__(7436));
 const apt = __importStar(__nccwpck_require__(4671));
@@ -26418,7 +26420,7 @@ function launchVirtualDisplay() {
             ">",
             "/dev/null",
             "2>&1",
-            "&",
+            "\&",
         ]);
         yield utils.exportVariables(["DISPLAY=:1.0", "MESA_GL_VERSION_OVERRIDE=3.3"]);
     });
@@ -26439,6 +26441,7 @@ function runLinux() {
         yield launchVirtualDisplay();
     });
 }
+exports.runLinux = runLinux;
 
 
 /***/ }),
@@ -26481,7 +26484,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.runMacOs = runMacOs;
+exports.runMacOs = void 0;
 const utils = __importStar(__nccwpck_require__(1314));
 const brew = __importStar(__nccwpck_require__(9586));
 /**
@@ -26503,6 +26506,7 @@ function runMacOs() {
         }
     });
 }
+exports.runMacOs = runMacOs;
 
 
 /***/ }),
@@ -26614,13 +26618,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.exec = exec;
-exports.exportVariables = exportVariables;
-exports.determineDistribCodename = determineDistribCodename;
-exports.validateDistro = validateDistro;
-exports.getRequiredGazeboDistributions = getRequiredGazeboDistributions;
-exports.checkForUnstableAptRepos = checkForUnstableAptRepos;
-exports.checkLaunchVirtualDisplay = checkLaunchVirtualDisplay;
+exports.checkLaunchVirtualDisplay = exports.checkForUnstableAptRepos = exports.getRequiredGazeboDistributions = exports.validateDistro = exports.determineDistribCodename = exports.exportVariables = exports.exec = void 0;
 const actions_exec = __importStar(__nccwpck_require__(1514));
 const core = __importStar(__nccwpck_require__(2186));
 /**
@@ -26641,11 +26639,13 @@ function exec(commandLine, args, options, log_message) {
         });
     });
 }
+exports.exec = exec;
 function exportVariables(envVariables) {
     return __awaiter(this, void 0, void 0, function* () {
         yield exec("bash", ["-c", "export"].concat(envVariables));
     });
 }
+exports.exportVariables = exportVariables;
 /**
  * Determines the Ubuntu distribution codename.
  *
@@ -26667,6 +26667,7 @@ function determineDistribCodename() {
         return distribCodename;
     });
 }
+exports.determineDistribCodename = determineDistribCodename;
 // List of valid Gazebo distributions
 const validDistro = [
     "citadel",
@@ -26689,6 +26690,7 @@ function validateDistro(requiredGazeboDistributionsList) {
     }
     return true;
 }
+exports.validateDistro = validateDistro;
 /**
  * Gets the input of the Gazebo distributions to be installed and
  * validates them
@@ -26709,6 +26711,7 @@ function getRequiredGazeboDistributions() {
     }
     return requiredGazeboDistributionsList;
 }
+exports.getRequiredGazeboDistributions = getRequiredGazeboDistributions;
 /**
  * Check for unstable repository inputs
  *
@@ -26726,6 +26729,7 @@ function checkForUnstableAptRepos() {
     }
     return unstableRepos;
 }
+exports.checkForUnstableAptRepos = checkForUnstableAptRepos;
 function checkLaunchVirtualDisplay() {
     const launchVirtualDisplay = core.getInput("launch-virtual-display");
     if (launchVirtualDisplay === "true") {
@@ -26733,6 +26737,7 @@ function checkLaunchVirtualDisplay() {
     }
     return false;
 }
+exports.checkLaunchVirtualDisplay = checkLaunchVirtualDisplay;
 
 
 /***/ }),

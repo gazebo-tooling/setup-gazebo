@@ -111,7 +111,7 @@ async function launchVirtualDisplay(): Promise<void> {
 		">",
 		"/dev/null",
 		"2>&1",
-		"&",
+		"\&",
 	]);
 	await utils.exportVariables(["DISPLAY=:1.0", "MESA_GL_VERSION_OVERRIDE=3.3"]);
 }
