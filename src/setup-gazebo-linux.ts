@@ -100,7 +100,6 @@ async function launchVirtualDisplay(): Promise<void> {
 	await utils.exec("bash", ["-c", "set", "-x"]);
 	await utils.exec("bash", [
 		"-c",
-		"nohup",
 		"Xvfb",
 		":1",
 		"-ac",
