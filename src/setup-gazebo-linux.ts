@@ -97,6 +97,7 @@ async function launchVirtualDisplay(): Promise<void> {
 	if (!utils.checkLaunchVirtualDisplay()) {
 		return;
 	}
+	await utils.exec("bash", ["set", "-x"]);
 	await utils.exec("bash", [
 		"-c",
 		"eval",
