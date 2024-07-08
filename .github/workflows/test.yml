@@ -1,13 +1,6 @@
 name: 'Test setup-gazebo'
 on:
-  pull_request:
   push:
-    branches:
-      - main
-      - 'releases/*'
-  schedule:
-    # Run the CI automatically twice per day to look for flakyness.
-    - cron: '0 */12 * * *'
 defaults:
   run:
     shell: bash
