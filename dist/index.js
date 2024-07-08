@@ -26417,9 +26417,6 @@ function launchVirtualDisplay() {
             "0",
             "1280x1024x24",
             ")",
-            ">",
-            "/dev/null",
-            "2>&1",
             "&",
         ]);
         yield utils.exportVariables(["DISPLAY=:1.0", "MESA_GL_VERSION_OVERRIDE=3.3"]);
