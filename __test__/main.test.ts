@@ -3,6 +3,7 @@ import * as exec from "@actions/exec";
 
 import * as linux from "../src/setup-gazebo-linux";
 import * as macOs from "../src/setup-gazebo-macos";
+import * as windows from "../src/setup-gazebo-windows";
 import * as utils from "../src/utils";
 
 describe("workflow test without input", () => {
@@ -20,6 +21,10 @@ describe("workflow test without input", () => {
 
 	it("run macOS workflow without input", async () => {
 		await expect(macOs.runMacOs()).rejects.toThrow();
+	});
+
+	it("run Windows workflow without input", async () => {
+		await expect(windows.runWindows()).rejects.toThrow();
 	});
 });
 
@@ -40,6 +45,10 @@ describe("workflow test with a invalid distro input", () => {
 	it("run macOS workflow with invalid distro input", async () => {
 		await expect(macOs.runMacOs()).rejects.toThrow();
 	});
+
+	it("run Windows workflow with invalid distro input", async () => {
+		await expect(windows.runWindows()).rejects.toThrow();
+	});
 });
 
 describe("workflow test with a valid distro input", () => {
@@ -58,6 +67,10 @@ describe("workflow test with a valid distro input", () => {
 
 	it("run macOS workflow with valid distro input", async () => {
 		await expect(macOs.runMacOs()).resolves.not.toThrow();
+	});
+
+	it("run Windows workflow with valid distro input", async () => {
+		await expect(windows.runWindows()).resolves.not.toThrow();
 	});
 });
 
