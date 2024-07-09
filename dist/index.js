@@ -26493,6 +26493,10 @@ function addBrewRepo() {
 }
 /**
  * Overwrite existing python installation
+ *
+ * This is a precautionary step as the installation occasionally
+ * fails due to a brew Python linking error
+ * See https://github.com/Homebrew/homebrew-core/issues/165793#issuecomment-1991817938
  */
 function overwritePythonInstall() {
     return __awaiter(this, void 0, void 0, function* () {

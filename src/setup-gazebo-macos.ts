@@ -10,6 +10,10 @@ async function addBrewRepo(): Promise<void> {
 
 /**
  * Overwrite existing python installation
+ *
+ * This is a precautionary step as the installation occasionally
+ * fails due to a brew Python linking error
+ * See https://github.com/Homebrew/homebrew-core/issues/165793#issuecomment-1991817938
  */
 export async function overwritePythonInstall(): Promise<void> {
 	await utils.exec("sudo", [
