@@ -26185,7 +26185,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.runAptGetInstall = runAptGetInstall;
+exports.runAptGetInstall = void 0;
 const utils = __importStar(__nccwpck_require__(1314));
 const aptCommandLine = [
     "DEBIAN_FRONTEND=noninteractive",
@@ -26208,6 +26208,7 @@ function runAptGetInstall(packages) {
         return utils.exec("sudo", aptCommandLine.concat(packages));
     });
 }
+exports.runAptGetInstall = runAptGetInstall;
 
 
 /***/ }),
@@ -26250,9 +26251,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.runBrew = runBrew;
-exports.unlinkPackage = unlinkPackage;
-exports.linkPackage = linkPackage;
+exports.linkPackage = exports.unlinkPackage = exports.runBrew = void 0;
 const utils = __importStar(__nccwpck_require__(1314));
 /**
  * Run brew install on a list of specified packages.
@@ -26265,6 +26264,7 @@ function runBrew(packages) {
         return utils.exec("brew", ["install"].concat(packages));
     });
 }
+exports.runBrew = runBrew;
 /**
  * Run brew unlink on a specified package
  *
@@ -26276,6 +26276,7 @@ function unlinkPackage(packageName) {
         return utils.exec("brew", ["unlink", `${packageName}`]);
     });
 }
+exports.unlinkPackage = unlinkPackage;
 /**
  * Run brew link on a specified package
  *
@@ -26287,6 +26288,7 @@ function linkPackage(packageName) {
         return utils.exec("brew", ["link", `${packageName}`]);
     });
 }
+exports.linkPackage = linkPackage;
 
 
 /***/ }),
@@ -26385,7 +26387,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.runLinux = runLinux;
+exports.runLinux = void 0;
 const core = __importStar(__nccwpck_require__(2186));
 const io = __importStar(__nccwpck_require__(7436));
 const apt = __importStar(__nccwpck_require__(4671));
@@ -26493,6 +26495,7 @@ function runLinux() {
         }
     });
 }
+exports.runLinux = runLinux;
 
 
 /***/ }),
@@ -26535,8 +26538,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.overwritePythonInstall = overwritePythonInstall;
-exports.runMacOs = runMacOs;
+exports.runMacOs = exports.overwritePythonInstall = void 0;
 const utils = __importStar(__nccwpck_require__(1314));
 const brew = __importStar(__nccwpck_require__(9586));
 /**
@@ -26567,6 +26569,7 @@ function overwritePythonInstall() {
         yield brew.linkPackage(packageName);
     });
 }
+exports.overwritePythonInstall = overwritePythonInstall;
 /**
  * Install Gazebo on MacOS worker
  */
@@ -26579,6 +26582,7 @@ function runMacOs() {
         }
     });
 }
+exports.runMacOs = runMacOs;
 
 
 /***/ }),
@@ -26636,7 +26640,9 @@ const validLibVersions = [
     },
 ];
 /**
- * Get gz-sim library version
+ * Get gz-sim library version corresponding to a gz-$collection
+ * since conda does not currently support the gz-$collection metapackages.
+ * See https://github.com/conda-forge/gz-sim-feedstock/issues/61
  *
  * @param gazeboDistro name of Gazebo distribution
  * @returns gz-sim version
@@ -26782,11 +26788,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.exec = exec;
-exports.determineDistribCodename = determineDistribCodename;
-exports.validateDistro = validateDistro;
-exports.getRequiredGazeboDistributions = getRequiredGazeboDistributions;
-exports.checkForUnstableAptRepos = checkForUnstableAptRepos;
+exports.checkForUnstableAptRepos = exports.getRequiredGazeboDistributions = exports.validateDistro = exports.determineDistribCodename = exports.exec = void 0;
 const actions_exec = __importStar(__nccwpck_require__(1514));
 const core = __importStar(__nccwpck_require__(2186));
 /**
@@ -26807,6 +26809,7 @@ function exec(commandLine, args, options, log_message) {
         });
     });
 }
+exports.exec = exec;
 /**
  * Determines the Ubuntu distribution codename.
  *
@@ -26828,6 +26831,7 @@ function determineDistribCodename() {
         return distribCodename;
     });
 }
+exports.determineDistribCodename = determineDistribCodename;
 // List of valid Gazebo distributions
 const validDistro = [
     "citadel",
@@ -26850,6 +26854,7 @@ function validateDistro(requiredGazeboDistributionsList) {
     }
     return true;
 }
+exports.validateDistro = validateDistro;
 /**
  * Gets the input of the Gazebo distributions to be installed and
  * validates them
@@ -26870,6 +26875,7 @@ function getRequiredGazeboDistributions() {
     }
     return requiredGazeboDistributionsList;
 }
+exports.getRequiredGazeboDistributions = getRequiredGazeboDistributions;
 /**
  * Check for unstable repository inputs
  *
@@ -26887,6 +26893,7 @@ function checkForUnstableAptRepos() {
     }
     return unstableRepos;
 }
+exports.checkForUnstableAptRepos = checkForUnstableAptRepos;
 
 
 /***/ }),

@@ -14,7 +14,9 @@ const validLibVersions: { distro: string; libVersion: number }[] = [
 ];
 
 /**
- * Get gz-sim library version
+ * Get gz-sim library version corresponding to a gz-$collection
+ * since conda does not currently support the gz-$collection metapackages.
+ * See https://github.com/conda-forge/gz-sim-feedstock/issues/61
  *
  * @param gazeboDistro name of Gazebo distribution
  * @returns gz-sim version
