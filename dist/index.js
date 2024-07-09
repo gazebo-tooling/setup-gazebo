@@ -26251,6 +26251,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.runBrew = runBrew;
+exports.unlinkPackage = unlinkPackage;
+exports.linkPackage = linkPackage;
 const utils = __importStar(__nccwpck_require__(1314));
 /**
  * Run brew install on a list of specified packages.
@@ -26261,6 +26263,28 @@ const utils = __importStar(__nccwpck_require__(1314));
 function runBrew(packages) {
     return __awaiter(this, void 0, void 0, function* () {
         return utils.exec("brew", ["install"].concat(packages));
+    });
+}
+/**
+ * Run brew unlink on a specified package
+ *
+ * @param packageName name of the package to be unlinked
+ * @returns Promise<number> exit code
+ */
+function unlinkPackage(packageName) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return utils.exec("brew", ["unlink", `${packageName}`]);
+    });
+}
+/**
+ * Run brew link on a specified package
+ *
+ * @param packageName name of the package to be linked
+ * @returns Promise<number> exit code
+ */
+function linkPackage(packageName) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return utils.exec("brew", ["link", `${packageName}`]);
     });
 }
 
@@ -26455,6 +26479,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.overwritePythonInstall = overwritePythonInstall;
 exports.runMacOs = runMacOs;
 const utils = __importStar(__nccwpck_require__(1314));
 const brew = __importStar(__nccwpck_require__(9586));
@@ -26467,11 +26492,32 @@ function addBrewRepo() {
     });
 }
 /**
+ * Overwrite existing python installation
+ *
+ * This is a precautionary step as the installation occasionally
+ * fails due to a brew Python linking error
+ * See https://github.com/Homebrew/homebrew-core/issues/165793#issuecomment-1991817938
+ */
+function overwritePythonInstall() {
+    return __awaiter(this, void 0, void 0, function* () {
+        yield utils.exec("sudo", [
+            "rm",
+            "-rf",
+            "/Library/Frameworks/Python.framework/",
+        ]);
+        const packageName = "python3";
+        yield brew.runBrew(["--force", packageName]);
+        yield brew.unlinkPackage(packageName);
+        yield brew.linkPackage(packageName);
+    });
+}
+/**
  * Install Gazebo on MacOS worker
  */
 function runMacOs() {
     return __awaiter(this, void 0, void 0, function* () {
         yield addBrewRepo();
+        yield overwritePythonInstall();
         for (const gazeboDistro of utils.getRequiredGazeboDistributions()) {
             yield brew.runBrew([`gz-${gazeboDistro}`]);
         }
