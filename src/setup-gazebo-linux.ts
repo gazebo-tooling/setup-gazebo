@@ -97,7 +97,7 @@ async function launchVirtualDisplay(): Promise<void> {
 	if (!utils.checkLaunchVirtualDisplay()) {
 		return;
 	}
-	await utils.exec("bash", [`${__dirname}/launch_virtual_display.sh`]);
+	await utils.exec("bash", [`${__dirname}/launch_virtual_display.bash`]);
 }
 
 /**

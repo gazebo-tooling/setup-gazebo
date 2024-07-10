@@ -26483,7 +26483,7 @@ function launchVirtualDisplay() {
         if (!utils.checkLaunchVirtualDisplay()) {
             return;
         }
-        yield utils.exec("bash", [`${__dirname}/launch_virtual_display.sh`]);
+        yield utils.exec("bash", [__nccwpck_require__.ab + "launch_virtual_display.bash"]);
     });
 }
 /**
