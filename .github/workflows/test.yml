@@ -151,9 +151,7 @@ jobs:
 
   test_gazebo_virtual_display:
     name: 'Check the launch of virtual display on Ubuntu'
-    runs-on: ubuntu-latest
-    container:
-      image: ubuntu:jammy
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4.0.2
