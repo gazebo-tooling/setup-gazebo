@@ -150,7 +150,7 @@ jobs:
         run: 'gz sim --versions'
 
   test_gazebo_virtual_display:
-    name: 'Test virtual display on Ubuntu'
+    name: 'Check the launch of virtual display on Ubuntu'
     runs-on: ubuntu-latest
     container:
       image: ubuntu:jammy
@@ -166,7 +166,9 @@ jobs:
           launch-virtual-display: true
       - name: 'Test Gazebo installation'
         run: 'gz sim --versions'
-      - run: 'jobs'
+      - name: 'Check all running jobs'
+        shell: bash
+        run: 'jobs'
 
   test_gazebo_install_windows:
     name: 'Check installation of Gazebo on Windows'
