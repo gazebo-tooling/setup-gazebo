@@ -26251,6 +26251,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.runBrew = runBrew;
+exports.unlinkPackage = unlinkPackage;
+exports.linkPackage = linkPackage;
 const utils = __importStar(__nccwpck_require__(1314));
 /**
  * Run brew install on a list of specified packages.
@@ -26261,6 +26263,83 @@ const utils = __importStar(__nccwpck_require__(1314));
 function runBrew(packages) {
     return __awaiter(this, void 0, void 0, function* () {
         return utils.exec("brew", ["install"].concat(packages));
+    });
+}
+/**
+ * Run brew unlink on a specified package
+ *
+ * @param packageName name of the package to be unlinked
+ * @returns Promise<number> exit code
+ */
+function unlinkPackage(packageName) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return utils.exec("brew", ["unlink", `${packageName}`]);
+    });
+}
+/**
+ * Run brew link on a specified package
+ *
+ * @param packageName name of the package to be linked
+ * @returns Promise<number> exit code
+ */
+function linkPackage(packageName) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return utils.exec("brew", ["link", `${packageName}`]);
+    });
+}
+
+
+/***/ }),
+
+/***/ 7725:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.runConda = runConda;
+const utils = __importStar(__nccwpck_require__(1314));
+/**
+ * Run conda install on a list of specified packages.
+ *
+ * @param   packages list of conda-forge packages to be installed
+ * @returns Promise<number> exit code
+ */
+function runConda(packages) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return utils.exec("conda", ["install", "--channel", "conda-forge"].concat(packages));
     });
 }
 
@@ -26465,6 +26544,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.overwritePythonInstall = overwritePythonInstall;
 exports.runMacOs = runMacOs;
 const utils = __importStar(__nccwpck_require__(1314));
 const brew = __importStar(__nccwpck_require__(9586));
@@ -26477,13 +26557,123 @@ function addBrewRepo() {
     });
 }
 /**
+ * Overwrite existing python installation
+ *
+ * This is a precautionary step as the installation occasionally
+ * fails due to a brew Python linking error
+ * See https://github.com/Homebrew/homebrew-core/issues/165793#issuecomment-1991817938
+ */
+function overwritePythonInstall() {
+    return __awaiter(this, void 0, void 0, function* () {
+        yield utils.exec("sudo", [
+            "rm",
+            "-rf",
+            "/Library/Frameworks/Python.framework/",
+        ]);
+        const packageName = "python3";
+        yield brew.runBrew(["--force", packageName]);
+        yield brew.unlinkPackage(packageName);
+        yield brew.linkPackage(packageName);
+    });
+}
+/**
  * Install Gazebo on MacOS worker
  */
 function runMacOs() {
     return __awaiter(this, void 0, void 0, function* () {
         yield addBrewRepo();
+        yield overwritePythonInstall();
         for (const gazeboDistro of utils.getRequiredGazeboDistributions()) {
             yield brew.runBrew([`gz-${gazeboDistro}`]);
+        }
+    });
+}
+
+
+/***/ }),
+
+/***/ 8502:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.runWindows = runWindows;
+const utils = __importStar(__nccwpck_require__(1314));
+const conda = __importStar(__nccwpck_require__(7725));
+// List of mapped Gazebo distro to gz-sim versions
+const validLibVersions = [
+    {
+        distro: "garden",
+        libVersion: 7,
+    },
+    {
+        distro: "harmonic",
+        libVersion: 8,
+    },
+];
+/**
+ * Get gz-sim library version corresponding to a gz-$collection
+ * since conda does not currently support the gz-$collection metapackages.
+ * See https://github.com/conda-forge/gz-sim-feedstock/issues/61
+ *
+ * @param gazeboDistro name of Gazebo distribution
+ * @returns gz-sim version
+ */
+function getLibVersion(gazeboDistro) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let version;
+        validLibVersions.forEach((obj) => {
+            if (obj.distro == gazeboDistro) {
+                version = obj.libVersion;
+            }
+        });
+        if (version === undefined) {
+            throw new Error(`No conda packages available for gz-${gazeboDistro}`);
+        }
+        return version;
+    });
+}
+/**
+ * Install Gazebo on a Windows worker
+ */
+function runWindows() {
+    return __awaiter(this, void 0, void 0, function* () {
+        for (const gazeboDistro of utils.getRequiredGazeboDistributions()) {
+            const version = yield getLibVersion(gazeboDistro);
+            yield conda.runConda([`gz-sim${version}`]);
         }
     });
 }
@@ -26532,6 +26722,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(2186));
 const linux = __importStar(__nccwpck_require__(5467));
 const macOs = __importStar(__nccwpck_require__(8247));
+const windows = __importStar(__nccwpck_require__(8502));
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -26541,6 +26732,9 @@ function run() {
             }
             else if (platform === "linux") {
                 linux.runLinux();
+            }
+            else if (platform === "win32") {
+                windows.runWindows();
             }
             else {
                 throw new Error(`Unsupported platform ${platform}`);
