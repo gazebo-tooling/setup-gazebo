@@ -14,16 +14,14 @@ defaults:
 jobs:
   test_action_linux:
     name: 'Run unit test on action'
-    runs-on: ubuntu-latest
-    container:
-      image: ${{ matrix.docker_image }}
+    runs-on: ${{ matrix.ubuntu_distro }}
     strategy:
       fail-fast: false
       matrix:
-        docker_image:
-          - ubuntu:focal
-          - ubuntu:jammy
-          - ubuntu:noble
+        ubuntu_distro:
+          - ubuntu-20.04
+          - ubuntu-22.04
+          - ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4.0.2
@@ -33,6 +31,56 @@ jobs:
 
   test_gazebo_install_ubuntu:
     name: 'Check installation of Gazebo on Ubuntu'
+    runs-on: ${{ matrix.ubuntu_distro }}
+    strategy:
+      fail-fast: false
+      matrix:
+        gazebo_distribution:
+          - citadel
+          - fortress
+          - garden
+          - harmonic
+        include:
+          # Gazebo Citadel (Dec 2019 - Dec 2024)
+          - ubuntu_distro: ubuntu-20.04
+            gazebo_distribution: citadel
+
+          # Gazebo Fortress (Sep 2021 - Sep 2026)
+          - ubuntu_distro: ubuntu-20.04
+            gazebo_distribution: fortress
+
+          # Gazebo Garden (Sep 2022 - Nov 2024)
+          - ubuntu_distro: ubuntu-20.04
+            gazebo_distribution: garden
+
+          # Gazebo Harmonic (Sep 2023 - Sep 2028)
+          - ubuntu_distro: ubuntu-22.04
+            gazebo_distribution: harmonic
+
+          - ubuntu_distro: ubuntu-24.04
+            gazebo_distribution: harmonic
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4.0.2
+        with:
+          node-version: '20.x'
+      - name: 'Check Gazebo installation on Ubuntu runner'
+        uses: ./
+        with:
+          required-gazebo-distributions: ${{ matrix.gazebo_distribution }}
+      - name: 'Test Gazebo installation'
+        run: |
+          if command -v ign > /dev/null; then
+            ign gazebo --versions
+          elif command -v gz > /dev/null; then
+            gz sim --versions
+          else
+            echo "Neither ign nor gz command found"
+            exit 1
+          fi
+
+  test_gazebo_install_ubuntu_docker:
+    name: 'Check installation of Gazebo on Ubuntu inside a container'
     runs-on: ubuntu-latest
     container:
       image: ${{ matrix.docker_image }}
