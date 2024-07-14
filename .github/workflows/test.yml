@@ -14,11 +14,11 @@ defaults:
 jobs:
   test_action_linux:
     name: 'Run unit test on action'
-    runs-on: ${{ matrix.ubuntu_distro }}
+    runs-on: ${{ matrix.ubuntu_distribution }}
     strategy:
       fail-fast: false
       matrix:
-        ubuntu_distro:
+        ubuntu_distribution:
           - ubuntu-20.04
           - ubuntu-22.04
           - ubuntu-24.04
@@ -31,7 +31,7 @@ jobs:
 
   test_gazebo_install_ubuntu:
     name: 'Check installation of Gazebo on Ubuntu'
-    runs-on: ${{ matrix.ubuntu_distro }}
+    runs-on: ${{ matrix.ubuntu_distribution }}
     strategy:
       fail-fast: false
       matrix:
@@ -42,22 +42,22 @@ jobs:
           - harmonic
         include:
           # Gazebo Citadel (Dec 2019 - Dec 2024)
-          - ubuntu_distro: ubuntu-20.04
+          - ubuntu_distribution: ubuntu-20.04
             gazebo_distribution: citadel
 
           # Gazebo Fortress (Sep 2021 - Sep 2026)
-          - ubuntu_distro: ubuntu-20.04
+          - ubuntu_distribution: ubuntu-20.04
             gazebo_distribution: fortress
 
           # Gazebo Garden (Sep 2022 - Nov 2024)
-          - ubuntu_distro: ubuntu-20.04
+          - ubuntu_distribution: ubuntu-20.04
             gazebo_distribution: garden
 
           # Gazebo Harmonic (Sep 2023 - Sep 2028)
-          - ubuntu_distro: ubuntu-22.04
+          - ubuntu_distribution: ubuntu-22.04
             gazebo_distribution: harmonic
 
-          - ubuntu_distro: ubuntu-24.04
+          - ubuntu_distribution: ubuntu-24.04
             gazebo_distribution: harmonic
     steps:
       - uses: actions/checkout@v4
