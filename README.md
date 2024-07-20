@@ -8,7 +8,6 @@ This action sets up a Gazebo release inside a Linux environment.
 1. [Usage](#Usage)
     1. [Ubuntu](#Ubuntu)
         1. [Setting up worker and installing a compatible Gazebo and Ubuntu combination](#Setting-up-worker-and-installing-a-compatible-Gazebo-and-Ubuntu-combination)
-        1. [Setting up worker and installing a compatible Gazebo and Ubuntu combination inside a container](#Setting-up-worker-and-installing-a-compatible-Gazebo-and-Ubuntu-combination-inside-a-container)
         1. [Iterating on all Gazebo and Ubuntu combinations](#Iterating-on-all-gazebo-ubuntu-combinations)
         1. [Using pre-release and/or nightly Gazebo binaries](#Using-pre-release-and/or-nightly-Gazebo-binaries)
     2. [macOS](#macOS)
@@ -57,11 +56,20 @@ See [action.yml](action.yml)
 
 ### Ubuntu
 
+The `setup-gazebo` GitHub action can be run using GitHub-hosted Ubuntu runners or inside Ubuntu docker containers.
+
+> [!NOTE]
+>
+> The available GitHub-hosted runners can be found [here](https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners/about-github-hosted-runners#standard-github-hosted-runners-for-public-repositories). It should be noted that the `ubuntu-24.04` runner image is a beta release. An alternative approach is using a docker container as shown in the following sections.
+
+
 #### Setting up worker and installing a compatible Gazebo and Ubuntu combination
 
-This workflow shows how to spawn a job to install Gazebo on an Ubuntu runner. The action needs an input in the `required-gazebo-distributions` field.
+This workflow shows how to spawn a job to install Gazebo on an Ubuntu distribution. The action needs an input in the `required-gazebo-distributions` field.
 
-The following code snippet shows the installation of Gazebo Harmonic on Ubuntu Noble.
+- *Using GitHub-hosted runners*
+
+  The following code snippet shows the installation of Gazebo Harmonic on Ubuntu Noble.
 
 ```yaml
   jobs:
@@ -80,11 +88,9 @@ The following code snippet shows the installation of Gazebo Harmonic on Ubuntu N
           run: 'gz sim --versions'
 ```
 
-#### Setting up worker and installing a compatible Gazebo and Ubuntu combination inside a container
+- *Using Ubuntu docker containers*
 
-This workflow shows how to spawn a job to install Gazebo inside a docker container using the action. The action needs an input in the `required-gazebo-distributions` field.
-
-The following code snippet shows the installation of Gazebo Harmonic on Ubuntu Noble.
+  The following code snippet shows the installation of Gazebo Harmonic on Ubuntu Noble.
 
 ```yaml
   jobs:
@@ -107,13 +113,9 @@ The following code snippet shows the installation of Gazebo Harmonic on Ubuntu N
 
 #### Iterating on all Gazebo and Ubuntu combinations
 
-This workflow shows how to spawn one job per Gazebo release and iterates over all specified Gazebo and Ubuntu combinations.
+This workflow shows how to spawn one job per Gazebo release and iterates over all specified Gazebo and Ubuntu combinations. It is done by defining a `matrix` to iterate over jobs.
 
-> [!NOTE]
->
-> The available GitHub-hosted runners can be found [here](https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners/about-github-hosted-runners#standard-github-hosted-runners-for-public-repositories). It should be noted that the `ubuntu-24.04` runner image is a beta release. An alternative approach is using a docker container as shown in the [previous](#Setting-up-worker-and-installing-a-compatible-Gazebo-and-Ubuntu-combination-inside-a-container) section.
-
-The following is an example of using a `matrix` to iterate over jobs. For example, Gazebo Garden runs on Ubuntu Focal and Gazebo Harmonic runs on with Ubuntu Jammy.
+- *Using GitHub-hosted runners*
 
 ```yaml
   jobs:
@@ -164,9 +166,85 @@ The following is an example of using a `matrix` to iterate over jobs. For exampl
             fi
 ```
 
+- *Using Ubuntu docker containers*
+
+```yaml
+  jobs:
+    test_gazebo:
+    runs-on: ubuntu-latest
+    container:
+      image: ${{ matrix.docker_image }}
+    strategy:
+      fail-fast: false
+      matrix:
+        gazebo_distribution:
+          - citadel
+          - fortress
+          - garden
+          - harmonic
+        include:
+          # Gazebo Citadel (Dec 2019 - Dec 2024)
+          - docker_image: ubuntu:focal
+            gazebo_distribution: citadel
+
+          # Gazebo Fortress (Sep 2021 - Sep 2026)
+          - docker_image: ubuntu:focal
+            gazebo_distribution: fortress
+
+          # Gazebo Garden (Sep 2022 - Nov 2024)
+          - docker_image: ubuntu:focal
+            gazebo_distribution: garden
+
+          # Gazebo Harmonic (Sep 2023 - Sep 2028)
+          - docker_image: ubuntu:jammy
+            gazebo_distribution: harmonic
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4.0.3
+        with:
+          node-version: '20.x'
+      - name: 'Check Gazebo installation on Ubuntu runner'
+        uses: ./
+        with:
+          required-gazebo-distributions: ${{ matrix.gazebo_distribution }}
+      - name: 'Test Gazebo installation'
+        run: |
+          if command -v ign > /dev/null; then
+            ign gazebo --versions
+          elif command -v gz > /dev/null; then
+            gz sim --versions
+          else
+            echo "Neither ign nor gz command found"
+            exit 1
+          fi
+```
+
 #### Using pre-release and/or nightly Gazebo binaries
 
 This workflow shows how to use binaries from [pre-release] or [nightly] Gazebo repositories instead of the stable repository by setting the `use-gazebo-prerelease` or `use-gazebo-nightly` to `true`.
+
+- *Using GitHub-hosted runners*
+
+```yaml
+  jobs:
+    test_gazebo:
+        runs-on: ubuntu-24.04
+        steps:
+          - uses: actions/checkout@v4
+          - uses: actions/setup-node@v4.0.2
+            with:
+              node-version: '20.x'
+          - name: 'Check Gazebo installation on Ubuntu runner'
+            uses: gazebo-tooling/setup-gazebo@<full_commit_hash>
+            with:
+              required-gazebo-distributions: 'harmonic'
+              use-gazebo-prerelease: 'true'
+              use-gazebo-nightly: 'true'
+          - name: 'Test Gazebo installation'
+            run: 'gz sim --versions'
+```
+
+- *Using Ubuntu docker containers*
 
 ```yaml
   jobs:
