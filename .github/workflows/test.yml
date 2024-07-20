@@ -13,7 +13,7 @@ defaults:
     shell: bash
 jobs:
   test_action_linux:
-    name: 'Run unit test on action on GitHub runners'
+    name: 'Unit testing action on GitHub runners'
     runs-on: ${{ matrix.ubuntu_distribution }}
     strategy:
       fail-fast: false
@@ -30,7 +30,7 @@ jobs:
       - run: .github/workflows/build-and-test.sh
 
   test_action_linux_docker:
-    name: 'Run unit test on action in a docker container'
+    name: 'Unit testing action in a docker container'
     runs-on: ubuntu-latest
     container:
       image: ${{ matrix.docker_image }}
@@ -49,7 +49,7 @@ jobs:
       - run: .github/workflows/build-and-test.sh
 
   test_gazebo_install_ubuntu:
-    name: 'Check installation of Gazebo on Ubuntu GitHub runner'
+    name: 'Install Gazebo on Ubuntu GitHub runner'
     runs-on: ${{ matrix.ubuntu_distribution }}
     strategy:
       fail-fast: false
@@ -99,7 +99,7 @@ jobs:
           fi
 
   test_gazebo_install_ubuntu_docker:
-    name: 'Check installation of Gazebo on Ubuntu in a docker container'
+    name: 'Install Gazebo on Ubuntu docker'
     runs-on: ubuntu-latest
     container:
       image: ${{ matrix.docker_image }}
@@ -151,7 +151,7 @@ jobs:
           fi
 
   test_gazebo_install_ubuntu_prerelease:
-    name: 'Check installation of Gazebo pre-release binary on Ubuntu GitHub runner'
+    name: 'Install Gazebo pre-release on Ubuntu GitHub runner'
     runs-on: ${{ matrix.ubuntu_distribution }}
     strategy:
       fail-fast: false
@@ -173,7 +173,7 @@ jobs:
         run: 'gz sim --versions'
 
   test_gazebo_install_ubuntu_prerelease_docker:
-    name: 'Check installation of Gazebo pre-release binary on Ubuntu in a docker container'
+    name: 'Install Gazebo pre-release on Ubuntu docker'
     runs-on: ubuntu-latest
     container:
       image: ${{ matrix.docker_image }}
@@ -197,7 +197,7 @@ jobs:
         run: 'gz sim --versions'
 
   test_gazebo_install_ubuntu_nightly:
-    name: 'Check installation of Gazebo nightly binary on Ubuntu GitHub runner'
+    name: 'Install Gazebo nightly on Ubuntu GitHub runner'
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
@@ -213,7 +213,7 @@ jobs:
         run: 'gz sim --versions'
 
   test_gazebo_install_ubuntu_nightly_docker:
-    name: 'Check installation of Gazebo nightly binary on Ubuntu in a docker container'
+    name: 'Install Gazebo nightly on Ubuntu docker'
     runs-on: ubuntu-latest
     container:
       image: ubuntu:noble
@@ -231,7 +231,7 @@ jobs:
         run: 'gz sim --versions'
 
   test_gazebo_install_macos:
-    name: 'Check installation of Gazebo on MacOS'
+    name: 'Install Gazebo on MacOS'
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -255,7 +255,7 @@ jobs:
         run: 'gz sim --versions'
 
   test_gazebo_install_windows:
-    name: 'Check installation of Gazebo on Windows'
+    name: 'Install Gazebo on Windows'
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
