@@ -13,7 +13,7 @@ defaults:
     shell: bash
 jobs:
   test_action_linux:
-    name: 'Run unit test on action'
+    name: 'Run unit test on action on GitHub runners'
     runs-on: ${{ matrix.ubuntu_distribution }}
     strategy:
       fail-fast: false
@@ -29,8 +29,27 @@ jobs:
           node-version: '20.x'
       - run: .github/workflows/build-and-test.sh
 
+  test_action_linux_docker:
+    name: 'Run unit test on action in a docker container'
+    runs-on: ubuntu-latest
+    container:
+      image: ${{ matrix.docker_image }}
+    strategy:
+      fail-fast: false
+      matrix:
+        docker_image:
+          - ubuntu:focal
+          - ubuntu:jammy
+          - ubuntu:noble
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4.0.3
+        with:
+          node-version: '20.x'
+      - run: .github/workflows/build-and-test.sh
+
   test_gazebo_install_ubuntu:
-    name: 'Check installation of Gazebo on Ubuntu'
+    name: 'Check installation of Gazebo on Ubuntu GitHub runner'
     runs-on: ${{ matrix.ubuntu_distribution }}
     strategy:
       fail-fast: false
@@ -80,7 +99,7 @@ jobs:
           fi
 
   test_gazebo_install_ubuntu_docker:
-    name: 'Check installation of Gazebo on Ubuntu inside a container'
+    name: 'Check installation of Gazebo on Ubuntu in a docker container'
     runs-on: ubuntu-latest
     container:
       image: ${{ matrix.docker_image }}
@@ -113,7 +132,7 @@ jobs:
             gazebo_distribution: harmonic
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4.0.2
+      - uses: actions/setup-node@v4.0.3
         with:
           node-version: '20.x'
       - name: 'Check Gazebo installation on Ubuntu runner'
@@ -132,7 +151,29 @@ jobs:
           fi
 
   test_gazebo_install_ubuntu_prerelease:
-    name: 'Check installation of Gazebo pre-release binary on Ubuntu'
+    name: 'Check installation of Gazebo pre-release binary on Ubuntu GitHub runner'
+    runs-on: ${{ matrix.ubuntu_distribution }}
+    strategy:
+      fail-fast: false
+      matrix:
+        ubuntu_distribution:
+          - ubuntu-22.04
+          - ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4.0.3
+        with:
+          node-version: '20.x'
+      - name: 'Check Gazebo installation on Ubuntu runner'
+        uses: ./
+        with:
+          required-gazebo-distributions: 'harmonic'
+          use-gazebo-prerelease: 'true'
+      - name: 'Test Gazebo installation'
+        run: 'gz sim --versions'
+
+  test_gazebo_install_ubuntu_prerelease_docker:
+    name: 'Check installation of Gazebo pre-release binary on Ubuntu in a docker container'
     runs-on: ubuntu-latest
     container:
       image: ${{ matrix.docker_image }}
@@ -144,7 +185,7 @@ jobs:
           - ubuntu:noble
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4.0.2
+      - uses: actions/setup-node@v4.0.3
         with:
           node-version: '20.x'
       - name: 'Check Gazebo installation on Ubuntu runner'
@@ -156,13 +197,29 @@ jobs:
         run: 'gz sim --versions'
 
   test_gazebo_install_ubuntu_nightly:
-    name: 'Check installation of Gazebo nightly binary on Ubuntu'
+    name: 'Check installation of Gazebo nightly binary on Ubuntu GitHub runner'
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4.0.3
+        with:
+          node-version: '20.x'
+      - name: 'Check Gazebo installation on Ubuntu runner'
+        uses: ./
+        with:
+          required-gazebo-distributions: 'ionic'
+          use-gazebo-nightly: 'true'
+      - name: 'Test Gazebo installation'
+        run: 'gz sim --versions'
+
+  test_gazebo_install_ubuntu_nightly_docker:
+    name: 'Check installation of Gazebo nightly binary on Ubuntu in a docker container'
     runs-on: ubuntu-latest
     container:
       image: ubuntu:noble
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4.0.2
+      - uses: actions/setup-node@v4.0.3
         with:
           node-version: '20.x'
       - name: 'Check Gazebo installation on Ubuntu runner'
@@ -187,7 +244,7 @@ jobs:
           - macos-13
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4.0.2
+      - uses: actions/setup-node@v4.0.3
         with:
           node-version: '20.x'
       - name: 'Check Gazebo installation on MacOS runner'
@@ -202,7 +259,7 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4.0.2
+      - uses: actions/setup-node@v4.0.3
         with:
           node-version: '20.x'
       - uses: conda-incubator/setup-miniconda@v3
