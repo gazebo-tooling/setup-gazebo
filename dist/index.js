@@ -26487,6 +26487,8 @@ function runLinux() {
         // Add repo according to Ubuntu version
         const ubuntuCodename = yield utils.determineDistribCodename();
         yield addAptRepo(ubuntuCodename);
+        const gazeboDistros = utils.getRequiredGazeboDistributions();
+        utils.checkUbuntuCompatibility(gazeboDistros, ubuntuCodename);
         for (const gazeboDistro of utils.getRequiredGazeboDistributions()) {
             yield apt.runAptGetInstall([`gz-${gazeboDistro}`]);
         }
@@ -26786,9 +26788,50 @@ exports.exec = exec;
 exports.determineDistribCodename = determineDistribCodename;
 exports.validateDistro = validateDistro;
 exports.getRequiredGazeboDistributions = getRequiredGazeboDistributions;
+exports.checkUbuntuCompatibility = checkUbuntuCompatibility;
 exports.checkForUnstableAptRepos = checkForUnstableAptRepos;
 const actions_exec = __importStar(__nccwpck_require__(1514));
 const core = __importStar(__nccwpck_require__(2186));
+// Enum of Gazebo distributions
+var gazeboDistro;
+(function (gazeboDistro) {
+    gazeboDistro["CITADEL"] = "citadel";
+    gazeboDistro["FORTRESS"] = "fortress";
+    gazeboDistro["GARDEN"] = "garden";
+    gazeboDistro["HARMONIC"] = "harmonic";
+    gazeboDistro["IONIC"] = "ionic";
+})(gazeboDistro || (gazeboDistro = {}));
+// Enum of Ubuntu distributions
+var ubuntuDistro;
+(function (ubuntuDistro) {
+    ubuntuDistro["FOCAL"] = "focal";
+    ubuntuDistro["JAMMY"] = "jammy";
+    ubuntuDistro["NOBLE"] = "noble";
+})(ubuntuDistro || (ubuntuDistro = {}));
+// List of Valid Gazebo distributions with compatible
+// Ubuntu distributions
+const validGazeboDistroList = [
+    {
+        name: gazeboDistro.CITADEL,
+        compatibleUbuntuDistros: [ubuntuDistro.FOCAL],
+    },
+    {
+        name: gazeboDistro.FORTRESS,
+        compatibleUbuntuDistros: [ubuntuDistro.FOCAL, ubuntuDistro.JAMMY],
+    },
+    {
+        name: gazeboDistro.GARDEN,
+        compatibleUbuntuDistros: [ubuntuDistro.FOCAL, ubuntuDistro.JAMMY],
+    },
+    {
+        name: gazeboDistro.HARMONIC,
+        compatibleUbuntuDistros: [ubuntuDistro.JAMMY, ubuntuDistro.NOBLE],
+    },
+    {
+        name: gazeboDistro.IONIC,
+        compatibleUbuntuDistros: [ubuntuDistro.NOBLE],
+    },
+];
 /**
  * Execute a command and wrap the output in a log group.
  *
@@ -26828,14 +26871,6 @@ function determineDistribCodename() {
         return distribCodename;
     });
 }
-// List of valid Gazebo distributions
-const validDistro = [
-    "citadel",
-    "fortress",
-    "garden",
-    "harmonic",
-    "ionic",
-];
 /**
  * Validate all Gazebo input distribution names
  *
@@ -26843,6 +26878,7 @@ const validDistro = [
  * @returns boolean Validity of Gazebo distribution
  */
 function validateDistro(requiredGazeboDistributionsList) {
+    const validDistro = Object.values(gazeboDistro);
     for (const gazeboDistro of requiredGazeboDistributionsList) {
         if (validDistro.indexOf(gazeboDistro) <= -1) {
             return false;
@@ -26869,6 +26905,25 @@ function getRequiredGazeboDistributions() {
         throw new Error("Input has invalid distribution names.");
     }
     return requiredGazeboDistributionsList;
+}
+/**
+ * Check the compatability of the Ubuntu version against the
+ * Gazebo distribution. Throws an error if incompatible
+ * combination found
+ *
+ * @param requiredGazeboDistributionsList
+ * @param ubuntuCodename
+ */
+function checkUbuntuCompatibility(requiredGazeboDistributionsList, ubuntuCodename) {
+    requiredGazeboDistributionsList.forEach((element) => {
+        const idx = validGazeboDistroList.findIndex((obj) => {
+            return obj.name === element;
+        });
+        const compatibleUbuntuList = Object.values(validGazeboDistroList[idx].compatibleUbuntuDistros);
+        if (compatibleUbuntuList.indexOf(ubuntuCodename) <= -1) {
+            throw new Error("Incompatible Gazebo and Ubuntu combination.");
+        }
+    });
 }
 /**
  * Check for unstable repository inputs
