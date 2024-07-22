@@ -55,6 +55,9 @@ describe("workflow test with a valid distro input", () => {
 	beforeAll(() => {
 		jest.spyOn(exec, "exec").mockImplementation(jest.fn());
 		jest.spyOn(core, "getInput").mockReturnValue("harmonic");
+		jest
+			.spyOn(utils, "determineDistribCodename")
+			.mockReturnValue(Promise.resolve("jammy"));
 	});
 
 	afterAll(() => {
@@ -95,6 +98,23 @@ describe("validate distribution test", () => {
 	});
 });
 
+describe("workflow test with incompatible Ubuntu combination", () => {
+	beforeAll(() => {
+		jest.spyOn(exec, "exec").mockImplementation(jest.fn());
+		jest.spyOn(core, "getInput").mockReturnValue("harmonic");
+		jest
+			.spyOn(utils, "determineDistribCodename")
+			.mockReturnValue(Promise.resolve("focal"));
+	});
+	afterAll(() => {
+		jest.resetAllMocks();
+	});
+
+	it("run Linux workflow with incompatible Ubuntu combination", async () => {
+		await expect(linux.runLinux()).rejects.toThrow();
+	});
+});
+
 describe("check for unstable repositories input", () => {
 	beforeAll(() => {
 		jest.spyOn(exec, "exec").mockImplementation(jest.fn());
@@ -108,6 +128,9 @@ describe("check for unstable repositories input", () => {
 			.spyOn(utils, "checkForUnstableAptRepos")
 			.mockReturnValueOnce(["prerelease", "nightly"]);
 		jest.spyOn(core, "getInput").mockReturnValue("harmonic");
+		jest
+			.spyOn(utils, "determineDistribCodename")
+			.mockReturnValue(Promise.resolve("jammy"));
 	});
 
 	afterAll(() => {
