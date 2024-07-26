@@ -18,9 +18,10 @@ This action sets up a Gazebo release inside a Linux environment.
 
 ## Overview
 
-The `setup-gazebo` GitHub Action sets up an environment to install a Gazebo release in a compatible Ubuntu distribution. The action requires a Gazebo release name as an input for the `required-gazebo-distributions` field.
-
-It is recommended to use the `setup-gazebo` action inside a Docker container due to the flaky nature of GitHub actions Linux workers.
+The `setup-gazebo` GitHub Action sets up an environment to install a Gazebo release in the platform of choice. The action takes in the following parameters as input:
+- `required-gazebo-distributions`: A **required** parameter that specifies the Gazebo distribution to be installed.
+- `use-gazebo-prerelease`: An **optional** parameter to install pre-release binaries from OSRF repository.
+- `use-gazebo-nightly`: An **optional** parameter to install nightly binaries from OSRF repository.
 
 ## Supported platforms
 
@@ -55,11 +56,41 @@ See [action.yml](action.yml)
 
 ### Ubuntu
 
+The `setup-gazebo` GitHub action can be run using GitHub-hosted Ubuntu runners or inside Ubuntu docker containers.
+
+> [!NOTE]
+>
+> The available GitHub-hosted runners can be found [here](https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners/about-github-hosted-runners#standard-github-hosted-runners-for-public-repositories). It should be noted that the `ubuntu-24.04` runner image is a beta release. An alternative approach is using a docker container as shown in the following sections.
+
+
 #### Setting up worker and installing a compatible Gazebo and Ubuntu combination
 
-This workflow shows how to spawn a job to install Gazebo using the action. The action needs an input in the `required-gazebo-distributions` field and requires a Docker configuration to run seamlessly.
+This workflow shows how to spawn a job to install Gazebo on an Ubuntu distribution. The action needs an input in the `required-gazebo-distributions` field.
 
-The following code snippet shows the installation of Gazebo Harmonic on Ubuntu Noble.
+- *Default: Using GitHub-hosted runners systems*
+
+  The following code snippet shows the installation of Gazebo Harmonic on Ubuntu Noble.
+
+```yaml
+  jobs:
+    test_gazebo:
+      runs-on: ubuntu-24.04
+      steps:
+        - uses: actions/checkout@v4
+        - uses: actions/setup-node@v4.0.2
+          with:
+            node-version: '20.x'
+        - name: 'Setup Gazebo'
+          uses: gazebo-tooling/setup-gazebo@<full_commit_hash>
+          with:
+            required-gazebo-distributions: harmonic
+        - name: 'Test Gazebo installation'
+          run: 'gz sim --versions'
+```
+
+- *Using Ubuntu docker containers*
+
+  The following code snippet shows the installation of Gazebo Harmonic on Ubuntu Noble.
 
 ```yaml
   jobs:
@@ -82,14 +113,14 @@ The following code snippet shows the installation of Gazebo Harmonic on Ubuntu N
 
 #### Iterating on all Gazebo and Ubuntu combinations
 
-This workflow shows how to spawn one job per Gazebo release. It iterates over all specified Gazebo and Ubuntu combinations using Docker. For example, Gazebo Garden is paired with Ubuntu Focal while Gazebo Harmonic is paired with Ubuntu Jammy.
+This workflow shows how to spawn one job per Gazebo release and iterates over all specified Gazebo and Ubuntu combinations. It is done by defining a `matrix` to iterate over jobs.
+
+- *Default: Using GitHub-hosted runners systems*
 
 ```yaml
   jobs:
     test_gazebo:
-      runs-on: ubuntu-latest
-      container:
-        image: ${{ matrix.docker_image }}
+      runs-on: ${{ matrix.ubuntu_distribution }}
       strategy:
         fail-fast: false
         matrix:
@@ -100,19 +131,19 @@ This workflow shows how to spawn one job per Gazebo release. It iterates over al
             - harmonic
           include:
             # Gazebo Citadel (Dec 2019 - Dec 2024)
-            - docker_image: ubuntu:focal
+            - ubuntu_distribution: ubuntu-20.04
               gazebo_distribution: citadel
 
             # Gazebo Fortress (Sep 2021 - Sep 2026)
-            - docker_image: ubuntu:focal
+            - ubuntu_distribution: ubuntu-20.04
               gazebo_distribution: fortress
 
             # Gazebo Garden (Sep 2022 - Nov 2024)
-            - docker_image: ubuntu:focal
+            - ubuntu_distribution: ubuntu-20.04
               gazebo_distribution: garden
 
             # Gazebo Harmonic (Sep 2023 - Sep 2028)
-            - docker_image: ubuntu:jammy
+            - ubuntu_distribution: ubuntu-22.04
               gazebo_distribution: harmonic
       steps:
         - uses: actions/checkout@v4
@@ -133,6 +164,59 @@ This workflow shows how to spawn one job per Gazebo release. It iterates over al
               echo "Neither ign nor gz command found"
               exit 1
             fi
+```
+
+- *Using Ubuntu docker containers*
+
+```yaml
+  jobs:
+    test_gazebo:
+    runs-on: ubuntu-latest
+    container:
+      image: ${{ matrix.docker_image }}
+    strategy:
+      fail-fast: false
+      matrix:
+        gazebo_distribution:
+          - citadel
+          - fortress
+          - garden
+          - harmonic
+        include:
+          # Gazebo Citadel (Dec 2019 - Dec 2024)
+          - docker_image: ubuntu:focal
+            gazebo_distribution: citadel
+
+          # Gazebo Fortress (Sep 2021 - Sep 2026)
+          - docker_image: ubuntu:focal
+            gazebo_distribution: fortress
+
+          # Gazebo Garden (Sep 2022 - Nov 2024)
+          - docker_image: ubuntu:focal
+            gazebo_distribution: garden
+
+          # Gazebo Harmonic (Sep 2023 - Sep 2028)
+          - docker_image: ubuntu:jammy
+            gazebo_distribution: harmonic
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4.0.3
+        with:
+          node-version: '20.x'
+      - name: 'Check Gazebo installation on Ubuntu runner'
+        uses: ./
+        with:
+          required-gazebo-distributions: ${{ matrix.gazebo_distribution }}
+      - name: 'Test Gazebo installation'
+        run: |
+          if command -v ign > /dev/null; then
+            ign gazebo --versions
+          elif command -v gz > /dev/null; then
+            gz sim --versions
+          else
+            echo "Neither ign nor gz command found"
+            exit 1
+          fi
 ```
 
 #### Using pre-release and/or nightly Gazebo binaries

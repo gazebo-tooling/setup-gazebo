@@ -13,7 +13,24 @@ defaults:
     shell: bash
 jobs:
   test_action_linux:
-    name: 'Run unit test on action'
+    name: 'Unit testing action on GitHub runners'
+    runs-on: ${{ matrix.ubuntu_distribution }}
+    strategy:
+      fail-fast: false
+      matrix:
+        ubuntu_distribution:
+          - ubuntu-20.04
+          - ubuntu-22.04
+          - ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4.0.2
+        with:
+          node-version: '20.x'
+      - run: .github/workflows/build-and-test.sh
+
+  test_action_linux_docker:
+    name: 'Unit testing action in a docker container'
     runs-on: ubuntu-latest
     container:
       image: ${{ matrix.docker_image }}
@@ -32,7 +49,57 @@ jobs:
       - run: .github/workflows/build-and-test.sh
 
   test_gazebo_install_ubuntu:
-    name: 'Check installation of Gazebo on Ubuntu'
+    name: 'Install Gazebo on Ubuntu GitHub runner'
+    runs-on: ${{ matrix.ubuntu_distribution }}
+    strategy:
+      fail-fast: false
+      matrix:
+        gazebo_distribution:
+          - citadel
+          - fortress
+          - garden
+          - harmonic
+        include:
+          # Gazebo Citadel (Dec 2019 - Dec 2024)
+          - ubuntu_distribution: ubuntu-20.04
+            gazebo_distribution: citadel
+
+          # Gazebo Fortress (Sep 2021 - Sep 2026)
+          - ubuntu_distribution: ubuntu-20.04
+            gazebo_distribution: fortress
+
+          # Gazebo Garden (Sep 2022 - Nov 2024)
+          - ubuntu_distribution: ubuntu-20.04
+            gazebo_distribution: garden
+
+          # Gazebo Harmonic (Sep 2023 - Sep 2028)
+          - ubuntu_distribution: ubuntu-22.04
+            gazebo_distribution: harmonic
+
+          - ubuntu_distribution: ubuntu-24.04
+            gazebo_distribution: harmonic
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4.0.2
+        with:
+          node-version: '20.x'
+      - name: 'Check Gazebo installation on Ubuntu runner'
+        uses: ./
+        with:
+          required-gazebo-distributions: ${{ matrix.gazebo_distribution }}
+      - name: 'Test Gazebo installation'
+        run: |
+          if command -v ign > /dev/null; then
+            ign gazebo --versions
+          elif command -v gz > /dev/null; then
+            gz sim --versions
+          else
+            echo "Neither ign nor gz command found"
+            exit 1
+          fi
+
+  test_gazebo_install_ubuntu_docker:
+    name: 'Install Gazebo on Ubuntu docker'
     runs-on: ubuntu-latest
     container:
       image: ${{ matrix.docker_image }}
@@ -83,8 +150,8 @@ jobs:
             exit 1
           fi
 
-  test_gazebo_install_ubuntu_prerelease:
-    name: 'Check installation of Gazebo pre-release binary on Ubuntu'
+  test_gazebo_install_ubuntu_prerelease_docker:
+    name: 'Install Gazebo pre-release on Ubuntu docker'
     runs-on: ubuntu-latest
     container:
       image: ${{ matrix.docker_image }}
@@ -107,8 +174,8 @@ jobs:
       - name: 'Test Gazebo installation'
         run: 'gz sim --versions'
 
-  test_gazebo_install_ubuntu_nightly:
-    name: 'Check installation of Gazebo nightly binary on Ubuntu'
+  test_gazebo_install_ubuntu_nightly_docker:
+    name: 'Install Gazebo nightly on Ubuntu docker'
     runs-on: ubuntu-latest
     container:
       image: ubuntu:noble
@@ -126,7 +193,7 @@ jobs:
         run: 'gz sim --versions'
 
   test_gazebo_install_macos:
-    name: 'Check installation of Gazebo on MacOS'
+    name: 'Install Gazebo on MacOS'
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -150,7 +217,7 @@ jobs:
         run: 'gz sim --versions'
 
   test_gazebo_install_windows:
-    name: 'Check installation of Gazebo on Windows'
+    name: 'Install Gazebo on Windows'
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
