@@ -1,6 +1,9 @@
-name: 'Setup Gazebo release'
+name: 'Setup Gazebo environment'
 description: |
-  Install a Gazebo release on a Linux system
+  Install system dependencies required to build software using Gazebo or to run Gazebo simulations
+branding:
+  icon: "box"
+  color: "gray-dark"
 inputs:
   required-gazebo-distributions:
       description: |
@@ -9,7 +12,7 @@ inputs:
         Allowed Gazebo distributions
         - citadel
         - fortress
-        - garden
+        - gardendasdad
         - harmonic
 
         Multiple values can be passed using a whitespace delimited list
