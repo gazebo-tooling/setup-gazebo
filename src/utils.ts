@@ -2,6 +2,34 @@ import * as actions_exec from "@actions/exec";
 import * as core from "@actions/core";
 import * as im from "@actions/exec/lib/interfaces";
 
+// List of Valid Gazebo distributions with compatible
+// Ubuntu distributions
+const validGazeboDistroList: {
+	name: string;
+	compatibleUbuntuDistros: string[];
+}[] = [
+	{
+		name: "citadel",
+		compatibleUbuntuDistros: ["focal"],
+	},
+	{
+		name: "fortress",
+		compatibleUbuntuDistros: ["focal", "jammy"],
+	},
+	{
+		name: "garden",
+		compatibleUbuntuDistros: ["focal", "jammy"],
+	},
+	{
+		name: "harmonic",
+		compatibleUbuntuDistros: ["jammy", "noble"],
+	},
+	{
+		name: "ionic",
+		compatibleUbuntuDistros: ["noble"],
+	},
+];
+
 /**
  * Execute a command and wrap the output in a log group.
  *
@@ -48,15 +76,6 @@ export async function determineDistribCodename(): Promise<string> {
 	return distribCodename;
 }
 
-// List of valid Gazebo distributions
-const validDistro: string[] = [
-	"citadel",
-	"fortress",
-	"garden",
-	"harmonic",
-	"ionic",
-];
-
 /**
  * Validate all Gazebo input distribution names
  *
@@ -66,6 +85,7 @@ const validDistro: string[] = [
 export function validateDistro(
 	requiredGazeboDistributionsList: string[],
 ): boolean {
+	const validDistro: string[] = validGazeboDistroList.map((obj) => obj.name);
 	for (const gazeboDistro of requiredGazeboDistributionsList) {
 		if (validDistro.indexOf(gazeboDistro) <= -1) {
 			return false;
@@ -96,6 +116,32 @@ export function getRequiredGazeboDistributions(): string[] {
 		throw new Error("Input has invalid distribution names.");
 	}
 	return requiredGazeboDistributionsList;
+}
+
+/**
+ * Check the compatability of the Ubuntu version against the
+ * Gazebo distribution. Throws an error if incompatible
+ * combination found
+ *
+ * @param requiredGazeboDistributionsList
+ * @param ubuntuCodename
+ */
+export function checkUbuntuCompatibility(
+	requiredGazeboDistributionsList: string[],
+	ubuntuCodename: string,
+) {
+	requiredGazeboDistributionsList.forEach((element) => {
+		const compatibleDistros = validGazeboDistroList.find(
+			(obj) => obj.name === element,
+		)!.compatibleUbuntuDistros;
+		if (compatibleDistros.indexOf(ubuntuCodename) <= -1) {
+			throw new Error(
+				"Incompatible Gazebo and Ubuntu combination. \
+        All compatible combinations can be found at \
+        https://gazebosim.org/docs/latest/getstarted/#step-1-install",
+			);
+		}
+	});
 }
 
 /**
