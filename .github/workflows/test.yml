@@ -129,9 +129,9 @@ jobs:
         exclude:
           # Gazebo Citadel (Dec 2019 - Dec 2024)
           # Compatible ubuntu docker images: focal
-          - ubuntu_distribution: ubuntu:jammy
+          - docker_image: ubuntu:jammy
             gazebo_distribution: citadel
-          - ubuntu_distribution: ubuntu:noble
+          - docker_image: ubuntu:noble
             gazebo_distribution: citadel
 
           # Gazebo Fortress (Sep 2021 - Sep 2026)
