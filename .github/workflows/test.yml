@@ -126,7 +126,7 @@ jobs:
           - fortress
           - garden
           - harmonic
-        include:
+        exclude:
           # Gazebo Citadel (Dec 2019 - Dec 2024)
           # Compatible ubuntu docker images: focal
           - ubuntu_distribution: ubuntu:jammy
