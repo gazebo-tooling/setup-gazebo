@@ -54,29 +54,40 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        ubuntu_distribution:
+          - ubuntu-20.04
+          - ubuntu-22.04
+          - ubuntu-24.04
         gazebo_distribution:
           - citadel
           - fortress
           - garden
           - harmonic
-        include:
+        exclude:
           # Gazebo Citadel (Dec 2019 - Dec 2024)
-          - ubuntu_distribution: ubuntu-20.04
+          # Compatible ubuntu distributions: 20.04
+          - ubuntu_distribution: ubuntu-22.04
+            gazebo_distribution: citadel
+          - ubuntu_distribution: ubuntu-24.04
             gazebo_distribution: citadel
 
           # Gazebo Fortress (Sep 2021 - Sep 2026)
-          - ubuntu_distribution: ubuntu-20.04
+          # Compatible ubuntu distributions: 20.04
+          - ubuntu_distribution: ubuntu-22.04
+            gazebo_distribution: fortress
+          - ubuntu_distribution: ubuntu-24.04
             gazebo_distribution: fortress
 
           # Gazebo Garden (Sep 2022 - Nov 2024)
-          - ubuntu_distribution: ubuntu-20.04
+          # Compatible ubuntu distributions: 20.04
+          - ubuntu_distribution: ubuntu-22.04
+            gazebo_distribution: garden
+          - ubuntu_distribution: ubuntu-24.04
             gazebo_distribution: garden
 
           # Gazebo Harmonic (Sep 2023 - Sep 2028)
-          - ubuntu_distribution: ubuntu-22.04
-            gazebo_distribution: harmonic
-
-          - ubuntu_distribution: ubuntu-24.04
+          # Compatible ubuntu distributions: 22.04, 24.04
+          - ubuntu_distribution: ubuntu-20.04
             gazebo_distribution: harmonic
     steps:
       - uses: actions/checkout@v4
@@ -106,29 +117,40 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        docker_image:
+          - ubuntu:focal
+          - ubuntu:jammy
+          - ubuntu:noble
         gazebo_distribution:
           - citadel
           - fortress
           - garden
           - harmonic
-        include:
+        exclude:
           # Gazebo Citadel (Dec 2019 - Dec 2024)
-          - docker_image: ubuntu:focal
+          # Compatible ubuntu docker images: focal
+          - docker_image: ubuntu:jammy
+            gazebo_distribution: citadel
+          - docker_image: ubuntu:noble
             gazebo_distribution: citadel
 
           # Gazebo Fortress (Sep 2021 - Sep 2026)
-          - docker_image: ubuntu:focal
+          # Compatible ubuntu docker images: focal
+          - docker_image: ubuntu:jammy
+            gazebo_distribution: fortress
+          - docker_image: ubuntu:noble
             gazebo_distribution: fortress
 
           # Gazebo Garden (Sep 2022 - Nov 2024)
-          - docker_image: ubuntu:focal
+          # Compatible ubuntu docker images: focal
+          - docker_image: ubuntu:jammy
+            gazebo_distribution: garden
+          - docker_image: ubuntu:noble
             gazebo_distribution: garden
 
           # Gazebo Harmonic (Sep 2023 - Sep 2028)
-          - docker_image: ubuntu:jammy
-            gazebo_distribution: harmonic
-
-          - docker_image: ubuntu:noble
+          # Compatible ubuntu docker images: jammy, noble
+          - docker_image: ubuntu:focal
             gazebo_distribution: harmonic
     steps:
       - uses: actions/checkout@v4
