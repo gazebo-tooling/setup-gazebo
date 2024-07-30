@@ -54,29 +54,40 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        ubuntu_distribution:
+          - ubuntu-20.04
+          - ubuntu-22.04
+          - ubuntu-24.04
         gazebo_distribution:
           - citadel
           - fortress
           - garden
           - harmonic
-        include:
+        exclude:
           # Gazebo Citadel (Dec 2019 - Dec 2024)
-          - ubuntu_distribution: ubuntu-20.04
+          # Compatible ubuntu distributions: 20.04
+          - ubuntu_distribution: ubuntu-22.04
+            gazebo_distribution: citadel
+          - ubuntu_distribution: ubuntu-24.04
             gazebo_distribution: citadel
 
           # Gazebo Fortress (Sep 2021 - Sep 2026)
-          - ubuntu_distribution: ubuntu-20.04
+          # Compatible ubuntu distributions: 20.04
+          - ubuntu_distribution: ubuntu-22.04
+            gazebo_distribution: fortress
+          - ubuntu_distribution: ubuntu-24.04
             gazebo_distribution: fortress
 
           # Gazebo Garden (Sep 2022 - Nov 2024)
-          - ubuntu_distribution: ubuntu-20.04
+          # Compatible ubuntu distributions: 20.04
+          - ubuntu_distribution: ubuntu-22.04
+            gazebo_distribution: garden
+          - ubuntu_distribution: ubuntu-24.04
             gazebo_distribution: garden
 
           # Gazebo Harmonic (Sep 2023 - Sep 2028)
-          - ubuntu_distribution: ubuntu-22.04
-            gazebo_distribution: harmonic
-
-          - ubuntu_distribution: ubuntu-24.04
+          # Compatible ubuntu distributions: 22.04, 24.04
+          - ubuntu_distribution: ubuntu-20.04
             gazebo_distribution: harmonic
     steps:
       - uses: actions/checkout@v4
