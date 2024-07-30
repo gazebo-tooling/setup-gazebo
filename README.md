@@ -1,8 +1,9 @@
 # `setup-gazebo`
 
 [![GitHub Action Status](https://github.com/gazebo-tooling/setup-gazebo/actions/workflows/test.yml/badge.svg)](https://github.com/gazebo-tooling/setup-gazebo)
+[![License](https://img.shields.io/github/license/gazebo-tooling/setup-gazebo)](https://github.com/gazebo-tooling/setup-gazebo/blob/main/LICENSE)
 
-This action sets up a Gazebo release inside a Linux environment.
+This action sets up a Gazebo environment.
 
 1. [Overview](#Overview)
 1. [Supported platforms](#Supported-platforms)
