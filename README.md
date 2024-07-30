@@ -1,6 +1,9 @@
 # `setup-gazebo`
 
-This action sets up a Gazebo release inside a Linux environment.
+[![GitHub Action Status](https://github.com/gazebo-tooling/setup-gazebo/actions/workflows/test.yml/badge.svg)](https://github.com/gazebo-tooling/setup-gazebo)
+[![License](https://img.shields.io/github/license/gazebo-tooling/setup-gazebo)](https://github.com/gazebo-tooling/setup-gazebo/blob/main/LICENSE)
+
+This action sets up a Gazebo environment.
 
 1. [Overview](#Overview)
 1. [Supported platforms](#Supported-platforms)
@@ -48,11 +51,9 @@ See [action.yml](action.yml)
 
 > [!WARNING]
 >
-> `setup-gazebo` is under active development. This action is currently being tested, and has not been released to GitHub Marketplace yet.
+> `setup-gazebo` is under active development.
 >
-> When using this action in your workflows, it is advisable to use a full commit hash as a suffix - `gazebo-tooling/setup-gazebo@<full_commit_hash>`.
->
-> This action can also be used with the `main` branch - `gazebo-tooling/setup-gazebo@main`. Use with caution as compatibility is not guaranteed!
+> This action can also be used with the `main` branch - `gazebo-tooling/setup-gazebo@main` or with a full commit has as a suffix - `gazebo-tooling/setup-gazebo@<full_commit_hash>`. Use with caution as compatibility is not guaranteed!
 
 ### Ubuntu
 
@@ -81,7 +82,7 @@ This workflow shows how to spawn a job to install Gazebo on an Ubuntu distributi
           with:
             node-version: '20.x'
         - name: 'Setup Gazebo'
-          uses: gazebo-tooling/setup-gazebo@<full_commit_hash>
+          uses: gazebo-tooling/setup-gazebo@v0.1.0
           with:
             required-gazebo-distributions: harmonic
         - name: 'Test Gazebo installation'
@@ -104,7 +105,7 @@ This workflow shows how to spawn a job to install Gazebo on an Ubuntu distributi
           with:
             node-version: '20.x'
         - name: 'Setup Gazebo'
-          uses: gazebo-tooling/setup-gazebo@<full_commit_hash>
+          uses: gazebo-tooling/setup-gazebo@v0.1.0
           with:
             required-gazebo-distributions: harmonic
         - name: 'Test Gazebo installation'
@@ -151,7 +152,7 @@ This workflow shows how to spawn one job per Gazebo release and iterates over al
           with:
             node-version: '20.x'
         - name: 'Check Gazebo installation on Ubuntu runner'
-          uses: gazebo-tooling/setup-gazebo@<full_commit_hash>
+          uses: gazebo-tooling/setup-gazebo@v0.1.0
           with:
             required-gazebo-distributions: ${{ matrix.gazebo_distribution }}
         - name: 'Test Gazebo installation'
@@ -204,7 +205,7 @@ This workflow shows how to spawn one job per Gazebo release and iterates over al
         with:
           node-version: '20.x'
       - name: 'Check Gazebo installation on Ubuntu runner'
-        uses: ./
+        uses: gazebo-tooling/setup-gazebo@v0.1.0
         with:
           required-gazebo-distributions: ${{ matrix.gazebo_distribution }}
       - name: 'Test Gazebo installation'
@@ -235,7 +236,7 @@ This workflow shows how to use binaries from [pre-release] or [nightly] Gazebo r
             with:
               node-version: '20.x'
           - name: 'Check Gazebo installation on Ubuntu runner'
-            uses: gazebo-tooling/setup-gazebo@<full_commit_hash>
+            uses: gazebo-tooling/setup-gazebo@v0.1.0
             with:
               required-gazebo-distributions: 'harmonic'
               use-gazebo-prerelease: 'true'
@@ -259,7 +260,7 @@ This workflow shows how to install Gazebo on a macOS worker. The action needs an
         with:
           node-version: '20.x'
       - name: 'Check Gazebo installation on MacOS runner'
-        uses: gazebo-tooling/setup-gazebo@<full_commit_hash>
+        uses: gazebo-tooling/setup-gazebo@v0.1.0
         with:
           required-gazebo-distributions: 'harmonic'
       - name: 'Test Gazebo installation'
@@ -282,7 +283,7 @@ This workflow shows how to install Gazebo on a Windows worker. The action requir
           node-version: '20.x'
       - uses: conda-incubator/setup-miniconda@v3
       - name: 'Check Gazebo installation on Windows runner'
-        uses: gazebo-tooling/setup-gazebo@<full_commit_hash>
+        uses: gazebo-tooling/setup-gazebo@v0.1.0
         with:
           required-gazebo-distributions: 'harmonic'
       - name: 'Test Gazebo installation'
