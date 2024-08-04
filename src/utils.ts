@@ -1,6 +1,7 @@
 import * as actions_exec from "@actions/exec";
 import * as core from "@actions/core";
 import * as im from "@actions/exec/lib/interfaces";
+import fetch from "node-fetch";
 
 // List of Valid Gazebo distributions with compatible
 // Ubuntu distributions
@@ -160,4 +161,15 @@ export function checkForUnstableAptRepos(): string[] {
 		unstableRepos.push("nightly");
 	}
 	return unstableRepos;
+}
+
+export async function fetchCollections() {
+	const response = await fetch(
+		"https://raw.githubusercontent.com/gazebo-tooling/release-tools/master/jenkins-scripts/dsl/gz-collections.yaml",
+	)
+		.then((response) => response.blob())
+		.then((blob) => blob.text())
+		.then((yamlStr) => {
+			console.log(yamlStr);
+		});
 }
