@@ -1,7 +1,7 @@
 import * as actions_exec from "@actions/exec";
 import * as core from "@actions/core";
 import * as im from "@actions/exec/lib/interfaces";
-import fetch from "node-fetch";
+import { parseDocument } from "yaml";
 
 // List of Valid Gazebo distributions with compatible
 // Ubuntu distributions
@@ -126,23 +126,33 @@ export function getRequiredGazeboDistributions(): string[] {
  *
  * @param requiredGazeboDistributionsList
  * @param ubuntuCodename
+ * @returns Promise<void>
  */
-export function checkUbuntuCompatibility(
+export async function checkUbuntuCompatibility(
 	requiredGazeboDistributionsList: string[],
 	ubuntuCodename: string,
-) {
-	requiredGazeboDistributionsList.forEach((element) => {
-		const compatibleDistros = validGazeboDistroList.find(
-			(obj) => obj.name === element,
-		)!.compatibleUbuntuDistros;
-		if (compatibleDistros.indexOf(ubuntuCodename) <= -1) {
-			throw new Error(
-				"Incompatible Gazebo and Ubuntu combination. \
-        All compatible combinations can be found at \
-        https://gazebosim.org/docs/latest/getstarted/#step-1-install",
-			);
-		}
-	});
+): Promise<void> {
+	await fetch(
+		"https://raw.githubusercontent.com/gazebo-tooling/release-tools/master/jenkins-scripts/dsl/gz-collections.yaml",
+	)
+		.then((response) => response.blob())
+		.then((blob) => blob.text())
+		.then((yamlStr) => {
+			const collections = parseDocument(yamlStr).toJSON();
+			collections["collections"].forEach((obj: any) => {
+				requiredGazeboDistributionsList.forEach((element) => {
+					if (obj["name"] === element) {
+						if (obj["packaging"]["configs"].indexOf(ubuntuCodename) <= -1) {
+							throw new Error(
+								"Incompatible Gazebo and Ubuntu combination. \
+                All compatible combinations can be found at \
+                https://gazebosim.org/docs/latest/getstarted/#step-1-install",
+							);
+						}
+					}
+				});
+			});
+		});
 }
 
 /**
@@ -161,15 +171,4 @@ export function checkForUnstableAptRepos(): string[] {
 		unstableRepos.push("nightly");
 	}
 	return unstableRepos;
-}
-
-export async function fetchCollections() {
-	const response = await fetch(
-		"https://raw.githubusercontent.com/gazebo-tooling/release-tools/master/jenkins-scripts/dsl/gz-collections.yaml",
-	)
-		.then((response) => response.blob())
-		.then((blob) => blob.text())
-		.then((yamlStr) => {
-			console.log(yamlStr);
-		});
 }
