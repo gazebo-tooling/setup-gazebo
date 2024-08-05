@@ -24,7 +24,7 @@ jobs:
           - ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4.0.2
+      - uses: actions/setup-node@v4.0.3
         with:
           node-version: '20.x'
       - run: .github/workflows/build-and-test.sh
@@ -91,7 +91,7 @@ jobs:
             gazebo_distribution: harmonic
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4.0.2
+      - uses: actions/setup-node@v4.0.3
         with:
           node-version: '20.x'
       - name: 'Check Gazebo installation on Ubuntu runner'
