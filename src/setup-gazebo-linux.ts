@@ -105,7 +105,7 @@ export async function runLinux(): Promise<void> {
 
 	const gazeboDistros = utils.getRequiredGazeboDistributions();
 
-	utils.checkUbuntuCompatibility(gazeboDistros, ubuntuCodename);
+	await utils.checkUbuntuCompatibility(gazeboDistros, ubuntuCodename);
 
 	for (const gazeboDistro of utils.getRequiredGazeboDistributions()) {
 		await apt.runAptGetInstall([`gz-${gazeboDistro}`]);
