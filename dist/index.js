@@ -26910,7 +26910,14 @@ function checkUbuntuCompatibility(requiredGazeboDistributionsList, ubuntuCodenam
             collections["collections"].forEach((obj) => {
                 requiredGazeboDistributionsList.forEach((element) => {
                     if (obj["name"] === element) {
-                        if (obj["packaging"]["configs"].indexOf(ubuntuCodename) <= -1) {
+                        const availableDistros = [];
+                        obj["packaging"]["configs"].forEach((distroCode) => {
+                            const packagingInfo = collections["packaging_configs"].find((packaging) => packaging.name === distroCode);
+                            if (packagingInfo.system.distribution === "ubuntu") {
+                                availableDistros.push(packagingInfo.system.version);
+                            }
+                        });
+                        if (availableDistros.indexOf(ubuntuCodename) <= -1) {
                             throw new Error("Incompatible Gazebo and Ubuntu combination. \
                 All compatible combinations can be found at \
                 https://gazebosim.org/docs/latest/getstarted/#step-1-install");

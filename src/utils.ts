@@ -142,7 +142,16 @@ export async function checkUbuntuCompatibility(
 			collections["collections"].forEach((obj: any) => {
 				requiredGazeboDistributionsList.forEach((element) => {
 					if (obj["name"] === element) {
-						if (obj["packaging"]["configs"].indexOf(ubuntuCodename) <= -1) {
+						const availableDistros: string[] = [];
+						obj["packaging"]["configs"].forEach((distroCode: any) => {
+							const packagingInfo = collections["packaging_configs"].find(
+								(packaging: any) => packaging.name === distroCode,
+							);
+							if (packagingInfo.system.distribution === "ubuntu") {
+								availableDistros.push(packagingInfo.system.version);
+							}
+						});
+						if (availableDistros.indexOf(ubuntuCodename) <= -1) {
 							throw new Error(
 								"Incompatible Gazebo and Ubuntu combination. \
                 All compatible combinations can be found at \
