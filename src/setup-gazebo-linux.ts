@@ -1,6 +1,7 @@
 import * as core from "@actions/core";
 import * as io from "@actions/io";
 import * as actions_exec from "@actions/exec";
+import * as im from "@actions/exec/lib/interfaces";
 
 import * as apt from "./package_manager/apt";
 import * as utils from "./utils";
@@ -93,13 +94,19 @@ async function addAptRepo(ubuntuCodename: string): Promise<void> {
 	await utils.exec("sudo", ["apt-get", "update"]);
 }
 
-async function installRosGz(): Promise<void> {
-	await utils.exec("bash", ["-c", `distros=($(ls /opt/ros -1))`]);
-	const output = await actions_exec.getExecOutput("bash", [
+async function installRosGz(): Promise<string> {
+	let rosDistros: string = "";
+	const options: im.ExecOptions = {};
+	options.listeners = {
+		stdout: (data: Buffer) => {
+			rosDistros += data.toString();
+		},
+	};
+	await utils.exec("bash", [
 		"-c",
-		`echo $distros`,
+		`distros=($(ls /opt/ros -1)) ; echo -n "$distros"`,
 	]);
-	console.log(output.stdout);
+	return rosDistros;
 }
 
 /**
@@ -120,5 +127,6 @@ export async function runLinux(): Promise<void> {
 	for (const gazeboDistro of utils.getRequiredGazeboDistributions()) {
 		await apt.runAptGetInstall([`gz-${gazeboDistro}`]);
 	}
-	await installRosGz();
+	const rosDistros = await installRosGz();
+	console.log(rosDistros);
 }

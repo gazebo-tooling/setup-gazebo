@@ -26387,7 +26387,6 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.runLinux = runLinux;
 const core = __importStar(__nccwpck_require__(2186));
 const io = __importStar(__nccwpck_require__(7436));
-const actions_exec = __importStar(__nccwpck_require__(1514));
 const apt = __importStar(__nccwpck_require__(4671));
 const utils = __importStar(__nccwpck_require__(1314));
 /**
@@ -26480,12 +26479,18 @@ function addAptRepo(ubuntuCodename) {
 }
 function installRosGz() {
     return __awaiter(this, void 0, void 0, function* () {
-        yield utils.exec("bash", ["-c", `distros=($(ls /opt/ros -1))`]);
-        const output = yield actions_exec.getExecOutput("bash", [
+        let rosDistros = "";
+        const options = {};
+        options.listeners = {
+            stdout: (data) => {
+                rosDistros += data.toString();
+            },
+        };
+        yield utils.exec("bash", [
             "-c",
-            `echo $distros`,
+            `distros=($(ls /opt/ros -1)) ; echo -n "$distros"`,
         ]);
-        console.log(output.stdout);
+        return rosDistros;
     });
 }
 /**
@@ -26503,7 +26508,8 @@ function runLinux() {
         for (const gazeboDistro of utils.getRequiredGazeboDistributions()) {
             yield apt.runAptGetInstall([`gz-${gazeboDistro}`]);
         }
-        yield installRosGz();
+        const rosDistros = yield installRosGz();
+        console.log(rosDistros);
     });
 }
 
