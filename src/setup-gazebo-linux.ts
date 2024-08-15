@@ -102,10 +102,11 @@ async function installRosGz(): Promise<string> {
 			rosDistros += data.toString();
 		},
 	};
-	await utils.exec("bash", [
-		"-c",
-		`distros=($(ls /opt/ros -1)) ; echo -n "$distros"`,
-	]);
+	await utils.exec(
+		"bash",
+		["-c", `distros=($(ls /opt/ros -1)) ; echo -n "$distros"`],
+		options,
+	);
 	return rosDistros;
 }
 
@@ -124,7 +125,7 @@ export async function runLinux(): Promise<void> {
 
 	utils.checkUbuntuCompatibility(gazeboDistros, ubuntuCodename);
 
-	for (const gazeboDistro of utils.getRequiredGazeboDistributions()) {
+	for (const gazeboDistro of gazeboDistros) {
 		await apt.runAptGetInstall([`gz-${gazeboDistro}`]);
 	}
 	const rosDistros = await installRosGz();
