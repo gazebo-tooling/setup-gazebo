@@ -26479,15 +26479,18 @@ function addAptRepo(ubuntuCodename) {
 }
 function installRosGz() {
     return __awaiter(this, void 0, void 0, function* () {
-        let rosDistros = "";
+        let rosDistroStr = "";
         const options = {};
         options.listeners = {
             stdout: (data) => {
-                rosDistros += data.toString();
+                rosDistroStr += data.toString();
             },
         };
         yield utils.exec("bash", ["-c", `distros=($(ls /opt/ros -1)) ; echo -n "$distros"`], options);
-        return rosDistros;
+        const rosDistros = rosDistroStr.split(" ");
+        for (const rosDistro of rosDistros) {
+            apt.runAptGetInstall([`ros-${rosDistro}-ros-gz`]);
+        }
     });
 }
 /**
@@ -26505,8 +26508,9 @@ function runLinux() {
         for (const gazeboDistro of gazeboDistros) {
             yield apt.runAptGetInstall([`gz-${gazeboDistro}`]);
         }
-        const rosDistros = yield installRosGz();
-        console.log(rosDistros);
+        if (utils.checkForRosGz()) {
+            yield installRosGz();
+        }
     });
 }
 
