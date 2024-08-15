@@ -7,26 +7,32 @@ import * as im from "@actions/exec/lib/interfaces";
 const validGazeboDistroList: {
 	name: string;
 	compatibleUbuntuDistros: string[];
+	compatibleRosDistros: string[];
 }[] = [
 	{
 		name: "citadel",
 		compatibleUbuntuDistros: ["focal"],
+		compatibleRosDistros: ["foxy"],
 	},
 	{
 		name: "fortress",
 		compatibleUbuntuDistros: ["focal", "jammy"],
+		compatibleRosDistros: ["humble", "iron"],
 	},
 	{
 		name: "garden",
 		compatibleUbuntuDistros: ["focal", "jammy"],
+		compatibleRosDistros: [],
 	},
 	{
 		name: "harmonic",
 		compatibleUbuntuDistros: ["jammy", "noble"],
+		compatibleRosDistros: ["jazzy", "rolling"],
 	},
 	{
 		name: "ionic",
 		compatibleUbuntuDistros: ["noble"],
+		compatibleRosDistros: [],
 	},
 ];
 
@@ -160,4 +166,9 @@ export function checkForUnstableAptRepos(): string[] {
 		unstableRepos.push("nightly");
 	}
 	return unstableRepos;
+}
+
+export function checkForRosGz(): boolean {
+	const installRosGz = core.getInput("install-ros-gz") === "true";
+	return installRosGz;
 }

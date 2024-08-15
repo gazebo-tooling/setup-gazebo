@@ -1,5 +1,6 @@
 import * as core from "@actions/core";
 import * as io from "@actions/io";
+import * as actions_exec from "@actions/exec";
 
 import * as apt from "./package_manager/apt";
 import * as utils from "./utils";
@@ -92,6 +93,15 @@ async function addAptRepo(ubuntuCodename: string): Promise<void> {
 	await utils.exec("sudo", ["apt-get", "update"]);
 }
 
+async function installRosGz(): Promise<void> {
+	await utils.exec("bash", ["-c", `distros=($(ls /opt/ros -1))`]);
+	const output = await actions_exec.getExecOutput("bash", [
+		"-c",
+		`echo $distros`,
+	]);
+	console.log(output.stdout);
+}
+
 /**
  * Install Gazebo on a Linux worker.
  */
@@ -110,4 +120,5 @@ export async function runLinux(): Promise<void> {
 	for (const gazeboDistro of utils.getRequiredGazeboDistributions()) {
 		await apt.runAptGetInstall([`gz-${gazeboDistro}`]);
 	}
+	await installRosGz();
 }

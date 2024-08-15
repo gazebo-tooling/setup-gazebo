@@ -29,6 +29,11 @@ inputs:
       Use nightly binaries from OSRF repository
     required: false
     default: 'false'
+  install-ros-gz:
+    description: |
+      Install ros_gz side-by-side with ROS 2 and Gazebo
+    required: false
+    default: 'false'
 runs:
   using: node20
   main: dist/index.js
