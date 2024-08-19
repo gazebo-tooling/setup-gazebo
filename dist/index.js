@@ -26796,26 +26796,11 @@ const yaml_1 = __nccwpck_require__(4083);
 // List of Valid Gazebo distributions with compatible
 // Ubuntu distributions
 const validGazeboDistroList = [
-    {
-        name: "citadel",
-        compatibleUbuntuDistros: ["focal"],
-    },
-    {
-        name: "fortress",
-        compatibleUbuntuDistros: ["focal", "jammy"],
-    },
-    {
-        name: "garden",
-        compatibleUbuntuDistros: ["focal", "jammy"],
-    },
-    {
-        name: "harmonic",
-        compatibleUbuntuDistros: ["jammy", "noble"],
-    },
-    {
-        name: "ionic",
-        compatibleUbuntuDistros: ["noble"],
-    },
+    "citadel",
+    "fortress",
+    "garden",
+    "harmonic",
+    "ionic",
 ];
 /**
  * Execute a command and wrap the output in a log group.
@@ -26863,9 +26848,8 @@ function determineDistribCodename() {
  * @returns boolean Validity of Gazebo distribution
  */
 function validateDistro(requiredGazeboDistributionsList) {
-    const validDistro = validGazeboDistroList.map((obj) => obj.name);
     for (const gazeboDistro of requiredGazeboDistributionsList) {
-        if (validDistro.indexOf(gazeboDistro) <= -1) {
+        if (validGazeboDistroList.indexOf(gazeboDistro) <= -1) {
             return false;
         }
     }
@@ -26907,12 +26891,17 @@ function checkUbuntuCompatibility(requiredGazeboDistributionsList, ubuntuCodenam
             .then((blob) => blob.text())
             .then((yamlStr) => {
             const collections = (0, yaml_1.parseDocument)(yamlStr).toJSON();
-            collections["collections"].forEach((obj) => {
-                requiredGazeboDistributionsList.forEach((element) => {
-                    if (obj["name"] === element) {
+            collections["collections"].forEach((indexCollection) => {
+                requiredGazeboDistributionsList.forEach((requiredCollectionName) => {
+                    // If the name of the Gazebo Distribution in the index matches the
+                    // name in the requiredGazeboDistributionsList then look for the
+                    // supported packaging configs.
+                    if (indexCollection["name"] === requiredCollectionName) {
                         const availableDistros = [];
-                        obj["packaging"]["configs"].forEach((distroCode) => {
-                            const packagingInfo = collections["packaging_configs"].find((packaging) => packaging.name === distroCode);
+                        indexCollection["packaging"]["configs"].forEach((collectionPkgConfigName) => {
+                            const packagingInfo = collections["packaging_configs"].find((packaging) => packaging.name === collectionPkgConfigName);
+                            // The interested packaging configurations are the system.version for ubuntu
+                            // which are the names of the Ubuntu distribution (i.e noble)
                             if (packagingInfo.system.distribution === "ubuntu") {
                                 availableDistros.push(packagingInfo.system.version);
                             }

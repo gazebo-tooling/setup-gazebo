@@ -5,30 +5,12 @@ import { parseDocument } from "yaml";
 
 // List of Valid Gazebo distributions with compatible
 // Ubuntu distributions
-const validGazeboDistroList: {
-	name: string;
-	compatibleUbuntuDistros: string[];
-}[] = [
-	{
-		name: "citadel",
-		compatibleUbuntuDistros: ["focal"],
-	},
-	{
-		name: "fortress",
-		compatibleUbuntuDistros: ["focal", "jammy"],
-	},
-	{
-		name: "garden",
-		compatibleUbuntuDistros: ["focal", "jammy"],
-	},
-	{
-		name: "harmonic",
-		compatibleUbuntuDistros: ["jammy", "noble"],
-	},
-	{
-		name: "ionic",
-		compatibleUbuntuDistros: ["noble"],
-	},
+const validGazeboDistroList: string[] = [
+	"citadel",
+	"fortress",
+	"garden",
+	"harmonic",
+	"ionic",
 ];
 
 /**
@@ -86,9 +68,8 @@ export async function determineDistribCodename(): Promise<string> {
 export function validateDistro(
 	requiredGazeboDistributionsList: string[],
 ): boolean {
-	const validDistro: string[] = validGazeboDistroList.map((obj) => obj.name);
 	for (const gazeboDistro of requiredGazeboDistributionsList) {
-		if (validDistro.indexOf(gazeboDistro) <= -1) {
+		if (validGazeboDistroList.indexOf(gazeboDistro) <= -1) {
 			return false;
 		}
 	}
@@ -139,18 +120,26 @@ export async function checkUbuntuCompatibility(
 		.then((blob) => blob.text())
 		.then((yamlStr) => {
 			const collections = parseDocument(yamlStr).toJSON();
-			collections["collections"].forEach((obj: any) => {
-				requiredGazeboDistributionsList.forEach((element) => {
-					if (obj["name"] === element) {
+			collections["collections"].forEach((indexCollection: any) => {
+				requiredGazeboDistributionsList.forEach((requiredCollectionName) => {
+					// If the name of the Gazebo Distribution in the index matches the
+					// name in the requiredGazeboDistributionsList then look for the
+					// supported packaging configs.
+					if (indexCollection["name"] === requiredCollectionName) {
 						const availableDistros: string[] = [];
-						obj["packaging"]["configs"].forEach((distroCode: any) => {
-							const packagingInfo = collections["packaging_configs"].find(
-								(packaging: any) => packaging.name === distroCode,
-							);
-							if (packagingInfo.system.distribution === "ubuntu") {
-								availableDistros.push(packagingInfo.system.version);
-							}
-						});
+						indexCollection["packaging"]["configs"].forEach(
+							(collectionPkgConfigName: any) => {
+								const packagingInfo = collections["packaging_configs"].find(
+									(packaging: any) =>
+										packaging.name === collectionPkgConfigName,
+								);
+								// The interested packaging configurations are the system.version for ubuntu
+								// which are the names of the Ubuntu distribution (i.e noble)
+								if (packagingInfo.system.distribution === "ubuntu") {
+									availableDistros.push(packagingInfo.system.version);
+								}
+							},
+						);
 						if (availableDistros.indexOf(ubuntuCodename) <= -1) {
 							throw new Error(
 								"Incompatible Gazebo and Ubuntu combination. \
