@@ -139,29 +139,34 @@ export async function checkUbuntuCompatibility(
 		.then((blob) => blob.text())
 		.then((yamlStr) => {
 			const collections = parseDocument(yamlStr).toJSON();
-			collections["collections"].forEach((obj: any) => {
-				requiredGazeboDistributionsList.forEach((element) => {
-					if (obj["name"] === element) {
-						const availableDistros: string[] = [];
-						obj["packaging"]["configs"].forEach((distroCode: any) => {
-							const packagingInfo = collections["packaging_configs"].find(
-								(packaging: any) => packaging.name === distroCode,
-							);
-							if (packagingInfo.system.distribution === "ubuntu") {
-								availableDistros.push(packagingInfo.system.version);
-							}
-						});
-						if (availableDistros.indexOf(ubuntuCodename) <= -1) {
-							throw new Error(
-								"Incompatible Gazebo and Ubuntu combination. \
-                All compatible combinations can be found at \
-                https://gazebosim.org/docs/latest/getstarted/#step-1-install",
-							);
-						}
+			collections["collections"].forEach((indexCollection: any) => {
+				requiredGazeboDistributionsList.forEach((requiredCollectionName) => {
+				// if the name of the Gazebo Distribution in the index matches the
+				// name in the requiredGazeboDistributionsList then look for the
+				// supported packaging configs.
+				if (indexCollection["name"] === requiredCollectionName) {
+					const availableDistros: string[] = [];
+					indexCollection["packaging"]["configs"].forEach((collectionPkgConfigName: any) => {
+					  const packagingInfo = collections["packaging_configs"].find(
+						(packaging: any) => packaging.name === collectionPkgConfigName,
+					  );
+					  // The interested packaging configurations are fthe system.version for ubuntu
+					  // which are the names of the Ubuntu distribution (i.e noble)
+					  if (packagingInfo.system.distribution === "ubuntu") {
+						availableDistros.push(packagingInfo.system.version);
+					  }
+					});
+					if (availableDistros.indexOf(ubuntuCodename) <= -1) {
+					  throw new Error(
+						"Incompatible Gazebo and Ubuntu combination. \
+						All compatible combinations can be found at \
+						https://gazebosim.org/docs/latest/getstarted/#step-1-install",
+					  );
 					}
-				});
+				}
 			});
 		});
+	});
 }
 
 /**
