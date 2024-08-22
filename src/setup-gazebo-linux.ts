@@ -94,26 +94,6 @@ async function addAptRepo(ubuntuCodename: string): Promise<void> {
 	await utils.exec("sudo", ["apt-get", "update"]);
 }
 
-async function installRosGz(): Promise<void> {
-	let rosDistroStr: string = "";
-	const options: im.ExecOptions = {};
-	options.listeners = {
-		stdout: (data: Buffer) => {
-			rosDistroStr += data.toString();
-		},
-	};
-	await utils.exec(
-		"bash",
-		["-c", `distros=($(ls /opt/ros -1)) ; echo -n "$distros"`],
-		options,
-	);
-
-	const rosDistros: string[] = rosDistroStr.split(" ");
-	for (const rosDistro of rosDistros) {
-		apt.runAptGetInstall([`ros-${rosDistro}-ros-gz`]);
-	}
-}
-
 /**
  * Install Gazebo on a Linux worker.
  */
@@ -133,7 +113,8 @@ export async function runLinux(): Promise<void> {
 		await apt.runAptGetInstall([`gz-${gazeboDistro}`]);
 	}
 
-	if (utils.checkForRosGz()) {
-		await installRosGz();
+	const rosGzDistros = utils.checkForRosGz();
+	for (const rosGzDistro of rosGzDistros) {
+		await apt.runAptGetInstall([`ros-${rosGzDistro}-ros-gz`]);
 	}
 }

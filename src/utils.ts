@@ -36,6 +36,9 @@ const validGazeboDistroList: {
 	},
 ];
 
+// List of valid ROS 2 distributions
+const validRosGzDistrosList: string[] = ["humble", "iron", "jazzy", "rolling"];
+
 /**
  * Execute a command and wrap the output in a log group.
  *
@@ -94,6 +97,23 @@ export function validateDistro(
 	const validDistro: string[] = validGazeboDistroList.map((obj) => obj.name);
 	for (const gazeboDistro of requiredGazeboDistributionsList) {
 		if (validDistro.indexOf(gazeboDistro) <= -1) {
+			return false;
+		}
+	}
+	return true;
+}
+
+/**
+ * Validate all ROS distribution names
+ *
+ * @returns boolean Validaity of the ROS distribution
+ */
+export function validateRosDistro(rosGzDistrosList: string[]): boolean {
+	if (rosGzDistrosList.length <= 0) {
+		return true;
+	}
+	for (const rosDistro of rosGzDistrosList) {
+		if (validRosGzDistrosList.indexOf(rosDistro) <= -1) {
 			return false;
 		}
 	}
@@ -168,7 +188,19 @@ export function checkForUnstableAptRepos(): string[] {
 	return unstableRepos;
 }
 
-export function checkForRosGz(): boolean {
-	const installRosGz = core.getInput("install-ros-gz") === "true";
-	return installRosGz;
+/**
+ * Check for inputs to install ros-gz
+ *
+ * @returns requiredRosDistroList list of valid ROS 2 distributions
+ */
+export function checkForRosGz(): string[] {
+	let requiredRosDistroList: string[] = [];
+	const installRosGz = core.getInput("install-ros-gz");
+	if (installRosGz) {
+		requiredRosDistroList = installRosGz.split(RegExp("\\s"));
+	}
+	if (!validateRosDistro(requiredRosDistroList)) {
+		throw new Error("Input has invalid ROS 2 distribution names.");
+	}
+	return requiredRosDistroList;
 }

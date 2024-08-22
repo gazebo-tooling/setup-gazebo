@@ -32,8 +32,17 @@ inputs:
   install-ros-gz:
     description: |
       Install ros_gz side-by-side with ROS 2 and Gazebo
+
+      Allowed ROS 2 distributions
+      - humble
+      - iron
+      - jazzy
+      - rolling
+
+      Multiple values can be passed using a whitespace delimited list
+      "humble iron".
     required: false
-    default: 'false'
+    default: ''
 runs:
   using: node20
   main: dist/index.js
