@@ -26487,9 +26487,9 @@ function runLinux() {
         // Add repo according to Ubuntu version
         const ubuntuCodename = yield utils.determineDistribCodename();
         yield addAptRepo(ubuntuCodename);
-        const gazeboDistros = utils.getRequiredGazeboDistributions();
+        const gazeboDistros = yield utils.getRequiredGazeboDistributions();
         yield utils.checkUbuntuCompatibility(gazeboDistros, ubuntuCodename);
-        for (const gazeboDistro of utils.getRequiredGazeboDistributions()) {
+        for (const gazeboDistro of gazeboDistros) {
             yield apt.runAptGetInstall([`gz-${gazeboDistro}`]);
         }
     });
@@ -26575,7 +26575,8 @@ function runMacOs() {
     return __awaiter(this, void 0, void 0, function* () {
         yield addBrewRepo();
         yield overwritePythonInstall();
-        for (const gazeboDistro of utils.getRequiredGazeboDistributions()) {
+        const gazeboDistros = yield utils.getRequiredGazeboDistributions();
+        for (const gazeboDistro of gazeboDistros) {
             yield brew.runBrew([`gz-${gazeboDistro}`]);
         }
     });
@@ -26663,7 +26664,8 @@ function getLibVersion(gazeboDistro) {
  */
 function runWindows() {
     return __awaiter(this, void 0, void 0, function* () {
-        for (const gazeboDistro of utils.getRequiredGazeboDistributions()) {
+        const gazeboDistros = yield utils.getRequiredGazeboDistributions();
+        for (const gazeboDistro of gazeboDistros) {
             const version = yield getLibVersion(gazeboDistro);
             yield conda.runConda([`gz-sim${version}`]);
         }
@@ -26793,15 +26795,7 @@ exports.checkForUnstableAptRepos = checkForUnstableAptRepos;
 const actions_exec = __importStar(__nccwpck_require__(1514));
 const core = __importStar(__nccwpck_require__(2186));
 const yaml_1 = __nccwpck_require__(4083);
-// List of Valid Gazebo distributions with compatible
-// Ubuntu distributions
-const validGazeboDistroList = [
-    "citadel",
-    "fortress",
-    "garden",
-    "harmonic",
-    "ionic",
-];
+const collections_url = "https://raw.githubusercontent.com/gazebo-tooling/release-tools/master/jenkins-scripts/dsl/gz-collections.yaml";
 /**
  * Execute a command and wrap the output in a log group.
  *
@@ -26845,35 +26839,43 @@ function determineDistribCodename() {
  * Validate all Gazebo input distribution names
  *
  * @param requiredGazeboDistributionsList
- * @returns boolean Validity of Gazebo distribution
+ * @returns Promise<void>
  */
 function validateDistro(requiredGazeboDistributionsList) {
-    for (const gazeboDistro of requiredGazeboDistributionsList) {
-        if (validGazeboDistroList.indexOf(gazeboDistro) <= -1) {
-            return false;
-        }
-    }
-    return true;
+    return __awaiter(this, void 0, void 0, function* () {
+        yield fetch(collections_url)
+            .then((response) => response.blob())
+            .then((blob) => blob.text())
+            .then((yamlStr) => {
+            const collections = (0, yaml_1.parseDocument)(yamlStr).toJSON();
+            requiredGazeboDistributionsList.forEach((gazeboDistro) => {
+                const valid = collections["collections"].some((collectionsDistro) => collectionsDistro.name === gazeboDistro);
+                if (!valid) {
+                    throw new Error("Input has invalid distribution names.");
+                }
+            });
+        });
+    });
 }
 /**
  * Gets the input of the Gazebo distributions to be installed and
  * validates them
  *
- * @returns string[] List of validated Gazebo distributions
+ * @returns Promise<string[]> List of validated Gazebo distributions
  */
 function getRequiredGazeboDistributions() {
-    let requiredGazeboDistributionsList = [];
-    const requiredGazeboDistributions = core.getInput("required-gazebo-distributions");
-    if (requiredGazeboDistributions) {
-        requiredGazeboDistributionsList = requiredGazeboDistributions.split(RegExp("\\s"));
-    }
-    else {
-        throw new Error("Input cannot be empty.");
-    }
-    if (!validateDistro(requiredGazeboDistributionsList)) {
-        throw new Error("Input has invalid distribution names.");
-    }
-    return requiredGazeboDistributionsList;
+    return __awaiter(this, void 0, void 0, function* () {
+        let requiredGazeboDistributionsList = [];
+        const requiredGazeboDistributions = core.getInput("required-gazebo-distributions");
+        if (requiredGazeboDistributions) {
+            requiredGazeboDistributionsList = requiredGazeboDistributions.split(RegExp("\\s"));
+        }
+        else {
+            throw new Error("Input cannot be empty.");
+        }
+        yield validateDistro(requiredGazeboDistributionsList);
+        return requiredGazeboDistributionsList;
+    });
 }
 /**
  * Check the compatability of the Ubuntu version against the
@@ -26886,7 +26888,7 @@ function getRequiredGazeboDistributions() {
  */
 function checkUbuntuCompatibility(requiredGazeboDistributionsList, ubuntuCodename) {
     return __awaiter(this, void 0, void 0, function* () {
-        yield fetch("https://raw.githubusercontent.com/gazebo-tooling/release-tools/master/jenkins-scripts/dsl/gz-collections.yaml")
+        yield fetch(collections_url)
             .then((response) => response.blob())
             .then((blob) => blob.text())
             .then((yamlStr) => {

@@ -36,7 +36,9 @@ export async function runMacOs(): Promise<void> {
 
 	await overwritePythonInstall();
 
-	for (const gazeboDistro of utils.getRequiredGazeboDistributions()) {
+	const gazeboDistros = await utils.getRequiredGazeboDistributions();
+
+	for (const gazeboDistro of gazeboDistros) {
 		await brew.runBrew([`gz-${gazeboDistro}`]);
 	}
 }
