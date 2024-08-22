@@ -26795,6 +26795,7 @@ exports.checkForUnstableAptRepos = checkForUnstableAptRepos;
 const actions_exec = __importStar(__nccwpck_require__(1514));
 const core = __importStar(__nccwpck_require__(2186));
 const yaml_1 = __nccwpck_require__(4083);
+// Collections file that contains all the valid Gazebo distributions along all compatiblity information
 const collections_url = "https://raw.githubusercontent.com/gazebo-tooling/release-tools/master/jenkins-scripts/dsl/gz-collections.yaml";
 /**
  * Execute a command and wrap the output in a log group.

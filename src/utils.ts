@@ -3,6 +3,7 @@ import * as core from "@actions/core";
 import * as im from "@actions/exec/lib/interfaces";
 import { parseDocument } from "yaml";
 
+// Collections file that contains all the valid Gazebo distributions along all compatiblity information
 const collections_url: string =
 	"https://raw.githubusercontent.com/gazebo-tooling/release-tools/master/jenkins-scripts/dsl/gz-collections.yaml";
 
