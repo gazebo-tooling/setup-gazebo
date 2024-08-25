@@ -32,6 +32,7 @@ describe("workflow test with a invalid distro input", () => {
 	beforeAll(() => {
 		jest.spyOn(exec, "exec").mockImplementation(jest.fn());
 		jest.spyOn(core, "getInput").mockReturnValue("dome");
+		jest.spyOn(utils, "checkForRosGz").mockReturnValue([]);
 	});
 
 	afterAll(() => {
@@ -55,6 +56,7 @@ describe("workflow test with a valid distro input", () => {
 	beforeAll(() => {
 		jest.spyOn(exec, "exec").mockImplementation(jest.fn());
 		jest.spyOn(core, "getInput").mockReturnValue("harmonic");
+		jest.spyOn(utils, "checkForRosGz").mockReturnValue([]);
 		jest
 			.spyOn(utils, "determineDistribCodename")
 			.mockReturnValue(Promise.resolve("jammy"));
@@ -77,7 +79,7 @@ describe("workflow test with a valid distro input", () => {
 	});
 });
 
-describe("validate distribution test", () => {
+describe("validate Gazebo distribution test", () => {
 	it("test valid distro", async () => {
 		await expect(utils.validateDistro(["citadel"])).toBe(true);
 		await expect(utils.validateDistro(["fortress"])).toBe(true);
@@ -98,10 +100,31 @@ describe("validate distribution test", () => {
 	});
 });
 
+describe("validate ROS 2 distribution test", () => {
+	it("test valid distro", async () => {
+		await expect(utils.validateRosDistro(["humble"])).toBe(true);
+		await expect(utils.validateRosDistro(["iron"])).toBe(true);
+		await expect(utils.validateRosDistro(["jazzy"])).toBe(true);
+		await expect(utils.validateRosDistro(["rolling"])).toBe(true);
+		await expect(utils.validateRosDistro(["humble", "jazzy"])).toBe(true);
+	});
+	it("test invalid distro", async () => {
+		await expect(utils.validateRosDistro(["noetic"])).toBe(false);
+		await expect(utils.validateRosDistro(["foxy"])).toBe(false);
+		await expect(utils.validateRosDistro(["galactic"])).toBe(false);
+		await expect(utils.validateRosDistro(["doesNotExist"])).toBe(false);
+		await expect(utils.validateRosDistro(["noetic", "humble"])).toBe(false);
+		await expect(utils.validateRosDistro(["foxy", "galactic", "jazzy"])).toBe(
+			false,
+		);
+	});
+});
+
 describe("workflow test with incompatible Ubuntu combination", () => {
 	beforeAll(() => {
 		jest.spyOn(exec, "exec").mockImplementation(jest.fn());
 		jest.spyOn(core, "getInput").mockReturnValue("harmonic");
+		jest.spyOn(utils, "checkForRosGz").mockReturnValue([]);
 		jest
 			.spyOn(utils, "determineDistribCodename")
 			.mockReturnValue(Promise.resolve("focal"));
@@ -128,6 +151,7 @@ describe("check for unstable repositories input", () => {
 			.spyOn(utils, "checkForUnstableAptRepos")
 			.mockReturnValueOnce(["prerelease", "nightly"]);
 		jest.spyOn(core, "getInput").mockReturnValue("harmonic");
+		jest.spyOn(utils, "checkForRosGz").mockReturnValue([]);
 		jest
 			.spyOn(utils, "determineDistribCodename")
 			.mockReturnValue(Promise.resolve("jammy"));

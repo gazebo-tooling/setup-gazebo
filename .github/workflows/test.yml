@@ -273,4 +273,4 @@ jobs:
         uses: ./
         with:
           required-gazebo-distributions: 'harmonic'
-          install-ros-gz: 'true'
+          install-ros-gz: 'jazzy iron'
