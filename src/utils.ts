@@ -1,39 +1,16 @@
 import * as actions_exec from "@actions/exec";
 import * as core from "@actions/core";
 import * as im from "@actions/exec/lib/interfaces";
+import { parseDocument } from "yaml";
 
 // List of Valid Gazebo distributions with compatible
 // Ubuntu distributions
-const validGazeboDistroList: {
-	name: string;
-	compatibleUbuntuDistros: string[];
-	compatibleRosDistros: string[];
-}[] = [
-	{
-		name: "citadel",
-		compatibleUbuntuDistros: ["focal"],
-		compatibleRosDistros: ["foxy"],
-	},
-	{
-		name: "fortress",
-		compatibleUbuntuDistros: ["focal", "jammy"],
-		compatibleRosDistros: ["humble", "iron"],
-	},
-	{
-		name: "garden",
-		compatibleUbuntuDistros: ["focal", "jammy"],
-		compatibleRosDistros: [],
-	},
-	{
-		name: "harmonic",
-		compatibleUbuntuDistros: ["jammy", "noble"],
-		compatibleRosDistros: ["jazzy", "rolling"],
-	},
-	{
-		name: "ionic",
-		compatibleUbuntuDistros: ["noble"],
-		compatibleRosDistros: [],
-	},
+const validGazeboDistroList: string[] = [
+	"citadel",
+	"fortress",
+	"garden",
+	"harmonic",
+	"ionic",
 ];
 
 // List of valid ROS 2 distributions
@@ -94,9 +71,8 @@ export async function determineDistribCodename(): Promise<string> {
 export function validateDistro(
 	requiredGazeboDistributionsList: string[],
 ): boolean {
-	const validDistro: string[] = validGazeboDistroList.map((obj) => obj.name);
 	for (const gazeboDistro of requiredGazeboDistributionsList) {
-		if (validDistro.indexOf(gazeboDistro) <= -1) {
+		if (validGazeboDistroList.indexOf(gazeboDistro) <= -1) {
 			return false;
 		}
 	}
@@ -151,23 +127,50 @@ export function getRequiredGazeboDistributions(): string[] {
  *
  * @param requiredGazeboDistributionsList
  * @param ubuntuCodename
+ * @returns Promise<void>
  */
-export function checkUbuntuCompatibility(
+export async function checkUbuntuCompatibility(
 	requiredGazeboDistributionsList: string[],
 	ubuntuCodename: string,
-) {
-	requiredGazeboDistributionsList.forEach((element) => {
-		const compatibleDistros = validGazeboDistroList.find(
-			(obj) => obj.name === element,
-		)!.compatibleUbuntuDistros;
-		if (compatibleDistros.indexOf(ubuntuCodename) <= -1) {
-			throw new Error(
-				"Incompatible Gazebo and Ubuntu combination. \
-        All compatible combinations can be found at \
-        https://gazebosim.org/docs/latest/getstarted/#step-1-install",
-			);
-		}
-	});
+): Promise<void> {
+	await fetch(
+		"https://raw.githubusercontent.com/gazebo-tooling/release-tools/master/jenkins-scripts/dsl/gz-collections.yaml",
+	)
+		.then((response) => response.blob())
+		.then((blob) => blob.text())
+		.then((yamlStr) => {
+			const collections = parseDocument(yamlStr).toJSON();
+			collections["collections"].forEach((indexCollection: any) => {
+				requiredGazeboDistributionsList.forEach((requiredCollectionName) => {
+					// If the name of the Gazebo Distribution in the index matches the
+					// name in the requiredGazeboDistributionsList then look for the
+					// supported packaging configs.
+					if (indexCollection["name"] === requiredCollectionName) {
+						const availableDistros: string[] = [];
+						indexCollection["packaging"]["configs"].forEach(
+							(collectionPkgConfigName: any) => {
+								const packagingInfo = collections["packaging_configs"].find(
+									(packaging: any) =>
+										packaging.name === collectionPkgConfigName,
+								);
+								// The interested packaging configurations are the system.version for ubuntu
+								// which are the names of the Ubuntu distribution (i.e noble)
+								if (packagingInfo.system.distribution === "ubuntu") {
+									availableDistros.push(packagingInfo.system.version);
+								}
+							},
+						);
+						if (availableDistros.indexOf(ubuntuCodename) <= -1) {
+							throw new Error(
+								"Incompatible Gazebo and Ubuntu combination. \
+                All compatible combinations can be found at \
+                https://gazebosim.org/docs/latest/getstarted/#step-1-install",
+							);
+						}
+					}
+				});
+			});
+		});
 }
 
 /**

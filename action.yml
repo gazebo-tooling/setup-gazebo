@@ -12,7 +12,7 @@ inputs:
         Allowed Gazebo distributions
         - citadel
         - fortress
-        - gardendasdad
+        - garden
         - harmonic
 
         Multiple values can be passed using a whitespace delimited list
