@@ -173,3 +173,11 @@ describe("check for unstable repositories input", () => {
 		await expect(linux.runLinux()).resolves.not.toThrow();
 	});
 });
+
+describe("generate APT package names for ros_gz", () => {
+	it("test ROS 2 and gazebo combination", async () => {
+		await expect(
+			utils.generateRosAptPackageNames(["rolling", "iron"], ["harmonic"]),
+		).toEqual(["ros-rolling-ros-gz", "ros-iron-ros-gzharmonic"]);
+	});
+});

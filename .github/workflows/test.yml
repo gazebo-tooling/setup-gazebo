@@ -258,7 +258,7 @@ jobs:
           gz sim --versions
 
   test_install_ros_gz:
-    name: 'Install ROS 2 side-by-side Gazebo'
+    name: 'Install ROS 2 and Gazebo side-by-side'
     runs-on: ubuntu-latest
     container:
       image: ubuntu:jammy

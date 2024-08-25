@@ -26810,7 +26810,9 @@ const validGazeboDistroList = [
     "harmonic",
     "ionic",
 ];
-// List of valid ROS 2 distributions
+// List of valid ROS 2 distributions and compatible Gazebo mapping
+// For more information check the following link
+// https://gazebosim.org/docs/latest/ros_installation/#summary-of-compatible-ros-and-gazebo-combinations
 const validRosGzDistrosList = [
     {
         rosDistro: "humble",
@@ -26990,7 +26992,6 @@ function checkForUnstableAptRepos() {
 function checkForRosGz() {
     let requiredRosDistroList = [];
     const installRosGz = core.getInput("install-ros-gz");
-    console.log(installRosGz);
     if (installRosGz) {
         requiredRosDistroList = installRosGz.split(RegExp("\\s"));
         if (!validateRosDistro(requiredRosDistroList)) {
@@ -26999,6 +27000,13 @@ function checkForRosGz() {
     }
     return requiredRosDistroList;
 }
+/**
+ * Generate APT package name from ROS 2 and Gazebo distribution names
+ *
+ * @param rosGzDistrosList ROS 2 distro ros_gz packages to be installed
+ * @param requiredGazeboDistributionsList Installed Gazebo distributions
+ * @returns string [] List of APT package names
+ */
 function generateRosAptPackageNames(rosGzDistrosList, requiredGazeboDistributionsList) {
     const rosAptPackageNames = [];
     for (const rosDistro of rosGzDistrosList) {
