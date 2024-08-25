@@ -114,7 +114,11 @@ export async function runLinux(): Promise<void> {
 	}
 
 	const rosGzDistros = utils.checkForRosGz();
-	for (const rosGzDistro of rosGzDistros) {
-		await apt.runAptGetInstall([`ros-${rosGzDistro}-ros-gz`]);
+	if (rosGzDistros.length > 0) {
+		const rosAptPackageNames = utils.generateRosAptPackageNames(
+			rosGzDistros,
+			gazeboDistros,
+		);
+		await apt.runAptGetInstall(rosAptPackageNames);
 	}
 }

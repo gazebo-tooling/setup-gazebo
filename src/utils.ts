@@ -14,7 +14,32 @@ const validGazeboDistroList: string[] = [
 ];
 
 // List of valid ROS 2 distributions
-const validRosGzDistrosList: string[] = ["humble", "iron", "jazzy", "rolling"];
+const validRosGzDistrosList: {
+	rosDistro: string;
+	compatibleGazeboDistros: string[];
+	useWithCautionGazeboDistros: string[];
+}[] = [
+	{
+		rosDistro: "humble",
+		compatibleGazeboDistros: ["fortress"],
+		useWithCautionGazeboDistros: ["garden", "harmonic"],
+	},
+	{
+		rosDistro: "iron",
+		compatibleGazeboDistros: ["fortress"],
+		useWithCautionGazeboDistros: ["garden", "harmonic"],
+	},
+	{
+		rosDistro: "jazzy",
+		compatibleGazeboDistros: ["harmonic"],
+		useWithCautionGazeboDistros: ["garden"],
+	},
+	{
+		rosDistro: "rolling",
+		compatibleGazeboDistros: ["harmonic"],
+		useWithCautionGazeboDistros: ["garden"],
+	},
+];
 
 /**
  * Execute a command and wrap the output in a log group.
@@ -82,15 +107,18 @@ export function validateDistro(
 /**
  * Validate all ROS distribution names
  *
+ * @param rosGzDistrosList
  * @returns boolean Validaity of the ROS distribution
  */
 export function validateRosDistro(rosGzDistrosList: string[]): boolean {
-	if (rosGzDistrosList.length <= 0) {
-		return true;
-	}
-	for (const rosDistro of rosGzDistrosList) {
-		if (validRosGzDistrosList.indexOf(rosDistro) <= -1) {
-			return false;
+	if (rosGzDistrosList.length > 0) {
+		const validDistro: string[] = validRosGzDistrosList.map(
+			(obj) => obj.rosDistro,
+		);
+		for (const rosDistro of rosGzDistrosList) {
+			if (validDistro.indexOf(rosDistro) <= -1) {
+				return false;
+			}
 		}
 	}
 	return true;
@@ -199,11 +227,40 @@ export function checkForUnstableAptRepos(): string[] {
 export function checkForRosGz(): string[] {
 	let requiredRosDistroList: string[] = [];
 	const installRosGz = core.getInput("install-ros-gz");
+	console.log(installRosGz);
 	if (installRosGz) {
 		requiredRosDistroList = installRosGz.split(RegExp("\\s"));
-	}
-	if (!validateRosDistro(requiredRosDistroList)) {
-		throw new Error("Input has invalid ROS 2 distribution names.");
+		if (!validateRosDistro(requiredRosDistroList)) {
+			throw new Error("Input has invalid ROS 2 distribution names.");
+		}
 	}
 	return requiredRosDistroList;
+}
+
+export function generateRosAptPackageNames(
+	rosGzDistrosList: string[],
+	requiredGazeboDistributionsList: string[],
+): string[] {
+	const rosAptPackageNames: string[] = [];
+	for (const rosDistro of rosGzDistrosList) {
+		const distroInfo = validRosGzDistrosList.find(
+			(distro) => distro.rosDistro === rosDistro,
+		);
+		for (const gazeboDistro of requiredGazeboDistributionsList) {
+			if (distroInfo!.compatibleGazeboDistros.indexOf(gazeboDistro) > -1) {
+				rosAptPackageNames.push(`ros-${rosDistro}-ros-gz`);
+			} else if (
+				distroInfo!.useWithCautionGazeboDistros.indexOf(gazeboDistro) > -1
+			) {
+				rosAptPackageNames.push(`ros-${rosDistro}-ros_gz${gazeboDistro}`);
+			} else {
+				throw new Error(
+					"Impossible ROS 2 and Gazebo combination requested. \
+          Please check the list of compatible combinations at \
+          https://gazebosim.org/docs/latest/ros_installation/#summary-of-compatible-ros-and-gazebo-combinations",
+				);
+			}
+		}
+	}
+	return rosAptPackageNames;
 }
