@@ -272,9 +272,9 @@ jobs:
       - name: 'Install ROS 2 Iron and Rolling'
         uses: ros-tooling/setup-ros@v0.7
         with:
-          required-ros-distributions: '$ROS_DISTROS'
+          required-ros-distributions: $ROS_DISTROS
       - name: 'Install Gazebo with ros_gz'
         uses: ./
         with:
           required-gazebo-distributions: 'harmonic'
-          install-ros-gz: '$ROS_DISTROS'
+          install-ros-gz: $ROS_DISTROS
