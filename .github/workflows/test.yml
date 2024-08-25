@@ -262,8 +262,6 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: ubuntu:jammy
-    env:
-      ROS_DISTROS: iron rolling
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4.0.3
@@ -272,9 +270,9 @@ jobs:
       - name: 'Install ROS 2 Iron and Rolling'
         uses: ros-tooling/setup-ros@v0.7
         with:
-          required-ros-distributions: $ROS_DISTROS
+          required-ros-distributions: 'rolling iron'
       - name: 'Install Gazebo with ros_gz'
         uses: ./
         with:
           required-gazebo-distributions: 'harmonic'
-          install-ros-gz: $ROS_DISTROS
+          install-ros-gz: 'rolling iron'
