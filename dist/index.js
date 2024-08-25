@@ -27008,7 +27008,7 @@ function generateRosAptPackageNames(rosGzDistrosList, requiredGazeboDistribution
                 rosAptPackageNames.push(`ros-${rosDistro}-ros-gz`);
             }
             else if (distroInfo.useWithCautionGazeboDistros.indexOf(gazeboDistro) > -1) {
-                rosAptPackageNames.push(`ros-${rosDistro}-ros_gz${gazeboDistro}`);
+                rosAptPackageNames.push(`ros-${rosDistro}-ros-gz${gazeboDistro}`);
             }
             else {
                 throw new Error("Impossible ROS 2 and Gazebo combination requested. \
