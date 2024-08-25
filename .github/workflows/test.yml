@@ -259,18 +259,22 @@ jobs:
 
   test_install_ros_gz:
     name: 'Install ROS 2 side-by-side Gazebo'
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
+    container:
+      image: ubuntu:jammy
+    env:
+      ROS_DISTROS: 'iron rolling'
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4.0.3
         with:
           node-version: '20.x'
-      - name: 'Install ROS 2 Jazzy'
+      - name: 'Install ROS 2 Iron and Rolling'
         uses: ros-tooling/setup-ros@v0.7
         with:
-          required-ros-distributions: 'iron jazzy'
+          required-ros-distributions: $ROS_DISTROS
       - name: 'Install Gazebo with ros_gz'
         uses: ./
         with:
           required-gazebo-distributions: 'harmonic'
-          install-ros-gz: 'jazzy iron'
+          install-ros-gz: $ROS_DISTROS
