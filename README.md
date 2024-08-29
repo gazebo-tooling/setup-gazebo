@@ -13,6 +13,7 @@ This action sets up a Gazebo environment.
         1. [Setting up worker and installing a compatible Gazebo and Ubuntu combination](#Setting-up-worker-and-installing-a-compatible-Gazebo-and-Ubuntu-combination)
         1. [Iterating on all Gazebo and Ubuntu combinations](#Iterating-on-all-gazebo-ubuntu-combinations)
         1. [Using pre-release and/or nightly Gazebo binaries](#Using-pre-release-and/or-nightly-Gazebo-binaries)
+        1. [Installing ROS 2 and Gazebo side-by-side along with `ros-gz`](#Installing-ROS-2-and-Gazebo-side-by-side-along-with-ros-gz)
     2. [macOS](#macOS)
         1. [Setting up worker to install Gazebo on macOS](#Setting-up-worker-to-install-Gazebo-on-macOS)
     3. [Windows](#Windows)
@@ -243,6 +244,32 @@ This workflow shows how to use binaries from [pre-release] or [nightly] Gazebo r
               use-gazebo-nightly: 'true'
           - name: 'Test Gazebo installation'
             run: 'gz sim --versions'
+```
+
+#### Installing ROS 2 and Gazebo side-by-side along with `ros-gz`
+
+This workflow shows how to install ROS 2 using the GitHub action `ros-tooling/setup-ros` along with Gazebo installed using `setup-gazebo`. The `ros-gz` package can be installed by setting the input parameter `install-ros-gz` to the required ROS 2 distributions.
+
+```yaml
+  jobs:
+    test_gazebo:
+      runs-on: ubuntu-latest
+      container:
+        image: ubuntu:jammy
+      steps:
+        - uses: actions/checkout@v4
+        - uses: actions/setup-node@v4.0.3
+          with:
+            node-version: '20.x'
+        - name: 'Install ROS 2 Iron and Rolling'
+          uses: ros-tooling/setup-ros@v0.7
+          with:
+            required-ros-distributions: 'rolling iron'
+        - name: 'Install Gazebo with ros_gz'
+          uses: gazebo-tooling/setup-gazebo@v0.1.0
+          with:
+            required-gazebo-distributions: 'harmonic'
+            install-ros-gz: 'rolling iron'
 ```
 
 ### macOS
