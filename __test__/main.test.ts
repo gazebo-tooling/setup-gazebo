@@ -175,9 +175,15 @@ describe("check for unstable repositories input", () => {
 });
 
 describe("generate APT package names for ros_gz", () => {
-	it("test ROS 2 and gazebo combination", async () => {
+	it("test ros_gz output package names list", async () => {
 		await expect(
 			utils.generateRosAptPackageNames(["rolling", "iron"], ["harmonic"]),
 		).toEqual(["ros-rolling-ros-gz", "ros-iron-ros-gzharmonic"]);
+		await expect(
+			utils.generateRosAptPackageNames(["jazzy"], ["harmonic"]),
+		).toEqual(["ros-jazzy-ros-gz"]);
+		await expect(
+			utils.generateRosAptPackageNames(["iron"], ["fortress", "garden"]),
+		).toEqual(["ros-iron-ros-gz", "ros-iron-ros-gzgarden"]);
 	});
 });
