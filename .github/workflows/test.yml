@@ -276,3 +276,15 @@ jobs:
         with:
           required-gazebo-distributions: 'harmonic'
           install-ros-gz: 'rolling iron'
+      - name: Test Gazebo installation
+        run: |
+          gz sim --versions
+      - name: Test Rolling ros_gz installation
+        run: |
+          source /opt/ros/rolling/setup.bash
+          ros2 pkg list | grep ros_gz
+      - name: Test Iron ros_gz installation
+        run: |
+          source /opt/ros/iron/setup.bash
+          ros2 pkg list | grep ros_gz
+
