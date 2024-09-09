@@ -79,22 +79,24 @@ describe("workflow test with a valid distro input", () => {
 
 describe("validate distribution test", () => {
 	it("test valid distro", async () => {
-		await expect(utils.validateDistro(["citadel"])).toBe(true);
-		await expect(utils.validateDistro(["fortress"])).toBe(true);
-		await expect(utils.validateDistro(["garden"])).toBe(true);
-		await expect(utils.validateDistro(["harmonic"])).toBe(true);
-		await expect(utils.validateDistro(["fortress", "garden"])).toBe(true);
+		await expect(utils.validateDistro(["citadel"])).resolves.not.toThrow();
+		await expect(utils.validateDistro(["fortress"])).resolves.not.toThrow();
+		await expect(utils.validateDistro(["garden"])).resolves.not.toThrow();
+		await expect(utils.validateDistro(["harmonic"])).resolves.not.toThrow();
+		await expect(
+			utils.validateDistro(["fortress", "garden"]),
+		).resolves.not.toThrow();
 	});
 	it("test invalid distro", async () => {
-		await expect(utils.validateDistro(["acropolis"])).toBe(false);
-		await expect(utils.validateDistro(["blueprint"])).toBe(false);
-		await expect(utils.validateDistro(["dome"])).toBe(false);
-		await expect(utils.validateDistro(["edifice"])).toBe(false);
-		await expect(utils.validateDistro(["doesNotExist"])).toBe(false);
-		await expect(utils.validateDistro(["dome", "fortress"])).toBe(false);
-		await expect(utils.validateDistro(["citadel", "edifice", "harmonic"])).toBe(
-			false,
-		);
+		await expect(utils.validateDistro(["acropolis"])).rejects.toThrow();
+		await expect(utils.validateDistro(["blueprint"])).rejects.toThrow();
+		await expect(utils.validateDistro(["dome"])).rejects.toThrow();
+		await expect(utils.validateDistro(["edifice"])).rejects.toThrow();
+		await expect(utils.validateDistro(["doesNotExist"])).rejects.toThrow();
+		await expect(utils.validateDistro(["dome", "fortress"])).rejects.toThrow();
+		await expect(
+			utils.validateDistro(["citadel", "edifice", "harmonic"]),
+		).rejects.toThrow();
 	});
 });
 
