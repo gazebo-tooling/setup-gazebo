@@ -2,9 +2,6 @@ name: 'Test setup-gazebo'
 on:
   pull_request:
   push:
-    branches:
-      - main
-      - 'releases/*'
   schedule:
     # Run the CI automatically twice per day to look for flakyness.
     - cron: '0 */12 * * *'
@@ -260,7 +257,7 @@ jobs:
   test_install_ros_gz:
     name: 'Install ROS 2 and Gazebo side-by-side'
     env:
-      ROS_DISTROS: 'rolling iron'
+      ROS_DISTROS: 'jazzy iron rolling'
     runs-on: ubuntu-latest
     container:
       image: ubuntu:jammy
@@ -269,7 +266,7 @@ jobs:
       - uses: actions/setup-node@v4.0.3
         with:
           node-version: '20.x'
-      - name: 'Install ROS 2 Iron and Rolling'
+      - name: 'Install ROS 2 Iron and Jazzy'
         uses: ros-tooling/setup-ros@v0.7
         with:
           required-ros-distributions: ${{ env.ROS_DISTROS }}
@@ -281,12 +278,13 @@ jobs:
       - name: Test Gazebo installation
         run: |
           gz sim --versions
-      - name: Test Rolling ros_gz installation
+      - name: Test Jazzy ros_gz installation
         run: |
           source /opt/ros/rolling/setup.bash
           ros2 pkg list | grep ros_gz
+          gz sim --version | grep 'version 8.[0-9*].[0-9*]'
       - name: Test Iron ros_gz installation
         run: |
           source /opt/ros/iron/setup.bash
           ros2 pkg list | grep ros_gz
-
+          gz sim --version | grep 'version 8.[0-9*].[0-9*]'
