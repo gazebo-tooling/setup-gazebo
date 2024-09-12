@@ -26819,16 +26819,6 @@ const validRosGzDistrosList = [
         compatibleGazeboDistros: ["fortress"],
         useWithCautionGazeboDistros: ["garden", "harmonic"],
     },
-    {
-        rosDistro: "jazzy",
-        compatibleGazeboDistros: ["harmonic"],
-        useWithCautionGazeboDistros: ["garden"],
-    },
-    {
-        rosDistro: "rolling",
-        compatibleGazeboDistros: ["harmonic"],
-        useWithCautionGazeboDistros: ["garden"],
-    },
 ];
 /**
  * Execute a command and wrap the output in a log group.
