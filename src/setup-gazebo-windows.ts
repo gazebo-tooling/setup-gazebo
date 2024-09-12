@@ -38,7 +38,9 @@ async function getLibVersion(gazeboDistro: string): Promise<number> {
  * Install Gazebo on a Windows worker
  */
 export async function runWindows(): Promise<void> {
-	for (const gazeboDistro of utils.getRequiredGazeboDistributions()) {
+	const gazeboDistros = await utils.getRequiredGazeboDistributions();
+
+	for (const gazeboDistro of gazeboDistros) {
 		const version = await getLibVersion(gazeboDistro);
 		await conda.runConda([`gz-sim${version}`]);
 	}

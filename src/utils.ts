@@ -3,15 +3,9 @@ import * as core from "@actions/core";
 import * as im from "@actions/exec/lib/interfaces";
 import { parseDocument } from "yaml";
 
-// List of Valid Gazebo distributions with compatible
-// Ubuntu distributions
-const validGazeboDistroList: string[] = [
-	"citadel",
-	"fortress",
-	"garden",
-	"harmonic",
-	"ionic",
-];
+// Collections file that contains all the valid Gazebo distributions along all compatiblity information
+const collections_url: string =
+	"https://raw.githubusercontent.com/gazebo-tooling/release-tools/master/jenkins-scripts/dsl/gz-collections.yaml";
 
 // List of valid ROS 2 distributions and compatible Gazebo mapping
 // For more information check the following link
@@ -93,17 +87,25 @@ export async function determineDistribCodename(): Promise<string> {
  * Validate all Gazebo input distribution names
  *
  * @param requiredGazeboDistributionsList
- * @returns boolean Validity of Gazebo distribution
+ * @returns Promise<void>
  */
-export function validateDistro(
+export async function validateDistro(
 	requiredGazeboDistributionsList: string[],
-): boolean {
-	for (const gazeboDistro of requiredGazeboDistributionsList) {
-		if (validGazeboDistroList.indexOf(gazeboDistro) <= -1) {
-			return false;
-		}
-	}
-	return true;
+): Promise<void> {
+	await fetch(collections_url)
+		.then((response) => response.blob())
+		.then((blob) => blob.text())
+		.then((yamlStr) => {
+			const collections = parseDocument(yamlStr).toJSON();
+			requiredGazeboDistributionsList.forEach((gazeboDistro) => {
+				const valid: boolean = collections["collections"].some(
+					(collectionsDistro: any) => collectionsDistro.name === gazeboDistro,
+				);
+				if (!valid) {
+					throw new Error("Input has invalid distribution names.");
+				}
+			});
+		});
 }
 
 /**
@@ -130,9 +132,9 @@ export function validateRosDistro(rosGzDistrosList: string[]): boolean {
  * Gets the input of the Gazebo distributions to be installed and
  * validates them
  *
- * @returns string[] List of validated Gazebo distributions
+ * @returns Promise<string[]> List of validated Gazebo distributions
  */
-export function getRequiredGazeboDistributions(): string[] {
+export async function getRequiredGazeboDistributions(): Promise<string[]> {
 	let requiredGazeboDistributionsList: string[] = [];
 	const requiredGazeboDistributions = core.getInput(
 		"required-gazebo-distributions",
@@ -144,9 +146,9 @@ export function getRequiredGazeboDistributions(): string[] {
 	} else {
 		throw new Error("Input cannot be empty.");
 	}
-	if (!validateDistro(requiredGazeboDistributionsList)) {
-		throw new Error("Input has invalid distribution names.");
-	}
+
+	await validateDistro(requiredGazeboDistributionsList);
+
 	return requiredGazeboDistributionsList;
 }
 
@@ -163,9 +165,7 @@ export async function checkUbuntuCompatibility(
 	requiredGazeboDistributionsList: string[],
 	ubuntuCodename: string,
 ): Promise<void> {
-	await fetch(
-		"https://raw.githubusercontent.com/gazebo-tooling/release-tools/master/jenkins-scripts/dsl/gz-collections.yaml",
-	)
+	await fetch(collections_url)
 		.then((response) => response.blob())
 		.then((blob) => blob.text())
 		.then((yamlStr) => {
