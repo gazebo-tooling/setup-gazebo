@@ -253,36 +253,31 @@ This workflow shows how to install ROS 2 using the GitHub action `ros-tooling/se
 ```yaml
   jobs:
     test_gazebo:
-      runs-on: ubuntu-latest
-      container:
-        image: ubuntu:jammy
-      env:
-        ROS_DISTROS: 'rolling iron'
-      steps:
-        - uses: actions/checkout@v4
-        - uses: actions/setup-node@v4.0.3
-          with:
-            node-version: '20.x'
-        - name: 'Install ROS 2 Iron and Rolling'
-          uses: ros-tooling/setup-ros@v0.7
-          with:
-            required-ros-distributions: ${{ env.ROS_DISTROS }}
-        - name: 'Install Gazebo with ros_gz'
-          uses: gazebo-tooling/setup-gazebo@v0.1.0
-          with:
-            required-gazebo-distributions: 'harmonic'
-            install-ros-gz: ${{ env.ROS_DISTROS }}
-        - name: Test Gazebo installation
-          run: |
-            gz sim --versions
-        - name: Test Rolling ros_gz installation
-          run: |
-            source /opt/ros/rolling/setup.bash
-            ros2 pkg list | grep ros_gz
-        - name: Test Iron ros_gz installation
-          run: |
-            source /opt/ros/iron/setup.bash
-            ros2 pkg list | grep ros_gz
+    name: 'Install Iron and Harmonic side-by-side'
+    env:
+      ROS_DISTROS: 'iron'
+    runs-on: ubuntu-latest
+    container:
+      image: ubuntu:jammy
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4.0.3
+        with:
+          node-version: '20.x'
+      - name: 'Install ROS 2 Iron'
+        uses: ros-tooling/setup-ros@v0.7
+        with:
+          required-ros-distributions: ${{ env.ROS_DISTROS }}
+      - name: 'Install Gazebo Harmonic with ros_gz'
+        uses: gazebo-tooling/setup-gazebo@v0.1.0
+        with:
+          required-gazebo-distributions: 'harmonic'
+          install-ros-gz: ${{ env.ROS_DISTROS }}
+      - name: Test Iron ros_gz installation
+        run: |
+          source /opt/ros/iron/setup.bash
+          ros2 pkg list | grep ros_gz
+          gz sim --version | grep 'version 8.[0-9*].[0-9*]'
 ```
 
 ### macOS
