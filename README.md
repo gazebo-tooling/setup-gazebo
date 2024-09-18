@@ -49,12 +49,6 @@ The `setup-gazebo` action performs the following tasks:
 
 See [action.yml](action.yml)
 
-> [!WARNING]
->
-> `setup-gazebo` is under active development.
->
-> This action can also be used with the `main` branch - `gazebo-tooling/setup-gazebo@main` or with a full commit has as a suffix - `gazebo-tooling/setup-gazebo@<full_commit_hash>`. Use with caution as compatibility is not guaranteed!
-
 ### Ubuntu
 
 The `setup-gazebo` GitHub action can be run using GitHub-hosted Ubuntu runners or inside Ubuntu docker containers.
