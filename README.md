@@ -26,6 +26,7 @@ The `setup-gazebo` GitHub Action sets up an environment to install a Gazebo rele
 - `required-gazebo-distributions`: A **required** parameter that specifies the Gazebo distribution to be installed.
 - `use-gazebo-prerelease`: An **optional** parameter to install pre-release binaries from OSRF repository.
 - `use-gazebo-nightly`: An **optional** parameter to install nightly binaries from OSRF repository.
+- `install-ros-gz`: An **optional** parameter to install the ROS 2 Gazebo bridge (`ros_gz`).
 
 ## Supported platforms
 
@@ -46,6 +47,7 @@ The `setup-gazebo` action performs the following tasks:
   - Tapping into the [osrf/homebrew-simulation](https://github.com/osrf/homebrew-simulation) using Homebrew
 - On Windows:
   - Installing Gazebo using Conda from conda-forge
+
 ## Usage
 
 See [action.yml](action.yml)
@@ -253,7 +255,6 @@ This workflow shows how to install ROS 2 using the GitHub action `ros-tooling/se
 ```yaml
   jobs:
     test_gazebo:
-    name: 'Install Iron and Harmonic side-by-side'
     env:
       ROS_DISTROS: 'iron'
     runs-on: ubuntu-latest
