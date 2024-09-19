@@ -26,7 +26,7 @@ The `setup-gazebo` GitHub Action sets up an environment to install a Gazebo rele
 - `required-gazebo-distributions`: A **required** parameter that specifies the Gazebo distribution to be installed.
 - `use-gazebo-prerelease`: An **optional** parameter to install pre-release binaries from OSRF repository.
 - `use-gazebo-nightly`: An **optional** parameter to install nightly binaries from OSRF repository.
-- `install-ros-gz`: An **optional** parameter to install the ROS 2 Gazebo bridge (`ros_gz`).
+- `install-ros-gz`: An **optional** parameter to install the ROS 2 Gazebo bridge (`ros_gz`). This will require a previous ROS installation which can be done using the [`setup-ros`](https://github.com/ros-tooling/setup-ros) GitHub action. Installation of the `ros_gz` bridge supports the ROS official and ROS non-official (from packages.osrfoundation.org) variants following the [Installing Gazebo with ROS](https://gazebosim.org/docs/ionic/ros_installation/#summary-of-compatible-ros-and-gazebo-combinations) documentation.
 
 ## Supported platforms
 
