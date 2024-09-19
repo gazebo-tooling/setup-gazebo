@@ -10,20 +10,20 @@ const collections_url: string =
 // List of valid ROS 2 distributions and compatible Gazebo mapping
 // For more information check the following link
 // https://gazebosim.org/docs/latest/ros_installation/#summary-of-compatible-ros-and-gazebo-combinations
-const validRosGzDistrosList: {
+const validROSGzDistrosList: {
 	rosDistro: string;
-	compatibleGazeboDistros: string[];
-	useWithCautionGazeboDistros: string[];
+	officialROSGzWrappers: string[];
+	unofficialROSGzWrappers: string[];
 }[] = [
 	{
 		rosDistro: "humble",
-		compatibleGazeboDistros: ["fortress"],
-		useWithCautionGazeboDistros: ["garden", "harmonic"],
+		officialROSGzWrappers: ["fortress"],
+		unofficialROSGzWrappers: ["garden", "harmonic"],
 	},
 	{
 		rosDistro: "iron",
-		compatibleGazeboDistros: ["fortress"],
-		useWithCautionGazeboDistros: ["garden", "harmonic"],
+		officialROSGzWrappers: ["fortress"],
+		unofficialROSGzWrappers: ["garden", "harmonic"],
 	},
 ];
 
@@ -104,9 +104,9 @@ export async function validateDistro(
  * @param rosGzDistrosList
  * @returns boolean Validaity of the ROS distribution
  */
-export function validateRosDistro(rosGzDistrosList: string[]): boolean {
+export function validateROSDistro(rosGzDistrosList: string[]): boolean {
 	if (rosGzDistrosList.length > 0) {
-		const validDistro: string[] = validRosGzDistrosList.map(
+		const validDistro: string[] = validROSGzDistrosList.map(
 			(obj) => obj.rosDistro,
 		);
 		for (const rosDistro of rosGzDistrosList) {
@@ -214,18 +214,18 @@ export function checkForUnstableAptRepos(): string[] {
 /**
  * Check for inputs to install ros-gz
  *
- * @returns requiredRosDistroList list of valid ROS 2 distributions
+ * @returns requiredROSDistroList list of valid ROS 2 distributions
  */
-export function checkForRosGz(): string[] {
-	let requiredRosDistroList: string[] = [];
-	const installRosGz = core.getInput("install-ros-gz");
-	if (installRosGz) {
-		requiredRosDistroList = installRosGz.split(RegExp("\\s"));
-		if (!validateRosDistro(requiredRosDistroList)) {
+export function checkForROSGz(): string[] {
+	let requiredROSDistroList: string[] = [];
+	const installROSGz = core.getInput("install-ros-gz");
+	if (installROSGz) {
+		requiredROSDistroList = installROSGz.split(RegExp("\\s"));
+		if (!validateROSDistro(requiredROSDistroList)) {
 			throw new Error("Input has invalid ROS 2 distribution names.");
 		}
 	}
-	return requiredRosDistroList;
+	return requiredROSDistroList;
 }
 
 /**
@@ -235,20 +235,20 @@ export function checkForRosGz(): string[] {
  * @param requiredGazeboDistributionsList Installed Gazebo distributions
  * @returns string [] List of APT package names
  */
-export function generateRosAptPackageNames(
+export function generateROSAptPackageNames(
 	rosGzDistrosList: string[],
 	requiredGazeboDistributionsList: string[],
 ): string[] {
 	const rosAptPackageNames: string[] = [];
 	for (const rosDistro of rosGzDistrosList) {
-		const distroInfo = validRosGzDistrosList.find(
+		const distroInfo = validROSGzDistrosList.find(
 			(distro) => distro.rosDistro === rosDistro,
 		);
 		for (const gazeboDistro of requiredGazeboDistributionsList) {
-			if (distroInfo!.compatibleGazeboDistros.indexOf(gazeboDistro) > -1) {
+			if (distroInfo!.officialROSGzWrappers.indexOf(gazeboDistro) > -1) {
 				rosAptPackageNames.push(`ros-${rosDistro}-ros-gz`);
 			} else if (
-				distroInfo!.useWithCautionGazeboDistros.indexOf(gazeboDistro) > -1
+				distroInfo!.unofficialROSGzWrappers.indexOf(gazeboDistro) > -1
 			) {
 				rosAptPackageNames.push(`ros-${rosDistro}-ros-gz${gazeboDistro}`);
 			} else {

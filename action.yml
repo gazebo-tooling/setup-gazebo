@@ -31,13 +31,11 @@ inputs:
     default: 'false'
   install-ros-gz:
     description: |
-      Install ros_gz side-by-side with ROS 2 and Gazebo
+      Install the ROS 2 Gazebo bridge (ros_gz)
 
       Allowed ROS 2 distributions
       - humble
       - iron
-      - jazzy
-      - rolling
 
       Multiple values can be passed using a whitespace delimited list
       "humble iron".
