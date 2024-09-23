@@ -79,7 +79,7 @@ This workflow shows how to spawn a job to install Gazebo on an Ubuntu distributi
           with:
             node-version: '20.x'
         - name: 'Setup Gazebo'
-          uses: gazebo-tooling/setup-gazebo@v0.1.0
+          uses: gazebo-tooling/setup-gazebo@v0.2.0
           with:
             required-gazebo-distributions: harmonic
         - name: 'Test Gazebo installation'
@@ -102,7 +102,7 @@ This workflow shows how to spawn a job to install Gazebo on an Ubuntu distributi
           with:
             node-version: '20.x'
         - name: 'Setup Gazebo'
-          uses: gazebo-tooling/setup-gazebo@v0.1.0
+          uses: gazebo-tooling/setup-gazebo@v0.2.0
           with:
             required-gazebo-distributions: harmonic
         - name: 'Test Gazebo installation'
@@ -149,7 +149,7 @@ This workflow shows how to spawn one job per Gazebo release and iterates over al
           with:
             node-version: '20.x'
         - name: 'Check Gazebo installation on Ubuntu runner'
-          uses: gazebo-tooling/setup-gazebo@v0.1.0
+          uses: gazebo-tooling/setup-gazebo@v0.2.0
           with:
             required-gazebo-distributions: ${{ matrix.gazebo_distribution }}
         - name: 'Test Gazebo installation'
@@ -202,7 +202,7 @@ This workflow shows how to spawn one job per Gazebo release and iterates over al
         with:
           node-version: '20.x'
       - name: 'Check Gazebo installation on Ubuntu runner'
-        uses: gazebo-tooling/setup-gazebo@v0.1.0
+        uses: gazebo-tooling/setup-gazebo@v0.2.0
         with:
           required-gazebo-distributions: ${{ matrix.gazebo_distribution }}
       - name: 'Test Gazebo installation'
@@ -233,7 +233,7 @@ This workflow shows how to use binaries from [pre-release] or [nightly] Gazebo r
             with:
               node-version: '20.x'
           - name: 'Check Gazebo installation on Ubuntu runner'
-            uses: gazebo-tooling/setup-gazebo@v0.1.0
+            uses: gazebo-tooling/setup-gazebo@v0.2.0
             with:
               required-gazebo-distributions: 'harmonic'
               use-gazebo-prerelease: 'true'
@@ -264,7 +264,7 @@ This workflow shows how to install ROS 2 using the GitHub action `ros-tooling/se
         with:
           required-ros-distributions: ${{ env.ROS_DISTROS }}
       - name: 'Install Gazebo Harmonic with ros_gz'
-        uses: gazebo-tooling/setup-gazebo@v0.1.0
+        uses: gazebo-tooling/setup-gazebo@v0.2.0
         with:
           required-gazebo-distributions: 'harmonic'
           install-ros-gz: ${{ env.ROS_DISTROS }}
@@ -290,7 +290,7 @@ This workflow shows how to install Gazebo on a macOS worker. The action needs an
         with:
           node-version: '20.x'
       - name: 'Check Gazebo installation on MacOS runner'
-        uses: gazebo-tooling/setup-gazebo@v0.1.0
+        uses: gazebo-tooling/setup-gazebo@v0.2.0
         with:
           required-gazebo-distributions: 'harmonic'
       - name: 'Test Gazebo installation'
@@ -313,7 +313,7 @@ This workflow shows how to install Gazebo on a Windows worker. The action requir
           node-version: '20.x'
       - uses: conda-incubator/setup-miniconda@v3
       - name: 'Check Gazebo installation on Windows runner'
-        uses: gazebo-tooling/setup-gazebo@v0.1.0
+        uses: gazebo-tooling/setup-gazebo@v0.2.0
         with:
           required-gazebo-distributions: 'harmonic'
       - name: 'Test Gazebo installation'
