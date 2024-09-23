@@ -1,5 +1,7 @@
 import * as core from "@actions/core";
 import * as io from "@actions/io";
+import * as actions_exec from "@actions/exec";
+import * as im from "@actions/exec/lib/interfaces";
 
 import * as apt from "./package_manager/apt";
 import * as utils from "./utils";
@@ -109,5 +111,14 @@ export async function runLinux(): Promise<void> {
 
 	for (const gazeboDistro of gazeboDistros) {
 		await apt.runAptGetInstall([`gz-${gazeboDistro}`]);
+	}
+
+	const rosGzDistros = utils.checkForROSGz();
+	if (rosGzDistros.length > 0) {
+		const rosAptPackageNames = utils.generateROSAptPackageNames(
+			rosGzDistros,
+			gazeboDistros,
+		);
+		await apt.runAptGetInstall(rosAptPackageNames);
 	}
 }

@@ -26492,6 +26492,11 @@ function runLinux() {
         for (const gazeboDistro of gazeboDistros) {
             yield apt.runAptGetInstall([`gz-${gazeboDistro}`]);
         }
+        const rosGzDistros = utils.checkForROSGz();
+        if (rosGzDistros.length > 0) {
+            const rosAptPackageNames = utils.generateROSAptPackageNames(rosGzDistros, gazeboDistros);
+            yield apt.runAptGetInstall(rosAptPackageNames);
+        }
     });
 }
 
@@ -26789,14 +26794,32 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.exec = exec;
 exports.determineDistribCodename = determineDistribCodename;
 exports.validateDistro = validateDistro;
+exports.validateROSDistro = validateROSDistro;
 exports.getRequiredGazeboDistributions = getRequiredGazeboDistributions;
 exports.checkUbuntuCompatibility = checkUbuntuCompatibility;
 exports.checkForUnstableAptRepos = checkForUnstableAptRepos;
+exports.checkForROSGz = checkForROSGz;
+exports.generateROSAptPackageNames = generateROSAptPackageNames;
 const actions_exec = __importStar(__nccwpck_require__(1514));
 const core = __importStar(__nccwpck_require__(2186));
 const yaml_1 = __nccwpck_require__(4083);
 // Collections file that contains all the valid Gazebo distributions along all compatiblity information
 const collections_url = "https://raw.githubusercontent.com/gazebo-tooling/release-tools/master/jenkins-scripts/dsl/gz-collections.yaml";
+// List of valid ROS 2 distributions and compatible Gazebo mapping
+// For more information check the following link
+// https://gazebosim.org/docs/latest/ros_installation/#summary-of-compatible-ros-and-gazebo-combinations
+const validROSGzDistrosList = [
+    {
+        rosDistro: "humble",
+        officialROSGzWrappers: ["fortress"],
+        unofficialROSGzWrappers: ["garden", "harmonic"],
+    },
+    {
+        rosDistro: "iron",
+        officialROSGzWrappers: ["fortress"],
+        unofficialROSGzWrappers: ["garden", "harmonic"],
+    },
+];
 /**
  * Execute a command and wrap the output in a log group.
  *
@@ -26857,6 +26880,23 @@ function validateDistro(requiredGazeboDistributionsList) {
             });
         });
     });
+}
+/**
+ * Validate all ROS distribution names
+ *
+ * @param rosGzDistrosList
+ * @returns boolean Validaity of the ROS distribution
+ */
+function validateROSDistro(rosGzDistrosList) {
+    if (rosGzDistrosList.length > 0) {
+        const validDistro = validROSGzDistrosList.map((obj) => obj.rosDistro);
+        for (const rosDistro of rosGzDistrosList) {
+            if (validDistro.indexOf(rosDistro) <= -1) {
+                return false;
+            }
+        }
+    }
+    return true;
 }
 /**
  * Gets the input of the Gazebo distributions to be installed and
@@ -26936,6 +26976,49 @@ function checkForUnstableAptRepos() {
         unstableRepos.push("nightly");
     }
     return unstableRepos;
+}
+/**
+ * Check for inputs to install ros-gz
+ *
+ * @returns requiredROSDistroList list of valid ROS 2 distributions
+ */
+function checkForROSGz() {
+    let requiredROSDistroList = [];
+    const installROSGz = core.getInput("install-ros-gz");
+    if (installROSGz) {
+        requiredROSDistroList = installROSGz.split(RegExp("\\s"));
+        if (!validateROSDistro(requiredROSDistroList)) {
+            throw new Error("Input has invalid ROS 2 distribution names.");
+        }
+    }
+    return requiredROSDistroList;
+}
+/**
+ * Generate APT package name from ROS 2 and Gazebo distribution names
+ *
+ * @param rosGzDistrosList ROS 2 distro ros_gz packages to be installed
+ * @param requiredGazeboDistributionsList Installed Gazebo distributions
+ * @returns string [] List of APT package names
+ */
+function generateROSAptPackageNames(rosGzDistrosList, requiredGazeboDistributionsList) {
+    const rosAptPackageNames = [];
+    for (const rosDistro of rosGzDistrosList) {
+        const distroInfo = validROSGzDistrosList.find((distro) => distro.rosDistro === rosDistro);
+        for (const gazeboDistro of requiredGazeboDistributionsList) {
+            if (distroInfo.officialROSGzWrappers.indexOf(gazeboDistro) > -1) {
+                rosAptPackageNames.push(`ros-${rosDistro}-ros-gz`);
+            }
+            else if (distroInfo.unofficialROSGzWrappers.indexOf(gazeboDistro) > -1) {
+                rosAptPackageNames.push(`ros-${rosDistro}-ros-gz${gazeboDistro}`);
+            }
+            else {
+                throw new Error("Impossible ROS 2 and Gazebo combination requested. \
+          Please check the list of compatible combinations at \
+          https://gazebosim.org/docs/latest/ros_installation/#summary-of-compatible-ros-and-gazebo-combinations");
+            }
+        }
+    }
+    return rosAptPackageNames;
 }
 
 

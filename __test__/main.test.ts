@@ -32,6 +32,7 @@ describe("workflow test with a invalid distro input", () => {
 	beforeAll(() => {
 		jest.spyOn(exec, "exec").mockImplementation(jest.fn());
 		jest.spyOn(core, "getInput").mockReturnValue("dome");
+		jest.spyOn(utils, "checkForROSGz").mockReturnValue([]);
 	});
 
 	afterAll(() => {
@@ -55,6 +56,7 @@ describe("workflow test with a valid distro input", () => {
 	beforeAll(() => {
 		jest.spyOn(exec, "exec").mockImplementation(jest.fn());
 		jest.spyOn(core, "getInput").mockReturnValue("harmonic");
+		jest.spyOn(utils, "checkForROSGz").mockReturnValue([]);
 		jest
 			.spyOn(utils, "determineDistribCodename")
 			.mockReturnValue(Promise.resolve("jammy"));
@@ -77,7 +79,7 @@ describe("workflow test with a valid distro input", () => {
 	});
 });
 
-describe("validate distribution test", () => {
+describe("validate Gazebo distribution test", () => {
 	it("test valid distro", async () => {
 		await expect(utils.validateDistro(["citadel"])).resolves.not.toThrow();
 		await expect(utils.validateDistro(["fortress"])).resolves.not.toThrow();
@@ -100,10 +102,29 @@ describe("validate distribution test", () => {
 	});
 });
 
+describe("validate ROS 2 distribution test", () => {
+	it("test valid distro", async () => {
+		await expect(utils.validateROSDistro(["humble"])).toBe(true);
+		await expect(utils.validateROSDistro(["iron"])).toBe(true);
+		await expect(utils.validateROSDistro(["humble", "iron"])).toBe(true);
+	});
+	it("test invalid distro", async () => {
+		await expect(utils.validateROSDistro(["noetic"])).toBe(false);
+		await expect(utils.validateROSDistro(["foxy"])).toBe(false);
+		await expect(utils.validateROSDistro(["galactic"])).toBe(false);
+		await expect(utils.validateROSDistro(["doesNotExist"])).toBe(false);
+		await expect(utils.validateROSDistro(["noetic", "humble"])).toBe(false);
+		await expect(utils.validateROSDistro(["foxy", "galactic", "jazzy"])).toBe(
+			false,
+		);
+	});
+});
+
 describe("workflow test with incompatible Ubuntu combination", () => {
 	beforeAll(() => {
 		jest.spyOn(exec, "exec").mockImplementation(jest.fn());
 		jest.spyOn(core, "getInput").mockReturnValue("harmonic");
+		jest.spyOn(utils, "checkForROSGz").mockReturnValue([]);
 		jest
 			.spyOn(utils, "determineDistribCodename")
 			.mockReturnValue(Promise.resolve("focal"));
@@ -130,6 +151,7 @@ describe("check for unstable repositories input", () => {
 			.spyOn(utils, "checkForUnstableAptRepos")
 			.mockReturnValueOnce(["prerelease", "nightly"]);
 		jest.spyOn(core, "getInput").mockReturnValue("harmonic");
+		jest.spyOn(utils, "checkForROSGz").mockReturnValue([]);
 		jest
 			.spyOn(utils, "determineDistribCodename")
 			.mockReturnValue(Promise.resolve("jammy"));
@@ -149,5 +171,19 @@ describe("check for unstable repositories input", () => {
 
 	it("run Linux workflow with both unstable repos", async () => {
 		await expect(linux.runLinux()).resolves.not.toThrow();
+	});
+});
+
+describe("generate APT package names for ros_gz", () => {
+	it("test ros_gz output package names list", async () => {
+		await expect(
+			utils.generateROSAptPackageNames(["humble", "iron"], ["harmonic"]),
+		).toEqual(["ros-humble-ros-gzharmonic", "ros-iron-ros-gzharmonic"]);
+		await expect(
+			utils.generateROSAptPackageNames(["humble"], ["fortress"]),
+		).toEqual(["ros-humble-ros-gz"]);
+		await expect(
+			utils.generateROSAptPackageNames(["iron"], ["fortress", "garden"]),
+		).toEqual(["ros-iron-ros-gz", "ros-iron-ros-gzgarden"]);
 	});
 });

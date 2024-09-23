@@ -29,6 +29,18 @@ inputs:
       Use nightly binaries from OSRF repository
     required: false
     default: 'false'
+  install-ros-gz:
+    description: |
+      Install the ROS 2 Gazebo bridge (ros_gz)
+
+      Allowed ROS 2 distributions
+      - humble
+      - iron
+
+      Multiple values can be passed using a whitespace delimited list
+      "humble iron".
+    required: false
+    default: ''
 runs:
   using: node20
   main: dist/index.js

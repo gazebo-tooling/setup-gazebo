@@ -13,6 +13,7 @@ This action sets up a Gazebo environment.
         1. [Setting up worker and installing a compatible Gazebo and Ubuntu combination](#Setting-up-worker-and-installing-a-compatible-Gazebo-and-Ubuntu-combination)
         1. [Iterating on all Gazebo and Ubuntu combinations](#Iterating-on-all-gazebo-ubuntu-combinations)
         1. [Using pre-release and/or nightly Gazebo binaries](#Using-pre-release-and/or-nightly-Gazebo-binaries)
+        1. [Installing ROS 2 and Gazebo side-by-side along with `ros_gz`](#Installing-ROS-2-and-Gazebo-side-by-side-along-with-ros_gz)
     2. [macOS](#macOS)
         1. [Setting up worker to install Gazebo on macOS](#Setting-up-worker-to-install-Gazebo-on-macOS)
     3. [Windows](#Windows)
@@ -25,6 +26,7 @@ The `setup-gazebo` GitHub Action sets up an environment to install a Gazebo rele
 - `required-gazebo-distributions`: A **required** parameter that specifies the Gazebo distribution to be installed.
 - `use-gazebo-prerelease`: An **optional** parameter to install pre-release binaries from OSRF repository.
 - `use-gazebo-nightly`: An **optional** parameter to install nightly binaries from OSRF repository.
+- `install-ros-gz`: An **optional** parameter to install the ROS 2 Gazebo bridge (`ros_gz`). This will require a previous ROS installation which can be done using the [`setup-ros`](https://github.com/ros-tooling/setup-ros) GitHub action. Installation of the `ros_gz` bridge supports the ROS official and ROS non-official (from packages.osrfoundation.org) variants following the [Installing Gazebo with ROS](https://gazebosim.org/docs/ionic/ros_installation/#summary-of-compatible-ros-and-gazebo-combinations) documentation.
 
 ## Supported platforms
 
@@ -45,6 +47,7 @@ The `setup-gazebo` action performs the following tasks:
   - Tapping into the [osrf/homebrew-simulation](https://github.com/osrf/homebrew-simulation) using Homebrew
 - On Windows:
   - Installing Gazebo using Conda from conda-forge
+
 ## Usage
 
 See [action.yml](action.yml)
@@ -237,6 +240,39 @@ This workflow shows how to use binaries from [pre-release] or [nightly] Gazebo r
               use-gazebo-nightly: 'true'
           - name: 'Test Gazebo installation'
             run: 'gz sim --versions'
+```
+
+#### Installing ROS 2 and Gazebo side-by-side along with `ros_gz`
+
+This workflow shows how to install ROS 2 using the GitHub action `ros-tooling/setup-ros` along with Gazebo installed using `setup-gazebo`. The `ros-gz` package can be installed by setting the input parameter `install-ros-gz` to the required ROS 2 distributions.
+
+```yaml
+  jobs:
+    test_gazebo:
+    env:
+      ROS_DISTROS: 'iron'
+    runs-on: ubuntu-latest
+    container:
+      image: ubuntu:jammy
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4.0.3
+        with:
+          node-version: '20.x'
+      - name: 'Install ROS 2 Iron'
+        uses: ros-tooling/setup-ros@v0.7
+        with:
+          required-ros-distributions: ${{ env.ROS_DISTROS }}
+      - name: 'Install Gazebo Harmonic with ros_gz'
+        uses: gazebo-tooling/setup-gazebo@v0.1.0
+        with:
+          required-gazebo-distributions: 'harmonic'
+          install-ros-gz: ${{ env.ROS_DISTROS }}
+      - name: Test Iron ros_gz installation
+        run: |
+          source /opt/ros/iron/setup.bash
+          ros2 pkg list | grep ros_gz
+          gz sim --version | grep 'version 8.[0-9*].[0-9*]'
 ```
 
 ### macOS
