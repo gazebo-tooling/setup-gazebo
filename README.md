@@ -235,7 +235,7 @@ This workflow shows how to use binaries from [pre-release] or [nightly] Gazebo r
           - name: 'Check Gazebo installation on Ubuntu runner'
             uses: gazebo-tooling/setup-gazebo@v0.2.0
             with:
-              required-gazebo-distributions: 'harmonic'
+              required-gazebo-distributions: 'ionic'
               use-gazebo-prerelease: 'true'
               use-gazebo-nightly: 'true'
           - name: 'Test Gazebo installation'
