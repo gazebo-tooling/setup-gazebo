@@ -11,8 +11,8 @@ This action sets up a Gazebo environment.
 1. [Usage](#Usage)
     1. [Ubuntu](#Ubuntu)
         1. [Setting up worker and installing a compatible Gazebo and Ubuntu combination](#Setting-up-worker-and-installing-a-compatible-Gazebo-and-Ubuntu-combination)
-        1. [Iterating on all Gazebo and Ubuntu combinations](#Iterating-on-all-gazebo-ubuntu-combinations)
-        1. [Using pre-release and/or nightly Gazebo binaries](#Using-pre-release-and/or-nightly-Gazebo-binaries)
+        1. [Iterating on all Gazebo and Ubuntu combinations](#Iterating-on-all-Gazebo-and-Ubuntu-combinations)
+        1. [Using prerelease and/or nightly Gazebo binaries](#Using-pre-release-andor-nightly-Gazebo-binaries)
         1. [Installing ROS 2 and Gazebo side-by-side along with `ros_gz`](#Installing-ROS-2-and-Gazebo-side-by-side-along-with-ros_gz)
     2. [macOS](#macOS)
         1. [Setting up worker to install Gazebo on macOS](#Setting-up-worker-to-install-Gazebo-on-macOS)
@@ -279,7 +279,7 @@ This workflow shows how to install ROS 2 using the GitHub action `ros-tooling/se
 
 #### Setting up worker to install Gazebo on macOS
 
-This workflow shows how to install Gazebo on a macOS worker. The action needs an input for `required-gazebo-distributions` parameter.
+This workflow shows how to install Gazebo on a macOS worker using the Homebrew package manager which is installed by the action. To run, this action needs an input for `required-gazebo-distributions` parameter.
 
 ```yaml
   test_gazebo:
