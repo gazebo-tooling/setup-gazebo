@@ -26489,10 +26489,12 @@ function runLinux() {
         yield addAptRepo(ubuntuCodename);
         const gazeboDistros = yield utils.getRequiredGazeboDistributions();
         yield utils.checkUbuntuCompatibility(gazeboDistros, ubuntuCodename);
-        for (const gazeboDistro of gazeboDistros) {
-            yield apt.runAptGetInstall([`gz-${gazeboDistro}`]);
-        }
         const rosGzDistros = utils.checkForROSGz();
+        for (const gazeboDistro of gazeboDistros) {
+            if (!utils.checkForROSGzVendorPackages(gazeboDistro, rosGzDistros)) {
+                yield apt.runAptGetInstall([`gz-${gazeboDistro}`]);
+            }
+        }
         if (rosGzDistros.length > 0) {
             const rosAptPackageNames = utils.generateROSAptPackageNames(rosGzDistros, gazeboDistros);
             yield apt.runAptGetInstall(rosAptPackageNames);
@@ -26800,6 +26802,7 @@ exports.checkUbuntuCompatibility = checkUbuntuCompatibility;
 exports.checkForUnstableAptRepos = checkForUnstableAptRepos;
 exports.checkForROSGz = checkForROSGz;
 exports.generateROSAptPackageNames = generateROSAptPackageNames;
+exports.checkForROSGzVendorPackages = checkForROSGzVendorPackages;
 const actions_exec = __importStar(__nccwpck_require__(1514));
 const core = __importStar(__nccwpck_require__(2186));
 const yaml_1 = __nccwpck_require__(4083);
@@ -26813,11 +26816,25 @@ const validROSGzDistrosList = [
         rosDistro: "humble",
         officialROSGzWrappers: ["fortress"],
         unofficialROSGzWrappers: ["garden", "harmonic"],
+        vendorPackagesAvailable: false,
     },
     {
         rosDistro: "iron",
         officialROSGzWrappers: ["fortress"],
         unofficialROSGzWrappers: ["garden", "harmonic"],
+        vendorPackagesAvailable: false,
+    },
+    {
+        rosDistro: "jazzy",
+        officialROSGzWrappers: ["harmonic"],
+        unofficialROSGzWrappers: [],
+        vendorPackagesAvailable: true,
+    },
+    {
+        rosDistro: "rolling",
+        officialROSGzWrappers: ["harmonic"],
+        unofficialROSGzWrappers: [],
+        vendorPackagesAvailable: true,
     },
 ];
 /**
@@ -27019,6 +27036,16 @@ function generateROSAptPackageNames(rosGzDistrosList, requiredGazeboDistribution
         }
     }
     return rosAptPackageNames;
+}
+function checkForROSGzVendorPackages(gazeboDistro, rosGzDistrosList) {
+    for (const rosDistro of rosGzDistrosList) {
+        const distroInfo = validROSGzDistrosList.find((distro) => distro.rosDistro === rosDistro);
+        if (distroInfo.vendorPackagesAvailable &&
+            distroInfo.officialROSGzWrappers.indexOf(gazeboDistro) > -1) {
+            return true;
+        }
+    }
+    return false;
 }
 
 

@@ -14,16 +14,31 @@ const validROSGzDistrosList: {
 	rosDistro: string;
 	officialROSGzWrappers: string[];
 	unofficialROSGzWrappers: string[];
+	vendorPackagesAvailable: boolean;
 }[] = [
 	{
 		rosDistro: "humble",
 		officialROSGzWrappers: ["fortress"],
 		unofficialROSGzWrappers: ["garden", "harmonic"],
+		vendorPackagesAvailable: false,
 	},
 	{
 		rosDistro: "iron",
 		officialROSGzWrappers: ["fortress"],
 		unofficialROSGzWrappers: ["garden", "harmonic"],
+		vendorPackagesAvailable: false,
+	},
+	{
+		rosDistro: "jazzy",
+		officialROSGzWrappers: ["harmonic"],
+		unofficialROSGzWrappers: [],
+		vendorPackagesAvailable: true,
+	},
+	{
+		rosDistro: "rolling",
+		officialROSGzWrappers: ["harmonic"],
+		unofficialROSGzWrappers: [],
+		vendorPackagesAvailable: true,
 	},
 ];
 
@@ -261,4 +276,22 @@ export function generateROSAptPackageNames(
 		}
 	}
 	return rosAptPackageNames;
+}
+
+export function checkForROSGzVendorPackages(
+	gazeboDistro: string,
+	rosGzDistrosList: string[],
+): boolean {
+	for (const rosDistro of rosGzDistrosList) {
+		const distroInfo = validROSGzDistrosList.find(
+			(distro) => distro.rosDistro === rosDistro,
+		);
+		if (
+			distroInfo!.vendorPackagesAvailable &&
+			distroInfo!.officialROSGzWrappers.indexOf(gazeboDistro) > -1
+		) {
+			return true;
+		}
+	}
+	return false;
 }

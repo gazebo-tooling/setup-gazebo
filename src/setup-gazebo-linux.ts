@@ -109,11 +109,14 @@ export async function runLinux(): Promise<void> {
 
 	await utils.checkUbuntuCompatibility(gazeboDistros, ubuntuCodename);
 
+	const rosGzDistros = utils.checkForROSGz();
+
 	for (const gazeboDistro of gazeboDistros) {
-		await apt.runAptGetInstall([`gz-${gazeboDistro}`]);
+		if (!utils.checkForROSGzVendorPackages(gazeboDistro, rosGzDistros)) {
+			await apt.runAptGetInstall([`gz-${gazeboDistro}`]);
+		}
 	}
 
-	const rosGzDistros = utils.checkForROSGz();
 	if (rosGzDistros.length > 0) {
 		const rosAptPackageNames = utils.generateROSAptPackageNames(
 			rosGzDistros,
