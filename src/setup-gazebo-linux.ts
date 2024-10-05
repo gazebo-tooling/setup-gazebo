@@ -111,17 +111,21 @@ export async function runLinux(): Promise<void> {
 
 	const rosGzDistros = utils.checkForROSGz();
 
-	for (const gazeboDistro of gazeboDistros) {
-		if (!utils.checkForROSGzVendorPackages(gazeboDistro, rosGzDistros)) {
-			await apt.runAptGetInstall([`gz-${gazeboDistro}`]);
-		}
-	}
+	// for (const gazeboDistro of gazeboDistros) {
+	// 	if (!utils.checkForROSGzVendorPackages(gazeboDistro, rosGzDistros)) {
+	// 		await apt.runAptGetInstall([`gz-${gazeboDistro}`]);
+	// 	}
+	// }
 
 	if (rosGzDistros.length > 0) {
-		const rosAptPackageNames = utils.generateROSAptPackageNames(
+		const rosAptPackageNames = utils.generateROSGzAptPackageNames(
 			rosGzDistros,
 			gazeboDistros,
 		);
 		await apt.runAptGetInstall(rosAptPackageNames);
+	} else {
+		for (const gazeboDistro of gazeboDistros) {
+			await apt.runAptGetInstall([`gz-${gazeboDistro}`]);
+		}
 	}
 }

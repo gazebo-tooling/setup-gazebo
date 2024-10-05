@@ -179,42 +179,51 @@ describe("check for unstable repositories input", () => {
 describe("generate APT package names for ros_gz", () => {
 	it("test ros_gz output package names list", async () => {
 		await expect(
-			utils.generateROSAptPackageNames(["humble", "iron"], ["harmonic"]),
-		).toEqual(["ros-humble-ros-gzharmonic", "ros-iron-ros-gzharmonic"]);
+			utils.generateROSGzAptPackageNames(["humble", "iron"], ["harmonic"]),
+		).toEqual([
+			"gz-harmonic",
+			"ros-humble-ros-gzharmonic",
+			"ros-iron-ros-gzharmonic",
+		]);
 		await expect(
-			utils.generateROSAptPackageNames(["humble"], ["fortress"]),
-		).toEqual(["ros-humble-ros-gz"]);
+			utils.generateROSGzAptPackageNames(["humble"], ["fortress"]),
+		).toEqual(["gz-fortress", "ros-humble-ros-gz"]);
 		await expect(
-			utils.generateROSAptPackageNames(["iron"], ["fortress", "garden"]),
-		).toEqual(["ros-iron-ros-gz", "ros-iron-ros-gzgarden"]);
+			utils.generateROSGzAptPackageNames(["iron"], ["fortress", "garden"]),
+		).toEqual([
+			"gz-fortress",
+			"ros-iron-ros-gz",
+			"gz-garden",
+			"ros-iron-ros-gzgarden",
+		]);
 		await expect(
-			utils.generateROSAptPackageNames(["jazzy"], ["harmonic"]),
+			utils.generateROSGzAptPackageNames(["jazzy"], ["harmonic"]),
 		).toEqual(["ros-jazzy-ros-gz"]);
 		await expect(
-			utils.generateROSAptPackageNames(["rolling"], ["harmonic"]),
+			utils.generateROSGzAptPackageNames(["rolling"], ["harmonic"]),
 		).toEqual(["ros-rolling-ros-gz"]);
 	});
 });
 
-describe("check for Gazebo vendor packages for ROS 2 distribution", () => {
-	it("test for Gazebo vendor packages", async () => {
-		await expect(
-			utils.checkForROSGzVendorPackages("garden", ["humble"]),
-		).toEqual(false);
-		await expect(
-			utils.checkForROSGzVendorPackages("harmonic", ["iron"]),
-		).toEqual(false);
-		await expect(
-			utils.checkForROSGzVendorPackages("harmonic", ["jazzy"]),
-		).toEqual(true);
-		await expect(
-			utils.checkForROSGzVendorPackages("harmonic", ["rolling"]),
-		).toEqual(true);
-		await expect(
-			utils.checkForROSGzVendorPackages("fortress", ["humble", "iron"]),
-		).toEqual(false);
-		await expect(
-			utils.checkForROSGzVendorPackages("harmonic", ["rolling", "jazzy"]),
-		).toEqual(true);
-	});
-});
+// describe("check for Gazebo vendor packages for ROS 2 distribution", () => {
+// 	it("test for Gazebo vendor packages", async () => {
+// 		await expect(
+// 			utils.checkForROSGzVendorPackages("garden", ["humble"]),
+// 		).toEqual(false);
+// 		await expect(
+// 			utils.checkForROSGzVendorPackages("harmonic", ["iron"]),
+// 		).toEqual(false);
+// 		await expect(
+// 			utils.checkForROSGzVendorPackages("harmonic", ["jazzy"]),
+// 		).toEqual(true);
+// 		await expect(
+// 			utils.checkForROSGzVendorPackages("harmonic", ["rolling"]),
+// 		).toEqual(true);
+// 		await expect(
+// 			utils.checkForROSGzVendorPackages("fortress", ["humble", "iron"]),
+// 		).toEqual(false);
+// 		await expect(
+// 			utils.checkForROSGzVendorPackages("harmonic", ["rolling", "jazzy"]),
+// 		).toEqual(true);
+// 	});
+// });

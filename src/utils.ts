@@ -250,22 +250,74 @@ export function checkForROSGz(): string[] {
  * @param requiredGazeboDistributionsList Installed Gazebo distributions
  * @returns string [] List of APT package names
  */
-export function generateROSAptPackageNames(
+// export function generateROSAptPackageNames(
+// 	rosGzDistrosList: string[],
+// 	requiredGazeboDistributionsList: string[],
+// ): string[] {
+// 	const rosAptPackageNames: string[] = [];
+// 	for (const rosDistro of rosGzDistrosList) {
+// 		const distroInfo = validROSGzDistrosList.find(
+// 			(distro) => distro.rosDistro === rosDistro,
+// 		);
+// 		for (const gazeboDistro of requiredGazeboDistributionsList) {
+// 			if (distroInfo!.officialROSGzWrappers.indexOf(gazeboDistro) > -1) {
+// 				rosAptPackageNames.push(`ros-${rosDistro}-ros-gz`);
+// 			} else if (
+// 				distroInfo!.unofficialROSGzWrappers.indexOf(gazeboDistro) > -1
+// 			) {
+// 				rosAptPackageNames.push(`ros-${rosDistro}-ros-gz${gazeboDistro}`);
+// 			} else {
+// 				throw new Error(
+// 					"Impossible ROS 2 and Gazebo combination requested. \
+//           Please check the list of compatible combinations at \
+//           https://gazebosim.org/docs/latest/ros_installation/#summary-of-compatible-ros-and-gazebo-combinations",
+// 				);
+// 			}
+// 		}
+// 	}
+// 	return rosAptPackageNames;
+// }
+
+// export function checkForROSGzVendorPackages(
+// 	gazeboDistro: string,
+// 	rosGzDistrosList: string[],
+// ): boolean {
+// 	for (const rosDistro of rosGzDistrosList) {
+// 		const distroInfo = validROSGzDistrosList.find(
+// 			(distro) => distro.rosDistro === rosDistro,
+// 		);
+// 		if (
+// 			distroInfo!.vendorPackagesAvailable &&
+// 			distroInfo!.officialROSGzWrappers.indexOf(gazeboDistro) > -1
+// 		) {
+// 			return true;
+// 		}
+// 	}
+// 	return false;
+// }
+
+export function generateROSGzAptPackageNames(
 	rosGzDistrosList: string[],
 	requiredGazeboDistributionsList: string[],
 ): string[] {
-	const rosAptPackageNames: string[] = [];
+	const rosGzAptPackageNames: string[] = [];
 	for (const rosDistro of rosGzDistrosList) {
 		const distroInfo = validROSGzDistrosList.find(
 			(distro) => distro.rosDistro === rosDistro,
 		);
 		for (const gazeboDistro of requiredGazeboDistributionsList) {
+			if (!distroInfo!.vendorPackagesAvailable) {
+				const gzPkgName = `gz-${gazeboDistro}`;
+				if (rosGzAptPackageNames.indexOf(gzPkgName) < 0) {
+					rosGzAptPackageNames.push(gzPkgName);
+				}
+			}
 			if (distroInfo!.officialROSGzWrappers.indexOf(gazeboDistro) > -1) {
-				rosAptPackageNames.push(`ros-${rosDistro}-ros-gz`);
+				rosGzAptPackageNames.push(`ros-${rosDistro}-ros-gz`);
 			} else if (
 				distroInfo!.unofficialROSGzWrappers.indexOf(gazeboDistro) > -1
 			) {
-				rosAptPackageNames.push(`ros-${rosDistro}-ros-gz${gazeboDistro}`);
+				rosGzAptPackageNames.push(`ros-${rosDistro}-ros-gz${gazeboDistro}`);
 			} else {
 				throw new Error(
 					"Impossible ROS 2 and Gazebo combination requested. \
@@ -275,23 +327,5 @@ export function generateROSAptPackageNames(
 			}
 		}
 	}
-	return rosAptPackageNames;
-}
-
-export function checkForROSGzVendorPackages(
-	gazeboDistro: string,
-	rosGzDistrosList: string[],
-): boolean {
-	for (const rosDistro of rosGzDistrosList) {
-		const distroInfo = validROSGzDistrosList.find(
-			(distro) => distro.rosDistro === rosDistro,
-		);
-		if (
-			distroInfo!.vendorPackagesAvailable &&
-			distroInfo!.officialROSGzWrappers.indexOf(gazeboDistro) > -1
-		) {
-			return true;
-		}
-	}
-	return false;
+	return rosGzAptPackageNames;
 }
