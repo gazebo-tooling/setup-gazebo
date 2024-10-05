@@ -336,4 +336,5 @@ jobs:
         run: |
           source /opt/ros/jazzy/setup.bash
           ! [ $(apt list --installed gz-harmonic) ]
+          ros2 pkg list | grep ros_gz
           gz sim --version | grep 'version 8.[0-9*].[0-9*]'
