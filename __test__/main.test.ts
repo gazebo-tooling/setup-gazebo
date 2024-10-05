@@ -204,26 +204,3 @@ describe("generate APT package names for ros_gz", () => {
 		).toEqual(["ros-rolling-ros-gz"]);
 	});
 });
-
-// describe("check for Gazebo vendor packages for ROS 2 distribution", () => {
-// 	it("test for Gazebo vendor packages", async () => {
-// 		await expect(
-// 			utils.checkForROSGzVendorPackages("garden", ["humble"]),
-// 		).toEqual(false);
-// 		await expect(
-// 			utils.checkForROSGzVendorPackages("harmonic", ["iron"]),
-// 		).toEqual(false);
-// 		await expect(
-// 			utils.checkForROSGzVendorPackages("harmonic", ["jazzy"]),
-// 		).toEqual(true);
-// 		await expect(
-// 			utils.checkForROSGzVendorPackages("harmonic", ["rolling"]),
-// 		).toEqual(true);
-// 		await expect(
-// 			utils.checkForROSGzVendorPackages("fortress", ["humble", "iron"]),
-// 		).toEqual(false);
-// 		await expect(
-// 			utils.checkForROSGzVendorPackages("harmonic", ["rolling", "jazzy"]),
-// 		).toEqual(true);
-// 	});
-// });

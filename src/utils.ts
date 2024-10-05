@@ -247,55 +247,9 @@ export function checkForROSGz(): string[] {
  * Generate APT package name from ROS 2 and Gazebo distribution names
  *
  * @param rosGzDistrosList ROS 2 distro ros_gz packages to be installed
- * @param requiredGazeboDistributionsList Installed Gazebo distributions
+ * @param requiredGazeboDistributionsList Gazebo distributions to be installed
  * @returns string [] List of APT package names
  */
-// export function generateROSAptPackageNames(
-// 	rosGzDistrosList: string[],
-// 	requiredGazeboDistributionsList: string[],
-// ): string[] {
-// 	const rosAptPackageNames: string[] = [];
-// 	for (const rosDistro of rosGzDistrosList) {
-// 		const distroInfo = validROSGzDistrosList.find(
-// 			(distro) => distro.rosDistro === rosDistro,
-// 		);
-// 		for (const gazeboDistro of requiredGazeboDistributionsList) {
-// 			if (distroInfo!.officialROSGzWrappers.indexOf(gazeboDistro) > -1) {
-// 				rosAptPackageNames.push(`ros-${rosDistro}-ros-gz`);
-// 			} else if (
-// 				distroInfo!.unofficialROSGzWrappers.indexOf(gazeboDistro) > -1
-// 			) {
-// 				rosAptPackageNames.push(`ros-${rosDistro}-ros-gz${gazeboDistro}`);
-// 			} else {
-// 				throw new Error(
-// 					"Impossible ROS 2 and Gazebo combination requested. \
-//           Please check the list of compatible combinations at \
-//           https://gazebosim.org/docs/latest/ros_installation/#summary-of-compatible-ros-and-gazebo-combinations",
-// 				);
-// 			}
-// 		}
-// 	}
-// 	return rosAptPackageNames;
-// }
-
-// export function checkForROSGzVendorPackages(
-// 	gazeboDistro: string,
-// 	rosGzDistrosList: string[],
-// ): boolean {
-// 	for (const rosDistro of rosGzDistrosList) {
-// 		const distroInfo = validROSGzDistrosList.find(
-// 			(distro) => distro.rosDistro === rosDistro,
-// 		);
-// 		if (
-// 			distroInfo!.vendorPackagesAvailable &&
-// 			distroInfo!.officialROSGzWrappers.indexOf(gazeboDistro) > -1
-// 		) {
-// 			return true;
-// 		}
-// 	}
-// 	return false;
-// }
-
 export function generateROSGzAptPackageNames(
 	rosGzDistrosList: string[],
 	requiredGazeboDistributionsList: string[],

@@ -105,25 +105,24 @@ export async function runLinux(): Promise<void> {
 	const ubuntuCodename = await utils.determineDistribCodename();
 	await addAptRepo(ubuntuCodename);
 
+	// Get list of Gazebo distributions
 	const gazeboDistros = await utils.getRequiredGazeboDistributions();
 
+	// Check compatibility with Ubuntu version
 	await utils.checkUbuntuCompatibility(gazeboDistros, ubuntuCodename);
 
+	// Look for ROS 2 distributions for installing ros_gz
 	const rosGzDistros = utils.checkForROSGz();
 
-	// for (const gazeboDistro of gazeboDistros) {
-	// 	if (!utils.checkForROSGzVendorPackages(gazeboDistro, rosGzDistros)) {
-	// 		await apt.runAptGetInstall([`gz-${gazeboDistro}`]);
-	// 	}
-	// }
-
 	if (rosGzDistros.length > 0) {
+		// Check for Gazebo vendor packages and generate appropriate package names
 		const rosAptPackageNames = utils.generateROSGzAptPackageNames(
 			rosGzDistros,
 			gazeboDistros,
 		);
 		await apt.runAptGetInstall(rosAptPackageNames);
 	} else {
+		// Install Gazebo as usual
 		for (const gazeboDistro of gazeboDistros) {
 			await apt.runAptGetInstall([`gz-${gazeboDistro}`]);
 		}

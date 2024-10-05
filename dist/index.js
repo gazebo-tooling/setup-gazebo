@@ -26487,19 +26487,19 @@ function runLinux() {
         // Add repo according to Ubuntu version
         const ubuntuCodename = yield utils.determineDistribCodename();
         yield addAptRepo(ubuntuCodename);
+        // Get list of Gazebo distributions
         const gazeboDistros = yield utils.getRequiredGazeboDistributions();
+        // Check compatibility with Ubuntu version
         yield utils.checkUbuntuCompatibility(gazeboDistros, ubuntuCodename);
+        // Look for ROS 2 distributions for installing ros_gz
         const rosGzDistros = utils.checkForROSGz();
-        // for (const gazeboDistro of gazeboDistros) {
-        // 	if (!utils.checkForROSGzVendorPackages(gazeboDistro, rosGzDistros)) {
-        // 		await apt.runAptGetInstall([`gz-${gazeboDistro}`]);
-        // 	}
-        // }
         if (rosGzDistros.length > 0) {
+            // Check for Gazebo vendor packages and generate appropriate package names
             const rosAptPackageNames = utils.generateROSGzAptPackageNames(rosGzDistros, gazeboDistros);
             yield apt.runAptGetInstall(rosAptPackageNames);
         }
         else {
+            // Install Gazebo as usual
             for (const gazeboDistro of gazeboDistros) {
                 yield apt.runAptGetInstall([`gz-${gazeboDistro}`]);
             }
@@ -27018,53 +27018,9 @@ function checkForROSGz() {
  * Generate APT package name from ROS 2 and Gazebo distribution names
  *
  * @param rosGzDistrosList ROS 2 distro ros_gz packages to be installed
- * @param requiredGazeboDistributionsList Installed Gazebo distributions
+ * @param requiredGazeboDistributionsList Gazebo distributions to be installed
  * @returns string [] List of APT package names
  */
-// export function generateROSAptPackageNames(
-// 	rosGzDistrosList: string[],
-// 	requiredGazeboDistributionsList: string[],
-// ): string[] {
-// 	const rosAptPackageNames: string[] = [];
-// 	for (const rosDistro of rosGzDistrosList) {
-// 		const distroInfo = validROSGzDistrosList.find(
-// 			(distro) => distro.rosDistro === rosDistro,
-// 		);
-// 		for (const gazeboDistro of requiredGazeboDistributionsList) {
-// 			if (distroInfo!.officialROSGzWrappers.indexOf(gazeboDistro) > -1) {
-// 				rosAptPackageNames.push(`ros-${rosDistro}-ros-gz`);
-// 			} else if (
-// 				distroInfo!.unofficialROSGzWrappers.indexOf(gazeboDistro) > -1
-// 			) {
-// 				rosAptPackageNames.push(`ros-${rosDistro}-ros-gz${gazeboDistro}`);
-// 			} else {
-// 				throw new Error(
-// 					"Impossible ROS 2 and Gazebo combination requested. \
-//           Please check the list of compatible combinations at \
-//           https://gazebosim.org/docs/latest/ros_installation/#summary-of-compatible-ros-and-gazebo-combinations",
-// 				);
-// 			}
-// 		}
-// 	}
-// 	return rosAptPackageNames;
-// }
-// export function checkForROSGzVendorPackages(
-// 	gazeboDistro: string,
-// 	rosGzDistrosList: string[],
-// ): boolean {
-// 	for (const rosDistro of rosGzDistrosList) {
-// 		const distroInfo = validROSGzDistrosList.find(
-// 			(distro) => distro.rosDistro === rosDistro,
-// 		);
-// 		if (
-// 			distroInfo!.vendorPackagesAvailable &&
-// 			distroInfo!.officialROSGzWrappers.indexOf(gazeboDistro) > -1
-// 		) {
-// 			return true;
-// 		}
-// 	}
-// 	return false;
-// }
 function generateROSGzAptPackageNames(rosGzDistrosList, requiredGazeboDistributionsList) {
     const rosGzAptPackageNames = [];
     for (const rosDistro of rosGzDistrosList) {
