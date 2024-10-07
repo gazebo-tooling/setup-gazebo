@@ -246,6 +246,8 @@ This workflow shows how to use binaries from [pre-release] or [nightly] Gazebo r
 
 This workflow shows how to install ROS 2 using the GitHub action `ros-tooling/setup-ros` along with Gazebo installed using `setup-gazebo`. The `ros-gz` package can be installed by setting the input parameter `install-ros-gz` to the required ROS 2 distributions.
 
+Starting with ROS 2 Jazzy, Gazebo is available to be installed from ROS package repository via [vendor packages]. This action will check for availability of vendor packages and install them if available for the specified ROS 2 distribution. More information on vendor packages can be found in the [official documentation].
+
 ```yaml
   jobs:
     test_gazebo:
@@ -282,19 +284,20 @@ This workflow shows how to install ROS 2 using the GitHub action `ros-tooling/se
 This workflow shows how to install Gazebo on a macOS worker using the Homebrew package manager which is installed by the action. To run, this action needs an input for `required-gazebo-distributions` parameter.
 
 ```yaml
-  test_gazebo:
-    runs-on: macos-13
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4.0.2
-        with:
-          node-version: '20.x'
-      - name: 'Check Gazebo installation on MacOS runner'
-        uses: gazebo-tooling/setup-gazebo@v0.2.0
-        with:
-          required-gazebo-distributions: 'harmonic'
-      - name: 'Test Gazebo installation'
-        run: 'gz sim --versions'
+  jobs:
+    test_gazebo:
+      runs-on: macos-13
+      steps:
+        - uses: actions/checkout@v4
+        - uses: actions/setup-node@v4.0.2
+          with:
+            node-version: '20.x'
+        - name: 'Check Gazebo installation on MacOS runner'
+          uses: gazebo-tooling/setup-gazebo@v0.2.0
+          with:
+            required-gazebo-distributions: 'harmonic'
+        - name: 'Test Gazebo installation'
+          run: 'gz sim --versions'
 ```
 
 ### Windows
@@ -304,23 +307,24 @@ This workflow shows how to install Gazebo on a Windows worker. The action requir
 #### Setting up worker to install Gazebo on Windows
 
 ```yaml
-  test_gazebo:
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4.0.2
-        with:
-          node-version: '20.x'
-      - uses: conda-incubator/setup-miniconda@v3
-      - name: 'Check Gazebo installation on Windows runner'
-        uses: gazebo-tooling/setup-gazebo@v0.2.0
-        with:
-          required-gazebo-distributions: 'harmonic'
-      - name: 'Test Gazebo installation'
-        shell: pwsh
-        run: |
-          conda activate
-          gz sim --versions
+  jobs:
+    test_gazebo:
+      runs-on: windows-latest
+      steps:
+        - uses: actions/checkout@v4
+        - uses: actions/setup-node@v4.0.2
+          with:
+            node-version: '20.x'
+        - uses: conda-incubator/setup-miniconda@v3
+        - name: 'Check Gazebo installation on Windows runner'
+          uses: gazebo-tooling/setup-gazebo@v0.2.0
+          with:
+            required-gazebo-distributions: 'harmonic'
+        - name: 'Test Gazebo installation'
+          shell: pwsh
+          run: |
+            conda activate
+            gz sim --versions
 ```
 
 ## License
@@ -332,3 +336,5 @@ The scripts and documentation in this project are released under the [Apache 2](
 [best-effort]: https://gazebosim.org/docs/harmonic/releases#supported-platforms
 [pre-release]: https://packages.osrfoundation.org/gazebo/ubuntu-prerelease/
 [nightly]: https://packages.osrfoundation.org/gazebo/ubuntu-nightly/
+[vendor packages]: https://gazebosim.org/docs/ionic/ros_installation/#ros-2-gazebo-vendor-packages
+[official documentation]: https://gazebosim.org/docs/ionic/ros2_gz_vendor_pkgs/
