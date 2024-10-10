@@ -246,7 +246,7 @@ This workflow shows how to use binaries from [pre-release] or [nightly] Gazebo r
 
 This workflow shows how to install ROS 2 using the GitHub action `ros-tooling/setup-ros` along with Gazebo installed using `setup-gazebo`. The `ros-gz` package can be installed by setting the input parameter `install-ros-gz` to the required ROS 2 distributions.
 
-Starting with ROS 2 Jazzy, Gazebo is available to be installed from ROS package repository via [vendor packages]. This action will check for availability of vendor packages and install them if available for the specified ROS 2 distribution. More information on vendor packages can be found in the [official documentation].
+Starting with ROS 2 Jazzy, Gazebo is also available to be installed from ROS packages via [vendor packages]. When using `install-ros-gz` this action will check for availability of these Gazebo vendor packages and install them if available for the specified ROS 2 distribution. Only the default (recommended) Gazebo release is currently available for the ROS 2 releases using the vendor packages (i.e if ROS 2 Jazzy is used, only Gazebo Harmonic is the valid option). More information on vendor packages can be found in the [official documentation].
 
 ```yaml
   jobs:
