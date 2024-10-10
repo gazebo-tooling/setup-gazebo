@@ -14,16 +14,31 @@ const validROSGzDistrosList: {
 	rosDistro: string;
 	officialROSGzWrappers: string[];
 	unofficialROSGzWrappers: string[];
+	vendorPackagesAvailable: boolean;
 }[] = [
 	{
 		rosDistro: "humble",
 		officialROSGzWrappers: ["fortress"],
 		unofficialROSGzWrappers: ["garden", "harmonic"],
+		vendorPackagesAvailable: false,
 	},
 	{
 		rosDistro: "iron",
 		officialROSGzWrappers: ["fortress"],
 		unofficialROSGzWrappers: ["garden", "harmonic"],
+		vendorPackagesAvailable: false,
+	},
+	{
+		rosDistro: "jazzy",
+		officialROSGzWrappers: ["harmonic"],
+		unofficialROSGzWrappers: [],
+		vendorPackagesAvailable: true,
+	},
+	{
+		rosDistro: "rolling",
+		officialROSGzWrappers: ["harmonic"],
+		unofficialROSGzWrappers: [],
+		vendorPackagesAvailable: true,
 	},
 ];
 
@@ -232,25 +247,31 @@ export function checkForROSGz(): string[] {
  * Generate APT package name from ROS 2 and Gazebo distribution names
  *
  * @param rosGzDistrosList ROS 2 distro ros_gz packages to be installed
- * @param requiredGazeboDistributionsList Installed Gazebo distributions
+ * @param requiredGazeboDistributionsList Gazebo distributions to be installed
  * @returns string [] List of APT package names
  */
-export function generateROSAptPackageNames(
+export function generateROSGzAptPackageNames(
 	rosGzDistrosList: string[],
 	requiredGazeboDistributionsList: string[],
 ): string[] {
-	const rosAptPackageNames: string[] = [];
+	const rosGzAptPackageNames: string[] = [];
 	for (const rosDistro of rosGzDistrosList) {
 		const distroInfo = validROSGzDistrosList.find(
 			(distro) => distro.rosDistro === rosDistro,
 		);
 		for (const gazeboDistro of requiredGazeboDistributionsList) {
+			if (!distroInfo!.vendorPackagesAvailable) {
+				const gzPkgName = `gz-${gazeboDistro}`;
+				if (rosGzAptPackageNames.indexOf(gzPkgName) < 0) {
+					rosGzAptPackageNames.push(gzPkgName);
+				}
+			}
 			if (distroInfo!.officialROSGzWrappers.indexOf(gazeboDistro) > -1) {
-				rosAptPackageNames.push(`ros-${rosDistro}-ros-gz`);
+				rosGzAptPackageNames.push(`ros-${rosDistro}-ros-gz`);
 			} else if (
 				distroInfo!.unofficialROSGzWrappers.indexOf(gazeboDistro) > -1
 			) {
-				rosAptPackageNames.push(`ros-${rosDistro}-ros-gz${gazeboDistro}`);
+				rosGzAptPackageNames.push(`ros-${rosDistro}-ros-gz${gazeboDistro}`);
 			} else {
 				throw new Error(
 					"Impossible ROS 2 and Gazebo combination requested. \
@@ -260,5 +281,5 @@ export function generateROSAptPackageNames(
 			}
 		}
 	}
-	return rosAptPackageNames;
+	return rosGzAptPackageNames;
 }
