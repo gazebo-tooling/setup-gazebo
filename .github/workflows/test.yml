@@ -320,7 +320,7 @@ jobs:
       image: ubuntu:noble
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4.0.3
+      - uses: actions/setup-node@v4.0.4
         with:
           node-version: '20.x'
       - name: 'Install ROS 2 Jazzy'
