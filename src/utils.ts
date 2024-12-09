@@ -19,13 +19,13 @@ const validROSGzDistrosList: {
 	{
 		rosDistro: "humble",
 		officialROSGzWrappers: ["fortress"],
-		unofficialROSGzWrappers: ["garden", "harmonic"],
+		unofficialROSGzWrappers: ["harmonic"],
 		vendorPackagesAvailable: false,
 	},
 	{
 		rosDistro: "iron",
 		officialROSGzWrappers: ["fortress"],
-		unofficialROSGzWrappers: ["garden", "harmonic"],
+		unofficialROSGzWrappers: ["harmonic"],
 		vendorPackagesAvailable: false,
 	},
 	{

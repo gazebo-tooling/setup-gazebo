@@ -4,10 +4,6 @@ import * as conda from "./package_manager/conda";
 // List of mapped Gazebo distro to gz-sim versions
 const validLibVersions: { distro: string; libVersion: number }[] = [
 	{
-		distro: "garden",
-		libVersion: 7,
-	},
-	{
 		distro: "harmonic",
 		libVersion: 8,
 	},
