@@ -58,7 +58,7 @@ The `setup-gazebo` GitHub action can be run using GitHub-hosted Ubuntu runners o
 
 > [!NOTE]
 >
-> The available GitHub-hosted runners can be found [here](https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners/about-github-hosted-runners#standard-github-hosted-runners-for-public-repositories). It should be noted that the `ubuntu-24.04` runner image is a beta release. An alternative approach is using a docker container as shown in the following sections.
+> The available GitHub-hosted runners can be found [here](https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners/about-github-hosted-runners#standard-github-hosted-runners-for-public-repositories). An alternative approach is using a docker container as shown in the following sections.
 
 
 #### Setting up worker and installing a compatible Gazebo and Ubuntu combination
@@ -79,7 +79,7 @@ This workflow shows how to spawn a job to install Gazebo on an Ubuntu distributi
           with:
             node-version: '20.x'
         - name: 'Setup Gazebo'
-          uses: gazebo-tooling/setup-gazebo@v0.2.0
+          uses: gazebo-tooling/setup-gazebo@v0.3.0
           with:
             required-gazebo-distributions: harmonic
         - name: 'Test Gazebo installation'
@@ -102,7 +102,7 @@ This workflow shows how to spawn a job to install Gazebo on an Ubuntu distributi
           with:
             node-version: '20.x'
         - name: 'Setup Gazebo'
-          uses: gazebo-tooling/setup-gazebo@v0.2.0
+          uses: gazebo-tooling/setup-gazebo@v0.3.0
           with:
             required-gazebo-distributions: harmonic
         - name: 'Test Gazebo installation'
@@ -125,8 +125,8 @@ This workflow shows how to spawn one job per Gazebo release and iterates over al
           gazebo_distribution:
             - citadel
             - fortress
-            - garden
             - harmonic
+            - ionic
           include:
             # Gazebo Citadel (Dec 2019 - Dec 2024)
             - ubuntu_distribution: ubuntu-20.04
@@ -136,20 +136,20 @@ This workflow shows how to spawn one job per Gazebo release and iterates over al
             - ubuntu_distribution: ubuntu-20.04
               gazebo_distribution: fortress
 
-            # Gazebo Garden (Sep 2022 - Nov 2024)
-            - ubuntu_distribution: ubuntu-20.04
-              gazebo_distribution: garden
-
             # Gazebo Harmonic (Sep 2023 - Sep 2028)
             - ubuntu_distribution: ubuntu-22.04
               gazebo_distribution: harmonic
+
+            # Gazebo Ionic (Sep 2024 - Sep 2026)
+            - ubuntu_distribution: ubuntu-24.04
+              gazebo_distribution: ionic
       steps:
         - uses: actions/checkout@v4
         - uses: actions/setup-node@v4.0.2
           with:
             node-version: '20.x'
         - name: 'Check Gazebo installation on Ubuntu runner'
-          uses: gazebo-tooling/setup-gazebo@v0.2.0
+          uses: gazebo-tooling/setup-gazebo@v0.3.0
           with:
             required-gazebo-distributions: ${{ matrix.gazebo_distribution }}
         - name: 'Test Gazebo installation'
@@ -169,52 +169,52 @@ This workflow shows how to spawn one job per Gazebo release and iterates over al
 ```yaml
   jobs:
     test_gazebo:
-    runs-on: ubuntu-latest
-    container:
-      image: ${{ matrix.docker_image }}
-    strategy:
-      fail-fast: false
-      matrix:
-        gazebo_distribution:
-          - citadel
-          - fortress
-          - garden
-          - harmonic
-        include:
-          # Gazebo Citadel (Dec 2019 - Dec 2024)
-          - docker_image: ubuntu:focal
-            gazebo_distribution: citadel
+      runs-on: ubuntu-latest
+      container:
+        image: ${{ matrix.docker_image }}
+      strategy:
+        fail-fast: false
+        matrix:
+          gazebo_distribution:
+            - citadel
+            - fortress
+            - harmonic
+            - ionic
+          include:
+            # Gazebo Citadel (Dec 2019 - Dec 2024)
+            - docker_image: ubuntu:focal
+              gazebo_distribution: citadel
 
-          # Gazebo Fortress (Sep 2021 - Sep 2026)
-          - docker_image: ubuntu:focal
-            gazebo_distribution: fortress
+            # Gazebo Fortress (Sep 2021 - Sep 2026)
+            - docker_image: ubuntu:focal
+              gazebo_distribution: fortress
 
-          # Gazebo Garden (Sep 2022 - Nov 2024)
-          - docker_image: ubuntu:focal
-            gazebo_distribution: garden
+            # Gazebo Harmonic (Sep 2023 - Sep 2028)
+            - docker_image: ubuntu:jammy
+              gazebo_distribution: harmonic
 
-          # Gazebo Harmonic (Sep 2023 - Sep 2028)
-          - docker_image: ubuntu:jammy
-            gazebo_distribution: harmonic
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4.0.3
-        with:
-          node-version: '20.x'
-      - name: 'Check Gazebo installation on Ubuntu runner'
-        uses: gazebo-tooling/setup-gazebo@v0.2.0
-        with:
-          required-gazebo-distributions: ${{ matrix.gazebo_distribution }}
-      - name: 'Test Gazebo installation'
-        run: |
-          if command -v ign > /dev/null; then
-            ign gazebo --versions
-          elif command -v gz > /dev/null; then
-            gz sim --versions
-          else
-            echo "Neither ign nor gz command found"
-            exit 1
-          fi
+            # Gazebo Ionic (Sep 2024 - Sep 2026)
+            - docker_image: ubuntu:noble
+              gazebo_distribution: ionic
+      steps:
+        - uses: actions/checkout@v4
+        - uses: actions/setup-node@v4.0.3
+          with:
+            node-version: '20.x'
+        - name: 'Check Gazebo installation on Ubuntu runner'
+          uses: gazebo-tooling/setup-gazebo@v0.3.0
+          with:
+            required-gazebo-distributions: ${{ matrix.gazebo_distribution }}
+        - name: 'Test Gazebo installation'
+          run: |
+            if command -v ign > /dev/null; then
+              ign gazebo --versions
+            elif command -v gz > /dev/null; then
+              gz sim --versions
+            else
+              echo "Neither ign nor gz command found"
+              exit 1
+            fi
 ```
 
 #### Using pre-release and/or nightly Gazebo binaries
@@ -224,22 +224,22 @@ This workflow shows how to use binaries from [pre-release] or [nightly] Gazebo r
 ```yaml
   jobs:
     test_gazebo:
-        runs-on: ubuntu-latest
-        container:
-          image: ubuntu:noble
-        steps:
-          - uses: actions/checkout@v4
-          - uses: actions/setup-node@v4.0.2
-            with:
-              node-version: '20.x'
-          - name: 'Check Gazebo installation on Ubuntu runner'
-            uses: gazebo-tooling/setup-gazebo@v0.2.0
-            with:
-              required-gazebo-distributions: 'ionic'
-              use-gazebo-prerelease: 'true'
-              use-gazebo-nightly: 'true'
-          - name: 'Test Gazebo installation'
-            run: 'gz sim --versions'
+      runs-on: ubuntu-latest
+      container:
+        image: ubuntu:noble
+      steps:
+        - uses: actions/checkout@v4
+        - uses: actions/setup-node@v4.0.2
+          with:
+            node-version: '20.x'
+        - name: 'Check Gazebo installation on Ubuntu runner'
+          uses: gazebo-tooling/setup-gazebo@v0.3.0
+          with:
+            required-gazebo-distributions: 'ionic'
+            use-gazebo-prerelease: 'true'
+            use-gazebo-nightly: 'true'
+        - name: 'Test Gazebo installation'
+          run: 'gz sim --versions'
 ```
 
 #### Installing ROS 2 and Gazebo side-by-side along with `ros_gz`
@@ -248,33 +248,71 @@ This workflow shows how to install ROS 2 using the GitHub action `ros-tooling/se
 
 Starting with ROS 2 Jazzy, Gazebo is also available to be installed from ROS packages via [vendor packages]. When using `install-ros-gz` this action will check for availability of these Gazebo vendor packages and install them if available for the specified ROS 2 distribution. Only the default (recommended) Gazebo release is currently available for the ROS 2 releases using the vendor packages (i.e if ROS 2 Jazzy is used, only Gazebo Harmonic is the valid option). More information on vendor packages can be found in the [official documentation].
 
+- *Installing a ROS-Gazebo combination*
+
+This example shows the installation of ROS 2 Iron and Gazebo Harmonic which is a supported ROS-Gazebo combination.
+
 ```yaml
   jobs:
     test_gazebo:
-    env:
-      ROS_DISTROS: 'iron'
-    runs-on: ubuntu-latest
-    container:
-      image: ubuntu:jammy
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4.0.3
-        with:
-          node-version: '20.x'
-      - name: 'Install ROS 2 Iron'
-        uses: ros-tooling/setup-ros@v0.7
-        with:
-          required-ros-distributions: ${{ env.ROS_DISTROS }}
-      - name: 'Install Gazebo Harmonic with ros_gz'
-        uses: gazebo-tooling/setup-gazebo@v0.2.0
-        with:
-          required-gazebo-distributions: 'harmonic'
-          install-ros-gz: ${{ env.ROS_DISTROS }}
-      - name: Test Iron ros_gz installation
-        run: |
-          source /opt/ros/iron/setup.bash
-          ros2 pkg list | grep ros_gz
-          gz sim --version | grep 'version 8.[0-9*].[0-9*]'
+      env:
+        ROS_DISTROS: 'iron'
+      runs-on: ubuntu-latest
+      container:
+        image: ubuntu:jammy
+      steps:
+        - uses: actions/checkout@v4
+        - uses: actions/setup-node@v4.0.3
+          with:
+            node-version: '20.x'
+        - name: 'Install ROS 2 Iron'
+          uses: ros-tooling/setup-ros@v0.7
+          with:
+            required-ros-distributions: ${{ env.ROS_DISTROS }}
+        - name: 'Install Gazebo Harmonic with ros_gz'
+          uses: gazebo-tooling/setup-gazebo@v0.3.0
+          with:
+            required-gazebo-distributions: 'harmonic'
+            install-ros-gz: ${{ env.ROS_DISTROS }}
+        - name: Test Iron ros_gz installation
+          run: |
+            source /opt/ros/iron/setup.bash
+            ros2 pkg list | grep ros_gz
+            gz sim --version | grep 'version 8.[0-9*].[0-9*]'
+```
+
+- *Installing Gazebo through vendor packages*
+
+This example shows the installation of ROS 2 Jazzy and Gazebo Harmonic which is a recommended ROS-Gazebo combination. In this case, Gazebo libraries are will be installed as ROS packages.
+
+```yaml
+  jobs:
+    test_gazebo:
+      env:
+        ROS_DISTROS: 'jazzy'
+      runs-on: ubuntu-latest
+      container:
+        image: ubuntu:noble
+      steps:
+        - uses: actions/checkout@v4
+        - uses: actions/setup-node@v4.0.3
+          with:
+            node-version: '20.x'
+        - name: 'Install ROS 2 Jazzy'
+          uses: ros-tooling/setup-ros@v0.7
+          with:
+            required-ros-distributions: ${{ env.ROS_DISTROS }}
+        - name: 'Install Gazebo with ros_gz'
+          uses: gazebo-tooling/setup-gazebo@v0.3.0
+          with:
+            required-gazebo-distributions: 'harmonic'
+            install-ros-gz: ${{ env.ROS_DISTROS }}
+        - name: Test Jazzy ros_gz installation
+          run: |
+            source /opt/ros/jazzy/setup.bash
+            ! [ $(apt list --installed gz-harmonic) ]
+            ros2 pkg list | grep ros_gz
+            gz sim --version | grep 'version 8.[0-9*].[0-9*]'
 ```
 
 ### macOS
@@ -293,7 +331,7 @@ This workflow shows how to install Gazebo on a macOS worker using the Homebrew p
           with:
             node-version: '20.x'
         - name: 'Check Gazebo installation on MacOS runner'
-          uses: gazebo-tooling/setup-gazebo@v0.2.0
+          uses: gazebo-tooling/setup-gazebo@v0.3.0
           with:
             required-gazebo-distributions: 'harmonic'
         - name: 'Test Gazebo installation'
@@ -317,7 +355,7 @@ This workflow shows how to install Gazebo on a Windows worker. The action requir
             node-version: '20.x'
         - uses: conda-incubator/setup-miniconda@v3
         - name: 'Check Gazebo installation on Windows runner'
-          uses: gazebo-tooling/setup-gazebo@v0.2.0
+          uses: gazebo-tooling/setup-gazebo@v0.3.0
           with:
             required-gazebo-distributions: 'harmonic'
         - name: 'Test Gazebo installation'

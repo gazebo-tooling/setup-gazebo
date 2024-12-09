@@ -12,11 +12,11 @@ inputs:
         Allowed Gazebo distributions
         - citadel
         - fortress
-        - garden
         - harmonic
+        - ionic
 
         Multiple values can be passed using a whitespace delimited list
-        "fortress garden".
+        "fortress harmonic".
       required: false
       default: ''
   use-gazebo-prerelease:
@@ -36,6 +36,8 @@ inputs:
       Allowed ROS 2 distributions
       - humble
       - iron
+      - jazzy
+      - rolling
 
       Multiple values can be passed using a whitespace delimited list
       "humble iron".
