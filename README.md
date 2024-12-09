@@ -125,8 +125,8 @@ This workflow shows how to spawn one job per Gazebo release and iterates over al
           gazebo_distribution:
             - citadel
             - fortress
-            - garden
             - harmonic
+            - ionic
           include:
             # Gazebo Citadel (Dec 2019 - Dec 2024)
             - ubuntu_distribution: ubuntu-20.04
@@ -136,13 +136,13 @@ This workflow shows how to spawn one job per Gazebo release and iterates over al
             - ubuntu_distribution: ubuntu-20.04
               gazebo_distribution: fortress
 
-            # Gazebo Garden (Sep 2022 - Nov 2024)
-            - ubuntu_distribution: ubuntu-20.04
-              gazebo_distribution: garden
-
             # Gazebo Harmonic (Sep 2023 - Sep 2028)
             - ubuntu_distribution: ubuntu-22.04
               gazebo_distribution: harmonic
+
+            # Gazebo Ionic (Sep 2024 - Sep 2026)
+            - ubuntu_distribution: ubuntu-24.04
+              gazebo_distribution: ionic
       steps:
         - uses: actions/checkout@v4
         - uses: actions/setup-node@v4.0.2
@@ -178,8 +178,8 @@ This workflow shows how to spawn one job per Gazebo release and iterates over al
           gazebo_distribution:
             - citadel
             - fortress
-            - garden
             - harmonic
+            - ionic
           include:
             # Gazebo Citadel (Dec 2019 - Dec 2024)
             - docker_image: ubuntu:focal
@@ -189,13 +189,13 @@ This workflow shows how to spawn one job per Gazebo release and iterates over al
             - docker_image: ubuntu:focal
               gazebo_distribution: fortress
 
-            # Gazebo Garden (Sep 2022 - Nov 2024)
-            - docker_image: ubuntu:focal
-              gazebo_distribution: garden
-
             # Gazebo Harmonic (Sep 2023 - Sep 2028)
             - docker_image: ubuntu:jammy
               gazebo_distribution: harmonic
+
+            # Gazebo Ionic (Sep 2024 - Sep 2026)
+            - docker_image: ubuntu:noble
+              gazebo_distribution: ionic
       steps:
         - uses: actions/checkout@v4
         - uses: actions/setup-node@v4.0.3
