@@ -83,10 +83,9 @@ describe("validate Gazebo distribution test", () => {
 	it("test valid distro", async () => {
 		await expect(utils.validateDistro(["citadel"])).resolves.not.toThrow();
 		await expect(utils.validateDistro(["fortress"])).resolves.not.toThrow();
-		await expect(utils.validateDistro(["garden"])).resolves.not.toThrow();
 		await expect(utils.validateDistro(["harmonic"])).resolves.not.toThrow();
 		await expect(
-			utils.validateDistro(["fortress", "garden"]),
+			utils.validateDistro(["fortress", "harmonic"]),
 		).resolves.not.toThrow();
 	});
 	it("test invalid distro", async () => {
@@ -94,6 +93,7 @@ describe("validate Gazebo distribution test", () => {
 		await expect(utils.validateDistro(["blueprint"])).rejects.toThrow();
 		await expect(utils.validateDistro(["dome"])).rejects.toThrow();
 		await expect(utils.validateDistro(["edifice"])).rejects.toThrow();
+		await expect(utils.validateDistro(["garden"])).rejects.toThrow();
 		await expect(utils.validateDistro(["doesNotExist"])).rejects.toThrow();
 		await expect(utils.validateDistro(["dome", "fortress"])).rejects.toThrow();
 		await expect(
@@ -189,13 +189,8 @@ describe("generate APT package names for ros_gz", () => {
 			utils.generateROSGzAptPackageNames(["humble"], ["fortress"]),
 		).toEqual(["gz-fortress", "ros-humble-ros-gz"]);
 		await expect(
-			utils.generateROSGzAptPackageNames(["iron"], ["fortress", "garden"]),
-		).toEqual([
-			"gz-fortress",
-			"ros-iron-ros-gz",
-			"gz-garden",
-			"ros-iron-ros-gzgarden",
-		]);
+			utils.generateROSGzAptPackageNames(["iron"], ["fortress"]),
+		).toEqual(["gz-fortress", "ros-iron-ros-gz"]);
 		await expect(
 			utils.generateROSGzAptPackageNames(["jazzy"], ["harmonic"]),
 		).toEqual(["ros-jazzy-ros-gz"]);
