@@ -81,7 +81,6 @@ describe("workflow test with a valid distro input", () => {
 
 describe("validate Gazebo distribution test", () => {
 	it("test valid distro", async () => {
-		await expect(utils.validateDistro(["citadel"])).resolves.not.toThrow();
 		await expect(utils.validateDistro(["fortress"])).resolves.not.toThrow();
 		await expect(utils.validateDistro(["harmonic"])).resolves.not.toThrow();
 		await expect(

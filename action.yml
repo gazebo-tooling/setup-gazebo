@@ -10,7 +10,6 @@ inputs:
         List of Gazebo distributions to be installed.
 
         Allowed Gazebo distributions
-        - citadel
         - fortress
         - harmonic
         - ionic
