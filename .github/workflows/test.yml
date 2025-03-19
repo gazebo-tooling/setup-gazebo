@@ -59,18 +59,10 @@ jobs:
           - ubuntu-22.04
           - ubuntu-24.04
         gazebo_distribution:
-          - citadel
           - fortress
           - harmonic
           - ionic
         exclude:
-          # Gazebo Citadel (Dec 2019 - Dec 2024)
-          # Compatible ubuntu distributions: 20.04
-          - ubuntu_distribution: ubuntu-22.04
-            gazebo_distribution: citadel
-          - ubuntu_distribution: ubuntu-24.04
-            gazebo_distribution: citadel
-
           # Gazebo Fortress (Sep 2021 - Sep 2026)
           # Compatible ubuntu distributions: 20.04
           - ubuntu_distribution: ubuntu-22.04
@@ -122,18 +114,10 @@ jobs:
           - ubuntu:jammy
           - ubuntu:noble
         gazebo_distribution:
-          - citadel
           - fortress
           - harmonic
           - ionic
         exclude:
-          # Gazebo Citadel (Dec 2019 - Dec 2024)
-          # Compatible ubuntu docker images: focal
-          - docker_image: ubuntu:jammy
-            gazebo_distribution: citadel
-          - docker_image: ubuntu:noble
-            gazebo_distribution: citadel
-
           # Gazebo Fortress (Sep 2021 - Sep 2026)
           # Compatible ubuntu docker images: focal
           - docker_image: ubuntu:jammy
