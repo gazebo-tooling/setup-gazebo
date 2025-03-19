@@ -246,7 +246,7 @@ jobs:
       - uses: actions/setup-node@v4.1.0
         with:
           node-version: '20.x'
-      - uses: conda-incubator/setup-miniconda@v3
+      - uses: conda-incubator/setup-miniconda@2defc80cc6f4028b1780c50faf08dd505d698976  # v3
       - name: 'Check Gazebo installation on Windows runner'
         uses: ./
         with:
@@ -270,7 +270,7 @@ jobs:
         with:
           node-version: '20.x'
       - name: 'Install ROS 2 Iron'
-        uses: ros-tooling/setup-ros@v0.7
+        uses: ros-tooling/setup-ros@v43873f0a494a4f853d2f47e0a65656dd5b24ebd9  # v7.0
         with:
           required-ros-distributions: ${{ env.ROS_DISTROS }}
       - name: 'Install Gazebo Harmonic with ros_gz'
