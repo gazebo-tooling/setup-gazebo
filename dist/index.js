@@ -26641,10 +26641,6 @@ const conda = __importStar(__nccwpck_require__(7725));
 // List of mapped Gazebo distro to gz-sim versions
 const validLibVersions = [
     {
-        distro: "garden",
-        libVersion: 7,
-    },
-    {
         distro: "harmonic",
         libVersion: 8,
     },
@@ -26819,13 +26815,13 @@ const validROSGzDistrosList = [
     {
         rosDistro: "humble",
         officialROSGzWrappers: ["fortress"],
-        unofficialROSGzWrappers: ["garden", "harmonic"],
+        unofficialROSGzWrappers: ["harmonic"],
         vendorPackagesAvailable: false,
     },
     {
         rosDistro: "iron",
         officialROSGzWrappers: ["fortress"],
-        unofficialROSGzWrappers: ["garden", "harmonic"],
+        unofficialROSGzWrappers: ["harmonic"],
         vendorPackagesAvailable: false,
     },
     {

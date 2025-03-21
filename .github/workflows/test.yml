@@ -24,7 +24,7 @@ jobs:
           - ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4.0.4
+      - uses: actions/setup-node@v4.1.0
         with:
           node-version: '20.x'
       - run: .github/workflows/build-and-test.sh
@@ -43,7 +43,7 @@ jobs:
           - ubuntu:noble
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4.0.4
+      - uses: actions/setup-node@v4.1.0
         with:
           node-version: '20.x'
       - run: .github/workflows/build-and-test.sh
@@ -59,18 +59,10 @@ jobs:
           - ubuntu-22.04
           - ubuntu-24.04
         gazebo_distribution:
-          - citadel
           - fortress
-          - garden
           - harmonic
+          - ionic
         exclude:
-          # Gazebo Citadel (Dec 2019 - Dec 2024)
-          # Compatible ubuntu distributions: 20.04
-          - ubuntu_distribution: ubuntu-22.04
-            gazebo_distribution: citadel
-          - ubuntu_distribution: ubuntu-24.04
-            gazebo_distribution: citadel
-
           # Gazebo Fortress (Sep 2021 - Sep 2026)
           # Compatible ubuntu distributions: 20.04
           - ubuntu_distribution: ubuntu-22.04
@@ -78,20 +70,20 @@ jobs:
           - ubuntu_distribution: ubuntu-24.04
             gazebo_distribution: fortress
 
-          # Gazebo Garden (Sep 2022 - Nov 2024)
-          # Compatible ubuntu distributions: 20.04
-          - ubuntu_distribution: ubuntu-22.04
-            gazebo_distribution: garden
-          - ubuntu_distribution: ubuntu-24.04
-            gazebo_distribution: garden
-
           # Gazebo Harmonic (Sep 2023 - Sep 2028)
           # Compatible ubuntu distributions: 22.04, 24.04
           - ubuntu_distribution: ubuntu-20.04
             gazebo_distribution: harmonic
+
+          # Gazebo Ionic (Sep 2024 - Sep 2026)
+          # Compatible ubuntu distributions: 24.04
+          - ubuntu_distribution: ubuntu-20.04
+            gazebo_distribution: ionic
+          - ubuntu_distribution: ubuntu-22.04
+            gazebo_distribution: ionic
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4.0.4
+      - uses: actions/setup-node@v4.1.0
         with:
           node-version: '20.x'
       - name: 'Check Gazebo installation on Ubuntu runner'
@@ -122,18 +114,10 @@ jobs:
           - ubuntu:jammy
           - ubuntu:noble
         gazebo_distribution:
-          - citadel
           - fortress
-          - garden
           - harmonic
+          - ionic
         exclude:
-          # Gazebo Citadel (Dec 2019 - Dec 2024)
-          # Compatible ubuntu docker images: focal
-          - docker_image: ubuntu:jammy
-            gazebo_distribution: citadel
-          - docker_image: ubuntu:noble
-            gazebo_distribution: citadel
-
           # Gazebo Fortress (Sep 2021 - Sep 2026)
           # Compatible ubuntu docker images: focal
           - docker_image: ubuntu:jammy
@@ -141,20 +125,20 @@ jobs:
           - docker_image: ubuntu:noble
             gazebo_distribution: fortress
 
-          # Gazebo Garden (Sep 2022 - Nov 2024)
-          # Compatible ubuntu docker images: focal
-          - docker_image: ubuntu:jammy
-            gazebo_distribution: garden
-          - docker_image: ubuntu:noble
-            gazebo_distribution: garden
-
           # Gazebo Harmonic (Sep 2023 - Sep 2028)
           # Compatible ubuntu docker images: jammy, noble
           - docker_image: ubuntu:focal
             gazebo_distribution: harmonic
+
+          # Gazebo Ionic (Sep 2024 - Sep 2026)
+          # Compatible ubuntu distributions: 24.04
+          - docker_image: ubuntu:focal
+            gazebo_distribution: ionic
+          - docker_image: ubuntu:jammy
+            gazebo_distribution: ionic
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4.0.4
+      - uses: actions/setup-node@v4.1.0
         with:
           node-version: '20.x'
       - name: 'Check Gazebo installation on Ubuntu runner'
@@ -185,7 +169,7 @@ jobs:
           - ubuntu:noble
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4.0.4
+      - uses: actions/setup-node@v4.1.0
         with:
           node-version: '20.x'
       - name: 'Check Gazebo installation on Ubuntu runner'
@@ -203,7 +187,7 @@ jobs:
       image: ubuntu:noble
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4.0.4
+      - uses: actions/setup-node@v4.1.0
         with:
           node-version: '20.x'
       - name: 'Check Gazebo installation on Ubuntu runner'
@@ -228,7 +212,7 @@ jobs:
           - macos-14
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4.0.4
+      - uses: actions/setup-node@v4.1.0
         with:
           node-version: '20.x'
       - name: 'Check Gazebo installation on macOS runner'
@@ -243,10 +227,10 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4.0.4
+      - uses: actions/setup-node@v4.1.0
         with:
           node-version: '20.x'
-      - uses: conda-incubator/setup-miniconda@v3
+      - uses: conda-incubator/setup-miniconda@2defc80cc6f4028b1780c50faf08dd505d698976  # v3
       - name: 'Check Gazebo installation on Windows runner'
         uses: ./
         with:
@@ -266,11 +250,11 @@ jobs:
       image: ubuntu:jammy
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4.0.4
+      - uses: actions/setup-node@v4.1.0
         with:
           node-version: '20.x'
       - name: 'Install ROS 2 Iron'
-        uses: ros-tooling/setup-ros@v0.7
+        uses: ros-tooling/setup-ros@43873f0a494a4f853d2f47e0a65656dd5b24ebd9  # v7.0
         with:
           required-ros-distributions: ${{ env.ROS_DISTROS }}
       - name: 'Install Gazebo Harmonic with ros_gz'
@@ -293,11 +277,11 @@ jobs:
       image: ubuntu:jammy
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4.0.4
+      - uses: actions/setup-node@v4.1.0
         with:
           node-version: '20.x'
       - name: 'Install ROS 2 Humble'
-        uses: ros-tooling/setup-ros@v0.7
+        uses: ros-tooling/setup-ros@43873f0a494a4f853d2f47e0a65656dd5b24ebd9  # v7.0
         with:
           required-ros-distributions: ${{ env.ROS_DISTROS }}
       - name: 'Install Gazebo with ros_gz'
@@ -320,11 +304,11 @@ jobs:
       image: ubuntu:noble
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4.0.3
+      - uses: actions/setup-node@v4.1.0
         with:
           node-version: '20.x'
       - name: 'Install ROS 2 Jazzy'
-        uses: ros-tooling/setup-ros@v0.7
+        uses: ros-tooling/setup-ros@43873f0a494a4f853d2f47e0a65656dd5b24ebd9  # v7.0
         with:
           required-ros-distributions: ${{ env.ROS_DISTROS }}
       - name: 'Install Gazebo with ros_gz'
