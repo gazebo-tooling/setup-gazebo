@@ -254,7 +254,7 @@ jobs:
         with:
           node-version: '20.x'
       - name: 'Install ROS 2 Iron'
-        uses: ros-tooling/setup-ros@43873f0a494a4f853d2f47e0a65656dd5b24ebd9  # v7.0
+        uses: ros-tooling/setup-ros@a1cad1270a615987e381b41130401b666f34734d  # v0.7.10
         with:
           required-ros-distributions: ${{ env.ROS_DISTROS }}
       - name: 'Install Gazebo Harmonic with ros_gz'
@@ -281,7 +281,7 @@ jobs:
         with:
           node-version: '20.x'
       - name: 'Install ROS 2 Humble'
-        uses: ros-tooling/setup-ros@43873f0a494a4f853d2f47e0a65656dd5b24ebd9  # v7.0
+        uses: ros-tooling/setup-ros@a1cad1270a615987e381b41130401b666f34734d  # v0.7.10
         with:
           required-ros-distributions: ${{ env.ROS_DISTROS }}
       - name: 'Install Gazebo with ros_gz'
@@ -308,7 +308,7 @@ jobs:
         with:
           node-version: '20.x'
       - name: 'Install ROS 2 Jazzy'
-        uses: ros-tooling/setup-ros@43873f0a494a4f853d2f47e0a65656dd5b24ebd9  # v7.0
+        uses: ros-tooling/setup-ros@a1cad1270a615987e381b41130401b666f34734d  # v0.7.10
         with:
           required-ros-distributions: ${{ env.ROS_DISTROS }}
       - name: 'Install Gazebo with ros_gz'
