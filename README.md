@@ -123,15 +123,10 @@ This workflow shows how to spawn one job per Gazebo release and iterates over al
         fail-fast: false
         matrix:
           gazebo_distribution:
-            - citadel
             - fortress
             - harmonic
             - ionic
           include:
-            # Gazebo Citadel (Dec 2019 - Dec 2024)
-            - ubuntu_distribution: ubuntu-20.04
-              gazebo_distribution: citadel
-
             # Gazebo Fortress (Sep 2021 - Sep 2026)
             - ubuntu_distribution: ubuntu-20.04
               gazebo_distribution: fortress
@@ -176,15 +171,10 @@ This workflow shows how to spawn one job per Gazebo release and iterates over al
         fail-fast: false
         matrix:
           gazebo_distribution:
-            - citadel
             - fortress
             - harmonic
             - ionic
           include:
-            # Gazebo Citadel (Dec 2019 - Dec 2024)
-            - docker_image: ubuntu:focal
-              gazebo_distribution: citadel
-
             # Gazebo Fortress (Sep 2021 - Sep 2026)
             - docker_image: ubuntu:focal
               gazebo_distribution: fortress
