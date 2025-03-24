@@ -24,7 +24,7 @@ jobs:
           - ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4.1.0
+      - uses: actions/setup-node@v4.3.0
         with:
           node-version: '20.x'
       - run: .github/workflows/build-and-test.sh
@@ -43,7 +43,7 @@ jobs:
           - ubuntu:noble
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4.1.0
+      - uses: actions/setup-node@v4.3.0
         with:
           node-version: '20.x'
       - run: .github/workflows/build-and-test.sh
@@ -83,7 +83,7 @@ jobs:
             gazebo_distribution: ionic
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4.1.0
+      - uses: actions/setup-node@v4.3.0
         with:
           node-version: '20.x'
       - name: 'Check Gazebo installation on Ubuntu runner'
@@ -138,7 +138,7 @@ jobs:
             gazebo_distribution: ionic
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4.1.0
+      - uses: actions/setup-node@v4.3.0
         with:
           node-version: '20.x'
       - name: 'Check Gazebo installation on Ubuntu runner'
@@ -169,7 +169,7 @@ jobs:
           - ubuntu:noble
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4.1.0
+      - uses: actions/setup-node@v4.3.0
         with:
           node-version: '20.x'
       - name: 'Check Gazebo installation on Ubuntu runner'
@@ -187,7 +187,7 @@ jobs:
       image: ubuntu:noble
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4.1.0
+      - uses: actions/setup-node@v4.3.0
         with:
           node-version: '20.x'
       - name: 'Check Gazebo installation on Ubuntu runner'
@@ -212,7 +212,7 @@ jobs:
           - macos-14
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4.1.0
+      - uses: actions/setup-node@v4.3.0
         with:
           node-version: '20.x'
       - name: 'Check Gazebo installation on macOS runner'
@@ -227,7 +227,7 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4.1.0
+      - uses: actions/setup-node@v4.3.0
         with:
           node-version: '20.x'
       - uses: conda-incubator/setup-miniconda@2defc80cc6f4028b1780c50faf08dd505d698976  # v3
@@ -250,7 +250,7 @@ jobs:
       image: ubuntu:jammy
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4.1.0
+      - uses: actions/setup-node@v4.3.0
         with:
           node-version: '20.x'
       - name: 'Install ROS 2 Iron'
@@ -277,7 +277,7 @@ jobs:
       image: ubuntu:jammy
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4.1.0
+      - uses: actions/setup-node@v4.3.0
         with:
           node-version: '20.x'
       - name: 'Install ROS 2 Humble'
@@ -304,7 +304,7 @@ jobs:
       image: ubuntu:noble
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4.1.0
+      - uses: actions/setup-node@v4.3.0
         with:
           node-version: '20.x'
       - name: 'Install ROS 2 Jazzy'
