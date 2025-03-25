@@ -230,7 +230,7 @@ jobs:
       - uses: actions/setup-node@v4.3.0
         with:
           node-version: '20.x'
-      - uses: conda-incubator/setup-miniconda@2defc80cc6f4028b1780c50faf08dd505d698976  # v3
+      - uses: conda-incubator/setup-miniconda@505e6394dae86d6a5c7fbb6e3fb8938e3e863830  # v3
       - name: 'Check Gazebo installation on Windows runner'
         uses: ./
         with:
