@@ -240,13 +240,13 @@ Starting with ROS 2 Jazzy, Gazebo is also available to be installed from ROS pac
 
 - *Installing a ROS-Gazebo combination*
 
-This example shows the installation of ROS 2 Iron and Gazebo Harmonic which is a supported ROS-Gazebo combination.
+This example shows the installation of ROS 2 Humble and Gazebo Fortress which is a supported ROS-Gazebo combination.
 
 ```yaml
   jobs:
     test_gazebo:
       env:
-        ROS_DISTROS: 'iron'
+        ROS_DISTROS: 'humble'
       runs-on: ubuntu-latest
       container:
         image: ubuntu:jammy
@@ -255,20 +255,20 @@ This example shows the installation of ROS 2 Iron and Gazebo Harmonic which is a
         - uses: actions/setup-node@v4.0.3
           with:
             node-version: '20.x'
-        - name: 'Install ROS 2 Iron'
+        - name: 'Install ROS 2 Humble'
           uses: ros-tooling/setup-ros@v0.7
           with:
             required-ros-distributions: ${{ env.ROS_DISTROS }}
-        - name: 'Install Gazebo Harmonic with ros_gz'
+        - name: 'Install Gazebo Fortress with ros_gz'
           uses: gazebo-tooling/setup-gazebo@v0.3.0
           with:
-            required-gazebo-distributions: 'harmonic'
+            required-gazebo-distributions: 'fortress'
             install-ros-gz: ${{ env.ROS_DISTROS }}
-        - name: Test Iron ros_gz installation
+        - name: Test Humble ros_gz installation
           run: |
-            source /opt/ros/iron/setup.bash
+            source /opt/ros/humble/setup.bash
             ros2 pkg list | grep ros_gz
-            gz sim --version | grep 'version 8.[0-9*].[0-9*]'
+            ign gazebo --version | grep 'version 6.*'
 ```
 
 - *Installing Gazebo through vendor packages*

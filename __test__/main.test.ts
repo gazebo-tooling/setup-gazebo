@@ -104,15 +104,15 @@ describe("validate Gazebo distribution test", () => {
 describe("validate ROS 2 distribution test", () => {
 	it("test valid distro", async () => {
 		await expect(utils.validateROSDistro(["humble"])).toBe(true);
-		await expect(utils.validateROSDistro(["iron"])).toBe(true);
 		await expect(utils.validateROSDistro(["jazzy"])).toBe(true);
 		await expect(utils.validateROSDistro(["rolling"])).toBe(true);
-		await expect(utils.validateROSDistro(["humble", "iron"])).toBe(true);
+		await expect(utils.validateROSDistro(["humble", "jazzy"])).toBe(true);
 	});
 	it("test invalid distro", async () => {
 		await expect(utils.validateROSDistro(["noetic"])).toBe(false);
 		await expect(utils.validateROSDistro(["foxy"])).toBe(false);
 		await expect(utils.validateROSDistro(["galactic"])).toBe(false);
+		await expect(utils.validateROSDistro(["iron"])).toBe(false);
 		await expect(utils.validateROSDistro(["doesNotExist"])).toBe(false);
 		await expect(utils.validateROSDistro(["noetic", "humble"])).toBe(false);
 		await expect(utils.validateROSDistro(["foxy", "galactic", "jazzy"])).toBe(
@@ -178,18 +178,11 @@ describe("check for unstable repositories input", () => {
 describe("generate APT package names for ros_gz", () => {
 	it("test ros_gz output package names list", async () => {
 		await expect(
-			utils.generateROSGzAptPackageNames(["humble", "iron"], ["harmonic"]),
-		).toEqual([
-			"gz-harmonic",
-			"ros-humble-ros-gzharmonic",
-			"ros-iron-ros-gzharmonic",
-		]);
+			utils.generateROSGzAptPackageNames(["humble", "jazzy"], ["harmonic"]),
+		).toEqual(["gz-harmonic", "ros-humble-ros-gzharmonic", "ros-jazzy-ros-gz"]);
 		await expect(
 			utils.generateROSGzAptPackageNames(["humble"], ["fortress"]),
 		).toEqual(["gz-fortress", "ros-humble-ros-gz"]);
-		await expect(
-			utils.generateROSGzAptPackageNames(["iron"], ["fortress"]),
-		).toEqual(["gz-fortress", "ros-iron-ros-gz"]);
 		await expect(
 			utils.generateROSGzAptPackageNames(["jazzy"], ["harmonic"]),
 		).toEqual(["ros-jazzy-ros-gz"]);

@@ -34,12 +34,11 @@ inputs:
 
       Allowed ROS 2 distributions
       - humble
-      - iron
       - jazzy
       - rolling
 
       Multiple values can be passed using a whitespace delimited list
-      "humble iron".
+      "humble jazzy".
     required: false
     default: ''
 runs:
