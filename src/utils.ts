@@ -23,12 +23,6 @@ const validROSGzDistrosList: {
 		vendorPackagesAvailable: false,
 	},
 	{
-		rosDistro: "iron",
-		officialROSGzWrappers: ["fortress"],
-		unofficialROSGzWrappers: ["harmonic"],
-		vendorPackagesAvailable: false,
-	},
-	{
 		rosDistro: "jazzy",
 		officialROSGzWrappers: ["harmonic"],
 		unofficialROSGzWrappers: [],
