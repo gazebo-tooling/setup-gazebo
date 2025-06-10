@@ -107,8 +107,8 @@ jobs:
         exclude:
           # Gazebo Fortress (Sep 2021 - Sep 2026)
           # Compatible ubuntu docker images: jammy
-          - docker_image: ubuntu:jammy
-            gazebo_distribution: fortress          
+          - docker_image: ubuntu:noble
+            gazebo_distribution: fortress
 
           # Gazebo Ionic (Sep 2024 - Sep 2026)
           # Compatible ubuntu distributions: 24.04          
