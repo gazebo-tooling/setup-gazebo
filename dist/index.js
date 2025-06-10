@@ -26388,6 +26388,12 @@ const validROSGzDistrosList = [
         vendorPackagesAvailable: true,
     },
     {
+        rosDistro: "kilted",
+        officialROSGzWrappers: ["ionic"],
+        unofficialROSGzWrappers: [],
+        vendorPackagesAvailable: true,
+    },
+    {
         rosDistro: "rolling",
         officialROSGzWrappers: ["harmonic"],
         unofficialROSGzWrappers: [],
