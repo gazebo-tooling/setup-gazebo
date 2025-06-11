@@ -105,8 +105,10 @@ describe("validate ROS 2 distribution test", () => {
 	it("test valid distro", async () => {
 		await expect(utils.validateROSDistro(["humble"])).toBe(true);
 		await expect(utils.validateROSDistro(["jazzy"])).toBe(true);
+		await expect(utils.validateROSDistro(["kilted"])).toBe(true);
 		await expect(utils.validateROSDistro(["rolling"])).toBe(true);
 		await expect(utils.validateROSDistro(["humble", "jazzy"])).toBe(true);
+		await expect(utils.validateROSDistro(["kilted", "rolling"])).toBe(true);
 	});
 	it("test invalid distro", async () => {
 		await expect(utils.validateROSDistro(["noetic"])).toBe(false);
@@ -186,6 +188,9 @@ describe("generate APT package names for ros_gz", () => {
 		await expect(
 			utils.generateROSGzAptPackageNames(["jazzy"], ["harmonic"]),
 		).toEqual(["ros-jazzy-ros-gz"]);
+		await expect(
+			utils.generateROSGzAptPackageNames(["kilted"], ["ionic"]),
+		).toEqual(["ros-kilted-ros-gz"]);
 		await expect(
 			utils.generateROSGzAptPackageNames(["rolling"], ["harmonic"]),
 		).toEqual(["ros-rolling-ros-gz"]);

@@ -305,6 +305,40 @@ This example shows the installation of ROS 2 Jazzy and Gazebo Harmonic which is 
             gz sim --version | grep 'version 8.[0-9*].[0-9*]'
 ```
 
+- *Installing ROS 2 Kilted with Gazebo Ionic*
+
+This example shows the installation of ROS 2 Kilted and Gazebo Ionic. Kilted uses vendor packages like Jazzy, so Gazebo libraries will be installed as ROS packages.
+
+```yaml
+  jobs:
+    test_gazebo:
+      env:
+        ROS_DISTROS: 'kilted'
+      runs-on: ubuntu-latest
+      container:
+        image: ubuntu:noble
+      steps:
+        - uses: actions/checkout@v4
+        - uses: actions/setup-node@v4.0.3
+          with:
+            node-version: '20.x'
+        - name: 'Install ROS 2 Kilted'
+          uses: ros-tooling/setup-ros@v0.7
+          with:
+            required-ros-distributions: ${{ env.ROS_DISTROS }}
+        - name: 'Install Gazebo with ros_gz'
+          uses: gazebo-tooling/setup-gazebo@v0.3.0
+          with:
+            required-gazebo-distributions: 'ionic'
+            install-ros-gz: ${{ env.ROS_DISTROS }}
+        - name: Test Kilted ros_gz installation
+          run: |
+            source /opt/ros/kilted/setup.bash
+            ! [ $(apt list --installed gz-ionic) ]
+            ros2 pkg list | grep ros_gz
+            gz sim --version | grep 'version 9.[0-9*].[0-9*]'
+```
+
 ### macOS
 
 #### Setting up worker to install Gazebo on macOS
