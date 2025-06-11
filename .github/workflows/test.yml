@@ -1,4 +1,6 @@
 name: 'Test setup-gazebo'
+permissions:
+  contents: read
 on:
   pull_request:
   push:
