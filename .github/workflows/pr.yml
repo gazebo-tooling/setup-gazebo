@@ -4,12 +4,16 @@ on:
 defaults:
   run:
     shell: bash
+permissions: {}
 jobs:
   test_lint_and_build:
     name: "Lint sources and check build artifacts"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
       - uses: actions/setup-node@v4.4.0
         with:
           node-version: "20.x"
