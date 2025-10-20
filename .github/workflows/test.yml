@@ -25,7 +25,7 @@ jobs:
           - ubuntu-22.04
           - ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           persist-credentials: false
       - uses: actions/setup-node@v4.4.0
@@ -45,7 +45,7 @@ jobs:
           - ubuntu:jammy
           - ubuntu:noble
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           persist-credentials: false
       - uses: actions/setup-node@v4.4.0
@@ -77,7 +77,7 @@ jobs:
           - ubuntu_distribution: ubuntu-22.04
             gazebo_distribution: ionic
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           persist-credentials: false
       - uses: actions/setup-node@v4.4.0
@@ -124,7 +124,7 @@ jobs:
           - docker_image: ubuntu:jammy
             gazebo_distribution: ionic
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           persist-credentials: false
       - uses: actions/setup-node@v4.4.0
@@ -157,7 +157,7 @@ jobs:
           - ubuntu:jammy
           - ubuntu:noble
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           persist-credentials: false
       - uses: actions/setup-node@v4.4.0
@@ -177,7 +177,7 @@ jobs:
     container:
       image: ubuntu:noble
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           persist-credentials: false
       - uses: actions/setup-node@v4.4.0
@@ -204,7 +204,7 @@ jobs:
           # macOS Sonoma
           - macos-14
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           persist-credentials: false
       - uses: actions/setup-node@v4.4.0
@@ -221,7 +221,7 @@ jobs:
     name: 'Install Gazebo on Windows'
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           persist-credentials: false
       - uses: actions/setup-node@v4.4.0
@@ -246,7 +246,7 @@ jobs:
     container:
       image: ubuntu:jammy
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           persist-credentials: false
       - uses: actions/setup-node@v4.4.0
@@ -275,7 +275,7 @@ jobs:
     container:
       image: ubuntu:jammy
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           persist-credentials: false
       - uses: actions/setup-node@v4.4.0
@@ -304,7 +304,7 @@ jobs:
     container:
       image: ubuntu:noble
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           persist-credentials: false
       - uses: actions/setup-node@v4.4.0
@@ -334,7 +334,7 @@ jobs:
     container:
       image: ubuntu:noble
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           persist-credentials: false
       - uses: actions/setup-node@v4.4.0
