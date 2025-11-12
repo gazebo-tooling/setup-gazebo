@@ -120,7 +120,7 @@ jobs:
             gazebo_distribution: fortress
 
           # Gazebo Ionic (Sep 2024 - Sep 2026)
-          # Compatible ubuntu distributions: 24.04          
+          # Compatible ubuntu distributions: 24.04
           - docker_image: ubuntu:jammy
             gazebo_distribution: ionic
     steps:
@@ -198,11 +198,14 @@ jobs:
       fail-fast: false
       matrix:
         os:
-          # macOS Ventura
-          - macos-13
-
           # macOS Sonoma
           - macos-14
+
+          # macOS Sequoia
+          - macos-15
+
+          # macOS Tahoe
+          - macos-16
     steps:
       - uses: actions/checkout@v5
         with:
@@ -213,7 +216,7 @@ jobs:
       - name: 'Check Gazebo installation on macOS runner'
         uses: ./
         with:
-          required-gazebo-distributions: 'harmonic'
+          required-gazebo-distributions: 'jetty'
       - name: 'Test Gazebo installation'
         run: 'gz sim --versions'
 
