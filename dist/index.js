@@ -26395,7 +26395,7 @@ const validROSGzDistrosList = [
     },
     {
         rosDistro: "rolling",
-        officialROSGzWrappers: ["harmonic"],
+        officialROSGzWrappers: ["jetty"],
         unofficialROSGzWrappers: [],
         vendorPackagesAvailable: true,
     },

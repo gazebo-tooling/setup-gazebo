@@ -83,8 +83,13 @@ describe("validate Gazebo distribution test", () => {
 	it("test valid distro", async () => {
 		await expect(utils.validateDistro(["fortress"])).resolves.not.toThrow();
 		await expect(utils.validateDistro(["harmonic"])).resolves.not.toThrow();
+		await expect(utils.validateDistro(["ionic"])).resolves.not.toThrow();
+		await expect(utils.validateDistro(["jetty"])).resolves.not.toThrow();
 		await expect(
 			utils.validateDistro(["fortress", "harmonic"]),
+		).resolves.not.toThrow();
+		await expect(
+			utils.validateDistro(["ionic", "jetty"]),
 		).resolves.not.toThrow();
 	});
 	it("test invalid distro", async () => {
@@ -192,7 +197,7 @@ describe("generate APT package names for ros_gz", () => {
 			utils.generateROSGzAptPackageNames(["kilted"], ["ionic"]),
 		).toEqual(["ros-kilted-ros-gz"]);
 		await expect(
-			utils.generateROSGzAptPackageNames(["rolling"], ["harmonic"]),
+			utils.generateROSGzAptPackageNames(["rolling"], ["jetty"]),
 		).toEqual(["ros-rolling-ros-gz"]);
 	});
 });
