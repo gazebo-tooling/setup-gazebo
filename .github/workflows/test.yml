@@ -216,7 +216,7 @@ jobs:
       - name: 'Check Gazebo installation on macOS runner'
         uses: ./
         with:
-          required-gazebo-distributions: 'jetty'
+          required-gazebo-distributions: 'ionic'
       - name: 'Test Gazebo installation'
         run: 'gz sim --versions'
 
