@@ -348,7 +348,7 @@ This workflow shows how to install Gazebo on a macOS worker using the Homebrew p
 ```yaml
   jobs:
     test_gazebo:
-      runs-on: macos-13
+      runs-on: macos-15
       steps:
         - uses: actions/checkout@v4
         - uses: actions/setup-node@v4.0.2
