@@ -59,6 +59,6 @@
 		"@actions/core": "^1.11.1",
 		"@actions/exec": "^1.1.1",
 		"@vercel/ncc": "^0.38.1",
-		"yaml": "^2.7.0"
+		"yaml": "^2.8.1"
 	}
 }
