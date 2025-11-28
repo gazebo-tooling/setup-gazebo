@@ -204,8 +204,8 @@ jobs:
           # macOS Sequoia
           - macos-15
 
-          # macOS Tahoe
-          - macos-16
+          # macOS Tahoe (not available in GH)
+          # macos-16
     steps:
       - uses: actions/checkout@v5
         with:
