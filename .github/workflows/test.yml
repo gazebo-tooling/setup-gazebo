@@ -265,7 +265,7 @@ jobs:
         run: |
           source /opt/ros/humble/setup.bash
           ros2 pkg list | grep ros_gz
-          gz sim --version | grep 'version 8.[0-9*].[0-9*]'
+          gz sim --version | grep -E 'version 8\.[0-9]+\.[0-9]+'
 
   test_install_ros_gz_official:
     name: 'Install Humble and Fortress side-by-side'
@@ -324,7 +324,7 @@ jobs:
           source /opt/ros/jazzy/setup.bash
           ! [ $(apt list --installed gz-harmonic) ]
           ros2 pkg list | grep ros_gz
-          gz sim --version | grep 'version 8.[0-9*].[0-9*]'
+          gz sim --version | grep -E 'version 8\.[0-9]+\.[0-9]+'
 
   test_install_ros_gz_kilted:
     name: 'Install Ionic on Kilted through vendor packages'
@@ -354,4 +354,4 @@ jobs:
           source /opt/ros/kilted/setup.bash
           ! [ $(apt list --installed gz-ionic) ]
           ros2 pkg list | grep ros_gz
-          gz sim --version | grep 'version 9.[0-9*].[0-9*]'
+          gz sim --version | grep -E 'version 9\.[0-9]+\.[0-9]+'
