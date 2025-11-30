@@ -339,6 +339,40 @@ This example shows the installation of ROS 2 Kilted and Gazebo Ionic. Kilted use
             gz sim --version | grep -E 'version 9\.[0-9]+\.[0-9]+'
 ```
 
+- *Installing ROS 2 Rolling with Gazebo Jetty*
+
+This example shows the installation of ROS 2 Rolling and Gazebo Jetty. Rolling uses vendor packages like Jazzy and Kilted, so Gazebo libraries will be installed as ROS packages.
+
+```yaml
+  jobs:
+    test_gazebo:
+      env:
+        ROS_DISTROS: 'rolling'
+      runs-on: ubuntu-latest
+      container:
+        image: ubuntu:noble
+      steps:
+        - uses: actions/checkout@v4
+        - uses: actions/setup-node@v4.0.3
+          with:
+            node-version: '20.x'
+        - name: 'Install ROS 2 Rolling'
+          uses: ros-tooling/setup-ros@v0.7
+          with:
+            required-ros-distributions: ${{ env.ROS_DISTROS }}
+        - name: 'Install Gazebo with ros_gz'
+          uses: gazebo-tooling/setup-gazebo@v0.3.0
+          with:
+            required-gazebo-distributions: 'jetty'
+            install-ros-gz: ${{ env.ROS_DISTROS }}
+        - name: Test Rolling ros_gz installation
+          run: |
+            source /opt/ros/rolling/setup.bash
+            ! [ $(apt list --installed gz-jetty) ]
+            ros2 pkg list | grep ros_gz
+            gz sim --version | grep 'version 10.[0-9*].[0-9*]'
+```
+
 ### macOS
 
 #### Setting up worker to install Gazebo on macOS

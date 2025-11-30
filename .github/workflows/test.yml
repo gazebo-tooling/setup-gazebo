@@ -66,6 +66,7 @@ jobs:
           - fortress
           - harmonic
           - ionic
+          - jetty
         exclude:
           # Gazebo Fortress (Sep 2021 - Sep 2026)
           # Compatible ubuntu distributions: 22.04
@@ -76,6 +77,12 @@ jobs:
           # Compatible ubuntu distributions: 24.04
           - ubuntu_distribution: ubuntu-22.04
             gazebo_distribution: ionic
+
+          # Gazebo Jetty (Sep 2024 - Sep 2026)
+          # Compatible ubuntu distributions: 24.04
+          - ubuntu_distribution: ubuntu-22.04
+            gazebo_distribution: jetty
+
     steps:
       - uses: actions/checkout@v5
         with:
@@ -186,7 +193,7 @@ jobs:
       - name: 'Check Gazebo installation on Ubuntu runner'
         uses: ./
         with:
-          required-gazebo-distributions: 'ionic'
+          required-gazebo-distributions: 'jetty'
           use-gazebo-nightly: 'true'
       - name: 'Test Gazebo installation'
         run: 'gz sim --versions'

@@ -13,6 +13,7 @@ inputs:
         - fortress
         - harmonic
         - ionic
+        - jetty
 
         Multiple values can be passed using a whitespace delimited list
         "fortress harmonic".
