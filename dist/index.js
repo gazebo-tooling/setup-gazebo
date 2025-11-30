@@ -26396,7 +26396,7 @@ const validROSGzDistrosList = [
     {
         rosDistro: "rolling",
         officialROSGzWrappers: ["jetty"],
-        unofficialROSGzWrappers: [],
+        unofficialROSGzWrappers: [""],
         vendorPackagesAvailable: true,
     },
 ];

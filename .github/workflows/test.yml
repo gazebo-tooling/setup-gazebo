@@ -77,6 +77,12 @@ jobs:
           # Compatible ubuntu distributions: 24.04
           - ubuntu_distribution: ubuntu-22.04
             gazebo_distribution: ionic
+
+          # Gazebo Jetty (Sep 2024 - Sep 2026)
+          # Compatible ubuntu distributions: 24.04
+          - ubuntu_distribution: ubuntu-22.04
+            gazebo_distribution: jetty
+
     steps:
       - uses: actions/checkout@v5
         with:
